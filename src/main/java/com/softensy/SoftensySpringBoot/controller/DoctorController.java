@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/doctor")
@@ -18,13 +19,13 @@ public class DoctorController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Doctor> getDoctor(@PathVariable("id") Long id) {
-        Doctor doctor = this.doctorService.getDoctorById(id);
+        Optional<Doctor> doctor = this.doctorService.getDoctorById(id);
 
         if (doctor == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(doctor, HttpStatus.OK);
+        return new ResponseEntity<>(doctor.get(), HttpStatus.OK);
     }
 
     @PostMapping
@@ -52,7 +53,7 @@ public class DoctorController {
 
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Doctor> deleteDoctor(@PathVariable("id") Long id) {
-        Doctor doctor = this.doctorService.getDoctorById(id);
+        Optional<Doctor> doctor = this.doctorService.getDoctorById(id);
 
         if (doctor == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -20,8 +21,8 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Patient getPatientById(Long id) {
-        return patientRepository.getById(id);
+    public Optional<Patient> getPatientById(Long id) {
+        return patientRepository.findById(id);
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.sql.Date;
 @Table
 public class Doctor {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column
     private String firstName;
