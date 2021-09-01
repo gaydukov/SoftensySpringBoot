@@ -1,6 +1,6 @@
 package com.softensy.SoftensySpringBoot.controller;
 
-import com.softensy.SoftensySpringBoot.entety.Patient;
+import com.softensy.SoftensySpringBoot.entity.Patient;
 import com.softensy.SoftensySpringBoot.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,71 +8,45 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
 
+
+    private final PatientService patientService;
+
     @Autowired
-    private PatientService patientService;
+    public PatientController(PatientService patientService) {
+        this.patientService = patientService;
+    }
 
-    @GetMapping("{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Patient> getPatient(@PathVariable("id") Long id) {
-
-        Optional<Patient> patient = this.patientService.getPatientById(id);
-
-        if (patient == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(patient.get(), HttpStatus.OK);
+        return new ResponseEntity<>(patientService.getPatientById(id).get(), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Patient> savePatient(@RequestBody  Patient patient) {
-
-        if (patient == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        this.patientService.savePatient(patient);
-        return new ResponseEntity<>(patient, HttpStatus.CREATED);
+        patientService.savePatient(patient);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Patient> updateDPatient(@RequestBody Patient patient) {
-
-        if (patient == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        this.patientService.updatePatient(patient);
-
-        return new ResponseEntity<>(patient, HttpStatus.OK);
+    public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient) {
+        patientService.updatePatient(patient);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping(value = "{id}")
     public ResponseEntity<Patient> deletePatient(@PathVariable("id") Long id) {
-        Optional<Patient> patient = this.patientService.getPatientById(id);
-
-        if (patient == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        this.patientService.deletePatient(id);
-
+        patientService.deletePatient(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping
     public ResponseEntity<List<Patient>> getAllPatients() {
-        List<Patient> patients = this.patientService.getAllPatients();
 
-        if (patients.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(patients, HttpStatus.OK);
+        return new ResponseEntity<>(patientService.getAllPatients(), HttpStatus.OK);
     }
 }

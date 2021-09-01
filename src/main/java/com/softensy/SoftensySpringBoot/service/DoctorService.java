@@ -1,6 +1,6 @@
 package com.softensy.SoftensySpringBoot.service;
 
-import com.softensy.SoftensySpringBoot.entety.Doctor;
+import com.softensy.SoftensySpringBoot.entity.Doctor;
 
 import java.util.List;
 import java.util.Optional;
