@@ -36,7 +36,6 @@ class PatientServiceImplTest {
         // when
         when(patientRepository.findAll()).thenReturn(expectedListPatients);
         List<Patient> actualListPatients = patientService.getAllPatients();
-
         //then
         Assertions.assertEquals(expectedListPatients, actualListPatients);
         Assertions.assertNotNull(firstPatient);
@@ -70,7 +69,6 @@ class PatientServiceImplTest {
         // when
         when(patientRepository.save(expectedPatient)).thenReturn(firstPatient);
         Patient actualPatient = patientService.savePatient(expectedPatient);
-
         //then
         Assertions.assertEquals(expectedPatient, actualPatient);
         Assertions.assertNotNull(firstPatient);
@@ -80,15 +78,13 @@ class PatientServiceImplTest {
 
     @Test
     void updatePatient() {
-// before
+        // before
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         firstPatient.setId(1);
         Patient expectedPatient = new Patient("Petr", "Petrov", "Petrov", 2, Date.valueOf("1988-07-19"), 54321L);
-
         // when
         when(patientRepository.saveAndFlush(expectedPatient)).thenReturn(firstPatient);
         Patient actualPatient = patientService.updatePatient(expectedPatient);
-
         //then
         Assertions.assertEquals(expectedPatient, actualPatient);
         verify(patientRepository, times(1)).saveAndFlush(expectedPatient);
@@ -99,7 +95,6 @@ class PatientServiceImplTest {
 
     @Test
     void deletePatient() {
-
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         firstPatient.setId(1);
         // when
@@ -108,9 +103,11 @@ class PatientServiceImplTest {
         if (firstPatient == null) {
             isPatientDelete = false;
         }
+        patientService.deletePatient(firstPatient.getId());
         //then
         Assertions.assertNotNull(firstPatient);
         Assertions.assertTrue(isPatientDelete);
         verify(patientRepository, times(1)).delete(firstPatient);
+        verify(patientRepository).delete(firstPatient);
     }
 }

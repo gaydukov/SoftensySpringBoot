@@ -15,12 +15,12 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-;
+
 
 @SpringBootTest
 class DoctorServiceImplTest {
     @Autowired
-    DoctorServiceImpl doctorService;
+    private DoctorServiceImpl doctorService;
 
     @MockBean
     private DoctorRepositoty doctorRepositoty;
@@ -37,54 +37,43 @@ class DoctorServiceImplTest {
         // when
         when(doctorRepositoty.findAll()).thenReturn(expectedDoctors);
         List<Doctor> actualDoctors = doctorService.getAllDoctors();
-
         //then
         Assertions.assertEquals(expectedDoctors, actualDoctors);
         Assertions.assertNotNull(firstDoctor);
         Assertions.assertNotNull(secondDoctor);
         verify(doctorRepositoty).findAll();
-
         verify(doctorRepositoty, times(1)).findAll();
     }
 
     @Test
     void getDoctorById() {
-
         // before
         Doctor expectedDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345);
         expectedDoctor.setId(1l);
-
         // when
         when(doctorRepositoty.findById(1l)).thenReturn(Optional.of(expectedDoctor));
         Doctor actualDoctor = doctorService.getDoctorById(1l).get();
-
         //then
         Assertions.assertEquals(expectedDoctor, actualDoctor);
         Assertions.assertNotNull(expectedDoctor);
         verify(doctorRepositoty).findById(1l);
-
         verify(doctorRepositoty, times(1)).findById(1l);
     }
 
     @Test
     void saveDoctor() {
-
         // before
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
         Doctor expectedDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
-
-        //    when
+        //when
         when(doctorRepositoty.save(expectedDoctor)).thenReturn(firstDoctor);
         Doctor actualDoctor = doctorService.saveDoctor(expectedDoctor);
-
         //then
         Assertions.assertEquals(expectedDoctor, actualDoctor);
         Assertions.assertNotNull(firstDoctor);
         Assertions.assertNotNull(expectedDoctor);
         verify(doctorRepositoty).save(expectedDoctor);
-
-
     }
 
     @Test
@@ -93,19 +82,15 @@ class DoctorServiceImplTest {
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
         Doctor expectedDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
-
         // when
         when(doctorRepositoty.saveAndFlush(expectedDoctor)).thenReturn(firstDoctor);
         Doctor actualDoctor = doctorService.updateDoctor(expectedDoctor);
-
         //then
         Assertions.assertEquals(expectedDoctor, actualDoctor);
         verify(doctorRepositoty, times(1)).saveAndFlush(expectedDoctor);
         verify(doctorRepositoty).saveAndFlush(expectedDoctor);
         Assertions.assertNotNull(firstDoctor);
         Assertions.assertNotNull(expectedDoctor);
-
-
     }
 
     @Test
@@ -119,9 +104,12 @@ class DoctorServiceImplTest {
         if (firstDoctor == null) {
             isDoctorDelete = false;
         }
+        doctorService.deleteDoctor(firstDoctor.getId());
         //then
         Assertions.assertTrue(isDoctorDelete);
         Assertions.assertNotNull(firstDoctor);
         verify(doctorRepositoty, times(1)).delete(firstDoctor);
+        verify(doctorRepositoty).delete(firstDoctor);
+
     }
 }
