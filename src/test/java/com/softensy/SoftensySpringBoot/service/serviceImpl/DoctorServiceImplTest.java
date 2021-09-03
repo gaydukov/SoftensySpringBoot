@@ -16,7 +16,6 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 
-
 @SpringBootTest
 class DoctorServiceImplTest {
     @Autowired
@@ -26,9 +25,9 @@ class DoctorServiceImplTest {
     private DoctorRepositoty doctorRepositoty;
 
     @Test
-    void getAllDoctors() {
+    void givenDoctors_whenGetAllDoctors_thenReturnAllDoctors() {
         List<Doctor> expectedDoctors = new ArrayList<>();
-        // before
+        // given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
         Doctor secondDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
@@ -46,8 +45,8 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    void getDoctorById() {
-        // before
+    void givenDoctor_whenGetDoctor_thenReturnDoctor() {
+        // given
         Doctor expectedDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345);
         expectedDoctor.setId(1l);
         // when
@@ -61,8 +60,8 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    void saveDoctor() {
-        // before
+    void givenDoctor_whenAddDoctor_thenReturnDoctorAndVerifyDoctorSave() {
+        // given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
         Doctor expectedDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
@@ -77,8 +76,8 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    void updateDoctor() {
-        // before
+    void givenDoctor_whenUpdateDoctor_thenReturnDoctorAndVerifyDoctorUpdate() {
+        // given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
         Doctor expectedDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
@@ -94,8 +93,8 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    void deleteDoctor() {
-        // before
+    void givenDoctor_whenDeleteDoctor_thenVerifyDoctorDelete() {
+        // given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
         // when

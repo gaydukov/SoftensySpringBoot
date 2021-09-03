@@ -25,7 +25,7 @@ class PatientServiceImplTest {
     private PatientRepository patientRepository;
 
     @Test
-    void getAllPatients() {
+    void givenPatients_whenGetAllPatients_thenReturnAllPatients() {
         List<Patient> expectedListPatients = new ArrayList<>();
         // before
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
@@ -45,7 +45,7 @@ class PatientServiceImplTest {
     }
 
     @Test
-    void getPatientById() {
+    void givenPatient_whenGetPatient_thenReturnPatient() {
         // before
         Patient expectedPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         expectedPatient.setId(1);
@@ -60,7 +60,7 @@ class PatientServiceImplTest {
     }
 
     @Test
-    void savePatient() {
+    void givenPatient_whenAddPatient_thenReturnPatientAndVerifyPatientSave() {
         // before
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         firstPatient.setId(1);
@@ -77,7 +77,7 @@ class PatientServiceImplTest {
     }
 
     @Test
-    void updatePatient() {
+    void givenPatient_whenUpdatePatient_thenReturnPatientAndVerifyPatientUpdate() {
         // before
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         firstPatient.setId(1);
@@ -94,7 +94,7 @@ class PatientServiceImplTest {
     }
 
     @Test
-    void deletePatient() {
+    void givenPatient_whenDeletePatient_thenVerifyPatientDelete() {
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         firstPatient.setId(1);
         // when
