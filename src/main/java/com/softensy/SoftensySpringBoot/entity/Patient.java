@@ -20,20 +20,21 @@ public class Patient {
     @Column
     private long doctorId;
     @Column
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date dateOfBirth;
     @Column
-    private long phoneNamber;
+    private long phoneNumber;
 
-    public Patient() {}
+    public Patient() {
+    }
 
-    public Patient(String firstName, String lastName, String middleName, long doctorId, Date dateOfBirth, long phoneNamber) {
+    public Patient(String firstName, String lastName, String middleName, long doctorId, Date dateOfBirth, long phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleName = middleName;
         this.doctorId = doctorId;
         this.dateOfBirth = dateOfBirth;
-        this.phoneNamber = phoneNamber;
+        this.phoneNumber = phoneNumber;
     }
 
     public long getId() {
@@ -84,12 +85,12 @@ public class Patient {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public long getPhoneNamber() {
-        return phoneNamber;
+    public long getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhoneNamber(long phoneNamber) {
-        this.phoneNamber = phoneNamber;
+    public void setPhoneNumber(long phoneNamber) {
+        this.phoneNumber = phoneNamber;
     }
 
     @Override
@@ -101,7 +102,7 @@ public class Patient {
                 ", middleName='" + middleName + '\'' +
                 ", doctorId=" + doctorId +
                 ", dateOfBirth=" + dateOfBirth +
-                ", phoneNamber=" + phoneNamber +
+                ", phoneNumber=" + phoneNumber +
                 '}';
     }
 }

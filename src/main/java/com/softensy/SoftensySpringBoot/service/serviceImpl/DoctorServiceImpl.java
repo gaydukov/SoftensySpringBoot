@@ -14,6 +14,7 @@ import java.util.Optional;
 @Service
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
+
     @Autowired
     public DoctorServiceImpl(DoctorRepository doctorRepository) {
         this.doctorRepository = doctorRepository;
@@ -32,7 +33,7 @@ public class DoctorServiceImpl implements DoctorService {
     public Optional<Doctor> getDoctorById(Long id) {
         Optional<Doctor> doctor = doctorRepository.findById(id);
         if (doctor.isEmpty()) {
-            return doctor;
+            ResponseEntity rs = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return doctor;
     }
@@ -41,18 +42,16 @@ public class DoctorServiceImpl implements DoctorService {
     public Doctor saveDoctor(Doctor doctor) {
         if (doctor == null) {
             ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else
-        doctorRepository.save(doctor);
-        return doctor;
+        }
+        return doctorRepository.save(doctor);
     }
 
     @Override
     public Doctor updateDoctor(Doctor doctor) {
         if (doctor == null) {
             ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else
-            doctorRepository.saveAndFlush(doctor);
-        return doctor;
+        }
+        return doctorRepository.saveAndFlush(doctor);
     }
 
     @Override
@@ -60,7 +59,8 @@ public class DoctorServiceImpl implements DoctorService {
         Optional<Doctor> doctor = doctorRepository.findById(id);
         if (doctor.isEmpty()) {
             ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else
+        } else {
             doctorRepository.deleteById(id);
+        }
     }
 }

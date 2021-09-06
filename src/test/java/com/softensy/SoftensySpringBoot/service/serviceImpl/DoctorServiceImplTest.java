@@ -24,7 +24,7 @@ class DoctorServiceImplTest {
     private DoctorRepository doctorRepository;
 
     @Test
-    @DisplayName("Test getAllDoctors")
+    @DisplayName("get all doctors return list doctors")
     void givenDoctors_whenGetAllDoctors_thenReturnAllDoctors() {
         // given
         List<Doctor> expectedDoctors = new ArrayList<>();
@@ -45,7 +45,7 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test getDoctorById")
+    @DisplayName("get doctor by id returned doctor")
     void givenDoctor_whenGetDoctor_thenReturnDoctor() {
         // given
         Doctor expectedDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345);
@@ -61,42 +61,45 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test saveDoctor")
+    @DisplayName("save doctor returned doctor")
     void givenDoctor_whenAddDoctor_thenReturnDoctorAndVerifyDoctorSave() {
         // given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
-        Doctor expectedDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
-        //when
-        when(doctorRepository.save(expectedDoctor)).thenReturn(firstDoctor);
-        Doctor actualDoctor = doctorService.saveDoctor(expectedDoctor);
+        Doctor secondDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
+        // when
+        when(doctorRepository.save(secondDoctor)).thenReturn(firstDoctor);
+        Doctor actualDoctor = doctorService.saveDoctor(secondDoctor);
+        Doctor expectedDoctor = firstDoctor;
         //then
         Assertions.assertEquals(expectedDoctor, actualDoctor);
+        verify(doctorRepository, times(1)).save(secondDoctor);
+        verify(doctorRepository).save(secondDoctor);
         Assertions.assertNotNull(firstDoctor);
-        Assertions.assertNotNull(expectedDoctor);
-        verify(doctorRepository).save(expectedDoctor);
+        Assertions.assertNotNull(secondDoctor);
     }
 
     @Test
-    @DisplayName("Test updateDoctor")
+    @DisplayName("update doctor returned doctor")
     void givenDoctor_whenUpdateDoctor_thenReturnDoctorAndVerifyDoctorUpdate() {
         // given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
-        Doctor expectedDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
+        Doctor secondDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
         // when
-        when(doctorRepository.saveAndFlush(expectedDoctor)).thenReturn(firstDoctor);
-        Doctor actualDoctor = doctorService.updateDoctor(expectedDoctor);
+        when(doctorRepository.saveAndFlush(secondDoctor)).thenReturn(firstDoctor);
+        Doctor actualDoctor = doctorService.updateDoctor(secondDoctor);
+        Doctor expectedDoctor = firstDoctor;
         //then
         Assertions.assertEquals(expectedDoctor, actualDoctor);
-        verify(doctorRepository, times(1)).saveAndFlush(expectedDoctor);
-        verify(doctorRepository).saveAndFlush(expectedDoctor);
+        verify(doctorRepository, times(1)).saveAndFlush(secondDoctor);
+        verify(doctorRepository).saveAndFlush(secondDoctor);
         Assertions.assertNotNull(firstDoctor);
-        Assertions.assertNotNull(expectedDoctor);
+        Assertions.assertNotNull(secondDoctor);
     }
 
     @Test
-    @DisplayName("Test deleteDoctor")
+    @DisplayName("delete doctor")
     void givenDoctor_whenDeleteDoctor_thenVerifyDoctorDelete() {
         // given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);

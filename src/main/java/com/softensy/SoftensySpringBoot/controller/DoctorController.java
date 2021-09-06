@@ -13,6 +13,7 @@ import java.util.List;
 @RequestMapping("/doctor")
 public class DoctorController {
     private final DoctorService doctorService;
+
     @Autowired
     public DoctorController(DoctorService doctorService) {
         this.doctorService = doctorService;
@@ -24,15 +25,15 @@ public class DoctorController {
     }
 
     @PostMapping
-    public ResponseEntity<Doctor> saveDoctor(@RequestBody  Doctor doctor) {
+    public ResponseEntity<Doctor> saveDoctor(@RequestBody Doctor doctor) {
         doctorService.saveDoctor(doctor);
-        return new ResponseEntity<>(doctor,HttpStatus.CREATED);
+        return new ResponseEntity<>(doctor, HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<Doctor> updateDoctor(@RequestBody Doctor doctor) {
         doctorService.updateDoctor(doctor);
-        return new ResponseEntity<>(doctor,HttpStatus.OK);
+        return new ResponseEntity<>(doctor, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "{id}")

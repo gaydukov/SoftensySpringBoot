@@ -24,7 +24,7 @@ class PatientServiceImplTest {
     private PatientRepository patientRepository;
 
     @Test
-    @DisplayName("Test getAllPatients")
+    @DisplayName("get all patients returned list patients")
     void givenPatients_whenGetAllPatients_thenReturnAllPatients() {
         // before
         List<Patient> expectedListPatients = new ArrayList<>();
@@ -45,7 +45,7 @@ class PatientServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test getPatientById")
+    @DisplayName("get patient by id returned patient")
     void givenPatient_whenGetPatient_thenReturnPatient() {
         // before
         Patient expectedPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
@@ -61,43 +61,45 @@ class PatientServiceImplTest {
     }
 
     @Test
-    @DisplayName("Test savePatient")
+    @DisplayName("save patient by id returned patient")
     void givenPatient_whenAddPatient_thenReturnPatientAndVerifyPatientSave() {
-        // before
+        // given
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         firstPatient.setId(1);
-        Patient expectedPatient = new Patient("Petr", "Petrov", "Petrov", 1, Date.valueOf("1988-07-19"), 54321L);
-        expectedPatient.setId(2);
+        Patient secondPatient = new Patient("Petr", "Petrov", "Petrov", 1, Date.valueOf("1988-07-19"), 54321L);
         // when
-        when(patientRepository.save(expectedPatient)).thenReturn(firstPatient);
-        Patient actualPatient = patientService.savePatient(expectedPatient);
+        when(patientRepository.save(secondPatient)).thenReturn(firstPatient);
+        Patient actualPatient = patientService.savePatient(secondPatient);
+        Patient expectedPatient = firstPatient;
         //then
         Assertions.assertEquals(expectedPatient, actualPatient);
+        verify(patientRepository, times(1)).save(secondPatient);
+        verify(patientRepository).save(secondPatient);
         Assertions.assertNotNull(firstPatient);
-        Assertions.assertNotNull(expectedPatient);
-        verify(patientRepository).save(expectedPatient);
+        Assertions.assertNotNull(secondPatient);
     }
 
     @Test
-    @DisplayName("Test updatePatient")
+    @DisplayName("update patient by id returned patient")
     void givenPatient_whenUpdatePatient_thenReturnPatientAndVerifyPatientUpdate() {
-        // before
+        // given
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         firstPatient.setId(1);
-        Patient expectedPatient = new Patient("Petr", "Petrov", "Petrov", 2, Date.valueOf("1988-07-19"), 54321L);
+        Patient secondPatient = new Patient("Petr", "Petrov", "Petrov", 1, Date.valueOf("1988-07-19"), 54321L);
         // when
-        when(patientRepository.saveAndFlush(expectedPatient)).thenReturn(firstPatient);
-        Patient actualPatient = patientService.updatePatient(expectedPatient);
+        when(patientRepository.saveAndFlush(secondPatient)).thenReturn(firstPatient);
+        Patient actualPatient = patientService.updatePatient(secondPatient);
+        Patient expectedPatient = firstPatient;
         //then
         Assertions.assertEquals(expectedPatient, actualPatient);
-        verify(patientRepository, times(1)).saveAndFlush(expectedPatient);
-        verify(patientRepository).saveAndFlush(expectedPatient);
+        verify(patientRepository, times(1)).saveAndFlush(secondPatient);
+        verify(patientRepository).saveAndFlush(secondPatient);
         Assertions.assertNotNull(firstPatient);
-        Assertions.assertNotNull(expectedPatient);
+        Assertions.assertNotNull(secondPatient);
     }
 
     @Test
-    @DisplayName("Test deletePatient")
+    @DisplayName("delete patient")
     void givenPatient_whenDeletePatient_thenVerifyPatientDelete() {
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         firstPatient.setId(1);

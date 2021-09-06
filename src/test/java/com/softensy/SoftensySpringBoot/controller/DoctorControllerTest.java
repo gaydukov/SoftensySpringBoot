@@ -34,7 +34,7 @@ class DoctorControllerTest {
     private DoctorService doctorService;
 
     @Test
-    @DisplayName("Test getDoctorController")
+    @DisplayName("get doctor by id returned doctor end status")
     void givenId_whenGetDoctor_thenStatus200andDoctorReturned() throws Exception {
         //given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
@@ -50,11 +50,11 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.position").value("Hirurg"))
                 .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
-                .andExpect(jsonPath("$.phoneNamber").value("12345"));
+                .andExpect(jsonPath("$.phoneNumber").value("12345"));
     }
 
     @Test
-    @DisplayName("Test saveDoctorController")
+    @DisplayName("save doctor returned doctor end status")
     void givenDoctor_whenAdd_thenStatus201() throws Exception {
         //given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
@@ -73,12 +73,12 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.position").value("Hirurg"))
                 .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
-                .andExpect(jsonPath("$.phoneNamber").value("12345"))
+                .andExpect(jsonPath("$.phoneNumber").value("12345"))
                 .andExpect(content().json(objectMapper.writeValueAsString(firstDoctor)));
     }
 
     @Test
-    @DisplayName("Test updateDoctorController")
+    @DisplayName("update doctor returned doctor end status")
     void givenDoctor_whenUpdate_thenStatus200() throws Exception {
         //given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
@@ -97,12 +97,12 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.position").value("Hirurg"))
                 .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
-                .andExpect(jsonPath("$.phoneNamber").value("12345"))
+                .andExpect(jsonPath("$.phoneNumber").value("12345"))
                 .andExpect(content().json(objectMapper.writeValueAsString(firstDoctor)));
     }
 
     @Test
-    @DisplayName("Test deleteDoctorController")
+    @DisplayName("delete doctor returned status")
     void givenDoctor_whenDeleteDoctor_thenStatus204() throws Exception {
         //given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
@@ -115,7 +115,7 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("Test getAllDoctorsController")
+    @DisplayName("get all doctors returned doctor end status")
     void givenDoctors_whenGetDoctors_thenStatus200() throws Exception {
         //given
         List<Doctor> doctors = new ArrayList<>();
