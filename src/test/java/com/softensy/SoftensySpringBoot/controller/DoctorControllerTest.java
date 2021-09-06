@@ -44,8 +44,6 @@ class DoctorControllerTest {
         //given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
-        controller = new DoctorController(doctorService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         //when
         when(doctorService.getDoctorById(1l)).thenReturn(Optional.of(firstDoctor));
         //then
@@ -66,8 +64,6 @@ class DoctorControllerTest {
         //given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
-        controller = new DoctorController(doctorService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         //when
         when(doctorService.saveDoctor(firstDoctor)).thenReturn(firstDoctor);
         //then
@@ -82,8 +78,6 @@ class DoctorControllerTest {
         //given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
-        controller = new DoctorController(doctorService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         //when
         when(doctorService.updateDoctor(firstDoctor)).thenReturn(firstDoctor);
         //then
@@ -98,8 +92,6 @@ class DoctorControllerTest {
         //given
         Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
         firstDoctor.setId(1);
-        controller = new DoctorController(doctorService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         //when
         when(doctorService.getDoctorById(1l)).thenReturn(Optional.of(firstDoctor));
         //then
@@ -117,8 +109,6 @@ class DoctorControllerTest {
         secondDoctor.setId(2);
         doctors.add(firstDoctor);
         doctors.add(secondDoctor);
-        controller = new DoctorController(doctorService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         //when
         when(doctorService.getAllDoctors()).thenReturn(doctors);
         //then

@@ -40,8 +40,6 @@ class PatientControllerTest {
         //given
         Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         patient.setId(1);
-        controller = new PatientController(patientService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         //when
         when(patientService.getPatientById(1l)).thenReturn(Optional.of(patient));
         //then
@@ -62,8 +60,6 @@ class PatientControllerTest {
         //given
         Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         patient.setId(1);
-        controller = new PatientController(patientService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         //when
         when(patientService.savePatient(patient)).thenReturn(patient);
         //then
@@ -78,8 +74,6 @@ class PatientControllerTest {
         //given
         Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         patient.setId(1);
-        controller = new PatientController(patientService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         //when
         when(patientService.updatePatient(patient)).thenReturn(patient);
         //then
@@ -94,8 +88,6 @@ class PatientControllerTest {
         //given
         Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         patient.setId(1);
-        controller = new PatientController(patientService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         //when
         when(patientService.getPatientById(1l)).thenReturn(Optional.of(patient));
         //then
@@ -113,8 +105,6 @@ class PatientControllerTest {
         secondPatient.setId(2);
         patients.add(firstPatient);
         patients.add(secondPatient);
-        controller = new PatientController(patientService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         //when
         when(patientService.getAllPatients()).thenReturn(patients);
         //then
