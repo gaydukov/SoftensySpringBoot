@@ -1,6 +1,7 @@
 package com.softensy.SoftensySpringBoot.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jdk.jfr.DataAmount;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -24,8 +25,7 @@ public class Doctor {
     @Column
     private long phoneNamber;
 
-    public Doctor() {
-    }
+    public Doctor() {}
 
     public Doctor(String firstName, String lastName, String middleName, String position, Date dateOfBirth, long phoneNamber) {
         this.firstName = firstName;
@@ -35,7 +35,6 @@ public class Doctor {
         this.dateOfBirth = dateOfBirth;
         this.phoneNamber = phoneNamber;
     }
-
 
     public long getId() {
         return id;

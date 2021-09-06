@@ -3,6 +3,7 @@ package com.softensy.SoftensySpringBoot.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softensy.SoftensySpringBoot.entity.Patient;
 import com.softensy.SoftensySpringBoot.service.PatientService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -32,16 +32,15 @@ class PatientControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private PatientService patientService;
-    private PatientController controller;
-
 
     @Test
+    @DisplayName("Test getPatientController")
     void givenId_whenGetPatient_thenStatus200andPatientReturned() throws Exception {
         //given
         Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         patient.setId(1);
         //when
-        when(patientService.getPatientById(1l)).thenReturn(Optional.of(patient));
+        when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
         mockMvc.perform(get("/patient/1"))
                 .andExpect(status().isOk())
@@ -54,8 +53,8 @@ class PatientControllerTest {
                 .andExpect(jsonPath("$.phoneNamber").value("12345"));
     }
 
-
     @Test
+    @DisplayName("Test savePatientController")
     void givenPatient_whenAdd_thenStatus201() throws Exception {
         //given
         Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
@@ -66,10 +65,19 @@ class PatientControllerTest {
         mockMvc.perform(post("/patient")
                         .content(objectMapper.writeValueAsString(patient))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.firstName").value("Ivan"))
+                .andExpect(jsonPath("$.lastName").value("Ivanov"))
+                .andExpect(jsonPath("$.middleName").value("Ivanovich"))
+                .andExpect(jsonPath("$.doctorId").value("1"))
+                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.phoneNamber").value("12345"))
+                .andExpect(content().json(objectMapper.writeValueAsString(patient)));
     }
 
     @Test
+    @DisplayName("Test updatePatientController")
     void givenPatient_whenUpdate_thenStatus200() throws Exception {
         //given
         Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
@@ -80,22 +88,32 @@ class PatientControllerTest {
         mockMvc.perform(put("/patient")
                         .content(objectMapper.writeValueAsString(patient))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.firstName").value("Ivan"))
+                .andExpect(jsonPath("$.lastName").value("Ivanov"))
+                .andExpect(jsonPath("$.middleName").value("Ivanovich"))
+                .andExpect(jsonPath("$.doctorId").value("1"))
+                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.phoneNamber").value("12345"))
+                .andExpect(content().json(objectMapper.writeValueAsString(patient)));
     }
 
     @Test
+    @DisplayName("Test getAllPatientController")
     void givenPatient_whenDeletePatient_thenStatus204() throws Exception {
         //given
         Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         patient.setId(1);
         //when
-        when(patientService.getPatientById(1l)).thenReturn(Optional.of(patient));
+        when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
         mockMvc.perform(delete("/patient/1"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
+    @DisplayName("Test deletePatientController")
     void givenPatients_whenGetPatients_thenStatus200andPatientsReturned() throws Exception {
         //given
         List<Patient> patients = new ArrayList<>();
@@ -112,5 +130,4 @@ class PatientControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(Arrays.asList(firstPatient, secondPatient))));
     }
-
 }

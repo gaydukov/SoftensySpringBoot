@@ -3,6 +3,7 @@ package com.softensy.SoftensySpringBoot.service.serviceImpl;
 import com.softensy.SoftensySpringBoot.entity.Patient;
 import com.softensy.SoftensySpringBoot.repository.PatientRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,17 +18,16 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class PatientServiceImplTest {
-
     @Autowired
     private PatientServiceImpl patientService;
-
     @MockBean
     private PatientRepository patientRepository;
 
     @Test
+    @DisplayName("Test getAllPatients")
     void givenPatients_whenGetAllPatients_thenReturnAllPatients() {
-        List<Patient> expectedListPatients = new ArrayList<>();
         // before
+        List<Patient> expectedListPatients = new ArrayList<>();
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         firstPatient.setId(1);
         Patient secondPatient = new Patient("Petr", "Petrov", "Petrov", 2, Date.valueOf("1988-07-19"), 54321L);
@@ -45,21 +45,23 @@ class PatientServiceImplTest {
     }
 
     @Test
+    @DisplayName("Test getPatientById")
     void givenPatient_whenGetPatient_thenReturnPatient() {
         // before
         Patient expectedPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         expectedPatient.setId(1);
         // when
-        when(patientRepository.findById(1l)).thenReturn(Optional.of(expectedPatient));
-        Patient actualPatient = patientService.getPatientById(1l).get();
+        when(patientRepository.findById(1L)).thenReturn(Optional.of(expectedPatient));
+        Patient actualPatient = patientService.getPatientById(1L).get();
         //then
         Assertions.assertEquals(expectedPatient, actualPatient);
         Assertions.assertNotNull(expectedPatient);
-        verify(patientRepository).findById(1l);
-        verify(patientRepository, times(1)).findById(1l);
+        verify(patientRepository).findById(1L);
+        verify(patientRepository, times(1)).findById(1L);
     }
 
     @Test
+    @DisplayName("Test savePatient")
     void givenPatient_whenAddPatient_thenReturnPatientAndVerifyPatientSave() {
         // before
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
@@ -77,6 +79,7 @@ class PatientServiceImplTest {
     }
 
     @Test
+    @DisplayName("Test updatePatient")
     void givenPatient_whenUpdatePatient_thenReturnPatientAndVerifyPatientUpdate() {
         // before
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
@@ -94,6 +97,7 @@ class PatientServiceImplTest {
     }
 
     @Test
+    @DisplayName("Test deletePatient")
     void givenPatient_whenDeletePatient_thenVerifyPatientDelete() {
         Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
         firstPatient.setId(1);

@@ -12,8 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
-
-
     private final PatientService patientService;
 
     @Autowired
@@ -27,15 +25,15 @@ public class PatientController {
     }
 
     @PostMapping
-    public ResponseEntity<Patient> savePatient(@RequestBody  Patient patient) {
+    public ResponseEntity<Patient> savePatient(@RequestBody Patient patient) {
         patientService.savePatient(patient);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(patient, HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient) {
         patientService.updatePatient(patient);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(patient, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "{id}")
@@ -46,7 +44,6 @@ public class PatientController {
 
     @GetMapping
     public ResponseEntity<List<Patient>> getAllPatients() {
-
         return new ResponseEntity<>(patientService.getAllPatients(), HttpStatus.OK);
     }
 }

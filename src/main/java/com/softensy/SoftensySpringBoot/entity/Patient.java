@@ -8,7 +8,6 @@ import java.sql.Date;
 @Entity
 @Table
 public class Patient {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -26,8 +25,7 @@ public class Patient {
     @Column
     private long phoneNamber;
 
-    public Patient() {
-    }
+    public Patient() {}
 
     public Patient(String firstName, String lastName, String middleName, long doctorId, Date dateOfBirth, long phoneNamber) {
         this.firstName = firstName;
