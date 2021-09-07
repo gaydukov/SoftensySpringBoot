@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.sql.Date;
+
 @Entity
 @Table
 public class Doctor {
@@ -19,23 +20,22 @@ public class Doctor {
     @Column
     private String position;
     @Column
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date dateOfBirth;
     @Column
-    private long phoneNamber;
+    private long phoneNumber;
 
     public Doctor() {
     }
 
-    public Doctor(String firstName, String lastName, String middleName, String position, Date dateOfBirth, long phoneNamber) {
+    public Doctor(String firstName, String lastName, String middleName, String position, Date dateOfBirth, long phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleName = middleName;
         this.position = position;
         this.dateOfBirth = dateOfBirth;
-        this.phoneNamber = phoneNamber;
+        this.phoneNumber = phoneNumber;
     }
-
 
     public long getId() {
         return id;
@@ -85,12 +85,12 @@ public class Doctor {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public long getPhoneNamber() {
-        return phoneNamber;
+    public long getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhoneNamber(long phoneNamber) {
-        this.phoneNamber = phoneNamber;
+    public void setPhoneNumber(long phoneNamber) {
+        this.phoneNumber = phoneNamber;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class Doctor {
                 ", middleName='" + middleName + '\'' +
                 ", position='" + position + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
-                ", phoneNamber=" + phoneNamber +
+                ", phoneNumber=" + phoneNumber +
                 '}';
     }
 }

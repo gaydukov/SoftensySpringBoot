@@ -12,8 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/doctor")
 public class DoctorController {
-
-
     private final DoctorService doctorService;
 
     @Autowired
@@ -27,15 +25,15 @@ public class DoctorController {
     }
 
     @PostMapping
-    public ResponseEntity<Doctor> saveDoctor(@RequestBody  Doctor doctor) {
+    public ResponseEntity<Doctor> saveDoctor(@RequestBody Doctor doctor) {
         doctorService.saveDoctor(doctor);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(doctor, HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<Doctor> updateDoctor(@RequestBody Doctor doctor) {
         doctorService.updateDoctor(doctor);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(doctor, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "{id}")
@@ -46,7 +44,6 @@ public class DoctorController {
 
     @GetMapping
     public ResponseEntity<List<Doctor>> getAllDoctors() {
-
         return new ResponseEntity<>(doctorService.getAllDoctors(), HttpStatus.OK);
     }
 }

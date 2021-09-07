@@ -14,12 +14,8 @@ import java.util.Optional;
 
 @Service
 public class PatientServiceImpl implements PatientService {
-
-
-
-
-
     private final PatientRepository patientRepository;
+
     @Autowired
     public PatientServiceImpl(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;
@@ -28,7 +24,6 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public List<Patient> getAllPatients() {
         List<Patient> patient = patientRepository.findAll();
-
         if (patient.isEmpty()) {
             return (List<Patient>) new ResponseEntity<Patient>(HttpStatus.NOT_FOUND);
         }
@@ -38,44 +33,35 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Optional<Patient> getPatientById(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
-
         if (patient.isEmpty()) {
-            return patient;
+            ResponseEntity rs = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return patient;
     }
 
     @Override
-    public void savePatient(Patient patient) {
+    public Patient savePatient(Patient patient) {
         if (patient == null) {
-            ResponseEntity rs= new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
+            ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        else
-            patientRepository.saveAndFlush(patient);
-
+        return patientRepository.save(patient);
     }
 
     @Override
-    public void updatePatient(Patient patient) {
+    public Patient updatePatient(Patient patient) {
         if (patient == null) {
-            ResponseEntity rs= new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        else
-            patientRepository.saveAndFlush(patient);
-
+        return patientRepository.saveAndFlush(patient);
     }
 
     @Override
     public void deletePatient(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
-
         if (patient.isEmpty()) {
-            ResponseEntity rs= new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        else
+            ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
             patientRepository.deleteById(id);
-
-
+        }
     }
 }

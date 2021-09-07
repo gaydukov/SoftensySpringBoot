@@ -8,9 +8,13 @@ import java.util.Optional;
 public interface DoctorService {
 
     public List<Doctor> getAllDoctors();
+
     public Optional<Doctor> getDoctorById(Long id);
-    public void saveDoctor(Doctor doctor);
-    public void updateDoctor(Doctor doctor);
+
+    public Doctor saveDoctor(Doctor doctor);
+
+    public Doctor updateDoctor(Doctor doctor);
+
     public void deleteDoctor(Long id);
 
 
