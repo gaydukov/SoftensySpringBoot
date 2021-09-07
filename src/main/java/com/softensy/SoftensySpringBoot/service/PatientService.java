@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface PatientService {
 
-    public List<Patient> getAllPatients();
+    List<Patient> getAllPatients();
 
-    public Optional<Patient> getPatientById(Long id);
+    Optional<Patient> getPatientById(Long id);
 
-    public Patient savePatient(Patient patient);
+    Patient savePatient(Patient patient);
 
-    public Patient updatePatient(Patient patient);
+    Patient updatePatient(Patient patient);
 
-    public void deletePatient(Long id);
+    void deletePatient(Long id);
 }

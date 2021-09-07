@@ -3,7 +3,6 @@ package com.softensy.SoftensySpringBoot.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softensy.SoftensySpringBoot.entity.Doctor;
 import com.softensy.SoftensySpringBoot.service.DoctorService;
-import com.softensy.SoftensySpringBoot.service.serviceImpl.DoctorServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +44,7 @@ class DoctorControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -73,7 +71,7 @@ class DoctorControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -104,7 +102,7 @@ class DoctorControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -135,7 +133,7 @@ class DoctorControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -156,7 +154,7 @@ class DoctorControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         Doctor secondDoctor = Doctor.builder()
@@ -165,7 +163,7 @@ class DoctorControllerTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .position("Terapevt")
-                .dateOfBirth(LocalDate.of(1988,07,19))
+                .dateOfBirth(LocalDate.of(1988, 07, 19))
                 .phoneNumber("54321")
                 .build();
         doctors.add(firstDoctor);

@@ -6,8 +6,8 @@ import com.softensy.SoftensySpringBoot.repository.PatientRepository;
 import com.softensy.SoftensySpringBoot.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +25,7 @@ public class PatientServiceImpl implements PatientService {
     public List<Patient> getAllPatients() {
         List<Patient> patient = patientRepository.findAll();
         if (patient.isEmpty()) {
-            throw new NullPointerException();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Patients are not found");
         }
         return patient;
     }
@@ -34,7 +34,7 @@ public class PatientServiceImpl implements PatientService {
     public Optional<Patient> getPatientById(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
         if (patient.isEmpty()) {
-            throw new NullPointerException();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient is not found");
         }
         return patient;
     }
@@ -42,7 +42,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient savePatient(Patient patient) {
         if (patient == null) {
-            throw new NullPointerException();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Patient is empty");
         }
         return patientRepository.save(patient);
     }
@@ -50,7 +50,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient updatePatient(Patient patient) {
         if (patient == null) {
-            throw new NullPointerException();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Patient is empty");
         }
         return patientRepository.saveAndFlush(patient);
     }
@@ -59,7 +59,7 @@ public class PatientServiceImpl implements PatientService {
     public void deletePatient(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
         if (patient.isEmpty()) {
-            throw new NullPointerException();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Patient is not found");
         } else {
             patientRepository.deleteById(id);
         }

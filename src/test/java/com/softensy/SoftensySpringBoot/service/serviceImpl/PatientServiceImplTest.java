@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ class PatientServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         Patient secondPatient = Patient.builder()
@@ -44,7 +43,7 @@ class PatientServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988,07,19))
+                .dateOfBirth(LocalDate.of(1988, 07, 19))
                 .phoneNumber("54321")
                 .build();
         expectedListPatients.add(firstPatient);
@@ -70,7 +69,7 @@ class PatientServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         // when
@@ -93,7 +92,7 @@ class PatientServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         Patient secondPatient = Patient.builder()
@@ -102,7 +101,7 @@ class PatientServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988,07,19))
+                .dateOfBirth(LocalDate.of(1988, 07, 19))
                 .phoneNumber("54321")
                 .build();
         // when
@@ -127,7 +126,7 @@ class PatientServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         Patient secondPatient = Patient.builder()
@@ -136,7 +135,7 @@ class PatientServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988,07,19))
+                .dateOfBirth(LocalDate.of(1988, 07, 19))
                 .phoneNumber("54321")
                 .build();
         // when
@@ -160,7 +159,7 @@ class PatientServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         // when

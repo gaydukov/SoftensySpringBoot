@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +43,7 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -71,7 +70,7 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -101,7 +100,7 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -131,7 +130,7 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -152,7 +151,7 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987,05,12))
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
                 .phoneNumber("12345")
                 .build();
         Patient secondPatient = Patient.builder()
@@ -161,7 +160,7 @@ class PatientControllerTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988,07,19))
+                .dateOfBirth(LocalDate.of(1988, 07, 19))
                 .phoneNumber("54321")
                 .build();
         patients.add(firstPatient);
