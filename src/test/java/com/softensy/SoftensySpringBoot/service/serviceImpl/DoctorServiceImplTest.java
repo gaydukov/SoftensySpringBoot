@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +35,8 @@ class DoctorServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(45632147)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("45632147")
                 .build();
         Doctor secondDoctor = Doctor.builder()
                 .id(2)
@@ -43,8 +44,8 @@ class DoctorServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .position("Terapevt")
-                .dateOfBirth(Date.valueOf("1988-07-19"))
-                .phoneNumber(54321L)
+                .dateOfBirth(LocalDate.of(1988,07,19))
+                .phoneNumber("54321")
                 .build();
         expectedDoctors.add(firstDoctor);
         expectedDoctors.add(secondDoctor);
@@ -69,8 +70,8 @@ class DoctorServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(45632147)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("45632147")
                 .build();
         // when
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(expectedDoctor));
@@ -92,8 +93,8 @@ class DoctorServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(45632147)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("45632147")
                 .build();
         Doctor secondDoctor = Doctor.builder()
                 .id(2)
@@ -101,8 +102,8 @@ class DoctorServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .position("Terapevt")
-                .dateOfBirth(Date.valueOf("1988-07-19"))
-                .phoneNumber(54321L)
+                .dateOfBirth(LocalDate.of(1988,07,19))
+                .phoneNumber("54321")
                 .build();
         // when
         when(doctorRepository.save(secondDoctor)).thenReturn(firstDoctor);
@@ -126,8 +127,8 @@ class DoctorServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(45632147)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("45632147")
                 .build();
         Doctor secondDoctor = Doctor.builder()
                 .id(2)
@@ -135,8 +136,8 @@ class DoctorServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .position("Terapevt")
-                .dateOfBirth(Date.valueOf("1988-07-19"))
-                .phoneNumber(54321L)
+                .dateOfBirth(LocalDate.of(1988,07,19))
+                .phoneNumber("54321")
                 .build();
         // when
         when(doctorRepository.saveAndFlush(secondDoctor)).thenReturn(firstDoctor);
@@ -160,10 +161,11 @@ class DoctorServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(45632147)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("45632147")
                 .build();
         // when
+        when(doctorRepository.findById(1L)).thenReturn(Optional.of(firstDoctor));
         doctorRepository.delete(firstDoctor);
         doctorService.deleteDoctor(firstDoctor.getId());
         //then

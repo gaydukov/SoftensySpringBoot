@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,8 +44,8 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345L)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         //when
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
@@ -56,7 +57,7 @@ class PatientControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.doctorId").value("1"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"));
     }
 
@@ -70,8 +71,8 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345L)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         //when
         when(patientService.savePatient(patient)).thenReturn(patient);
@@ -85,7 +86,7 @@ class PatientControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.doctorId").value("1"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"))
                 .andExpect(content().json(objectMapper.writeValueAsString(patient)));
     }
@@ -100,8 +101,8 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345L)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         //when
         when(patientService.updatePatient(patient)).thenReturn(patient);
@@ -115,7 +116,7 @@ class PatientControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.doctorId").value("1"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"))
                 .andExpect(content().json(objectMapper.writeValueAsString(patient)));
     }
@@ -130,8 +131,8 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345L)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         //when
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
@@ -151,8 +152,8 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345L)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         Patient secondPatient = Patient.builder()
                 .id(2)
@@ -160,8 +161,8 @@ class PatientControllerTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1988-07-19"))
-                .phoneNumber(54321L)
+                .dateOfBirth(LocalDate.of(1988,07,19))
+                .phoneNumber("54321")
                 .build();
         patients.add(firstPatient);
         patients.add(secondPatient);

@@ -3,6 +3,7 @@ package com.softensy.SoftensySpringBoot.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softensy.SoftensySpringBoot.entity.Doctor;
 import com.softensy.SoftensySpringBoot.service.DoctorService;
+import com.softensy.SoftensySpringBoot.service.serviceImpl.DoctorServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +15,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -43,8 +46,8 @@ class DoctorControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         //when
         when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(firstDoctor));
@@ -56,7 +59,7 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.position").value("Hirurg"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"));
     }
 
@@ -70,11 +73,11 @@ class DoctorControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         //when
-        when(doctorService.saveDoctor(firstDoctor)).thenReturn(firstDoctor);
+        when(doctorService.saveDoctor(any(Doctor.class))).thenReturn(firstDoctor);
         //then
         mockMvc.perform(post("/doctor")
                         .content(objectMapper.writeValueAsString(firstDoctor))
@@ -86,7 +89,7 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.position").value("Hirurg"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"))
                 .andExpect(content().json(objectMapper.writeValueAsString(firstDoctor)));
     }
@@ -101,11 +104,11 @@ class DoctorControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         //when
-        when(doctorService.updateDoctor(firstDoctor)).thenReturn(firstDoctor);
+        when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(firstDoctor);
         //then
         mockMvc.perform(put("/doctor")
                         .content(objectMapper.writeValueAsString(firstDoctor))
@@ -117,7 +120,7 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.position").value("Hirurg"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"))
                 .andExpect(content().json(objectMapper.writeValueAsString(firstDoctor)));
     }
@@ -132,8 +135,8 @@ class DoctorControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         //when
         when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(firstDoctor));
@@ -153,8 +156,8 @@ class DoctorControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         Doctor secondDoctor = Doctor.builder()
                 .id(2)
@@ -162,8 +165,8 @@ class DoctorControllerTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .position("Terapevt")
-                .dateOfBirth(Date.valueOf("1988-07-19"))
-                .phoneNumber(54321L)
+                .dateOfBirth(LocalDate.of(1988,07,19))
+                .phoneNumber("54321")
                 .build();
         doctors.add(firstDoctor);
         doctors.add(secondDoctor);

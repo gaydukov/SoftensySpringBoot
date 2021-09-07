@@ -4,8 +4,6 @@ import com.softensy.SoftensySpringBoot.entity.Doctor;
 import com.softensy.SoftensySpringBoot.repository.DoctorRepository;
 import com.softensy.SoftensySpringBoot.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,46 +19,45 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<Doctor> getAllDoctors() {
+    public List<Doctor> getAllDoctors() throws NullPointerException {
         List<Doctor> doctors = doctorRepository.findAll();
         if (doctors.isEmpty()) {
-            return (List<Doctor>) new ResponseEntity<Doctor>(HttpStatus.NOT_FOUND);
+            throw new NullPointerException();
         }
         return doctors;
     }
 
     @Override
-    public Optional<Doctor> getDoctorById(Long id) {
+    public Optional<Doctor> getDoctorById(Long id) throws NullPointerException {
         Optional<Doctor> doctor = doctorRepository.findById(id);
         if (doctor.isEmpty()) {
-            ResponseEntity rs = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NullPointerException();
         }
         return doctor;
     }
 
     @Override
-    public Doctor saveDoctor(Doctor doctor) {
+    public Doctor saveDoctor(Doctor doctor) throws NullPointerException {
         if (doctor == null) {
-            ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new NullPointerException();
         }
         return doctorRepository.save(doctor);
     }
 
     @Override
-    public Doctor updateDoctor(Doctor doctor) {
+    public Doctor updateDoctor(Doctor doctor) throws NullPointerException {
         if (doctor == null) {
-            ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new NullPointerException();
         }
         return doctorRepository.saveAndFlush(doctor);
     }
 
     @Override
-    public void deleteDoctor(Long id) {
+    public void deleteDoctor(Long id) throws NullPointerException {
         Optional<Doctor> doctor = doctorRepository.findById(id);
         if (doctor.isEmpty()) {
-            ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
+            throw new NullPointerException();
+            }
             doctorRepository.deleteById(id);
-        }
     }
 }

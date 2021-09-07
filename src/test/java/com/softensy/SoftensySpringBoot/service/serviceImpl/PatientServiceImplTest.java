@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +35,8 @@ class PatientServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345L)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         Patient secondPatient = Patient.builder()
                 .id(2)
@@ -43,8 +44,8 @@ class PatientServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1988-07-19"))
-                .phoneNumber(54321L)
+                .dateOfBirth(LocalDate.of(1988,07,19))
+                .phoneNumber("54321")
                 .build();
         expectedListPatients.add(firstPatient);
         expectedListPatients.add(secondPatient);
@@ -69,8 +70,8 @@ class PatientServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345L)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         // when
         when(patientRepository.findById(1L)).thenReturn(Optional.of(expectedPatient));
@@ -92,8 +93,8 @@ class PatientServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345L)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         Patient secondPatient = Patient.builder()
                 .id(2)
@@ -101,8 +102,8 @@ class PatientServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1988-07-19"))
-                .phoneNumber(54321L)
+                .dateOfBirth(LocalDate.of(1988,07,19))
+                .phoneNumber("54321")
                 .build();
         // when
         when(patientRepository.save(secondPatient)).thenReturn(firstPatient);
@@ -126,8 +127,8 @@ class PatientServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345L)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         Patient secondPatient = Patient.builder()
                 .id(2)
@@ -135,8 +136,8 @@ class PatientServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1988-07-19"))
-                .phoneNumber(54321L)
+                .dateOfBirth(LocalDate.of(1988,07,19))
+                .phoneNumber("54321")
                 .build();
         // when
         when(patientRepository.saveAndFlush(secondPatient)).thenReturn(firstPatient);
@@ -159,10 +160,11 @@ class PatientServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(Date.valueOf("1987-05-12"))
-                .phoneNumber(12345L)
+                .dateOfBirth(LocalDate.of(1987,05,12))
+                .phoneNumber("12345")
                 .build();
         // when
+        when(patientRepository.findById(1L)).thenReturn(Optional.of(firstPatient));
         patientRepository.delete(firstPatient);
         patientService.deletePatient(firstPatient.getId());
         //then

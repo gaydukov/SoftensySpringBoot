@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -21,29 +22,52 @@ public class PatientController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Patient> getPatient(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(patientService.getPatientById(id).get(), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(patientService.getPatientById(id).get(), HttpStatus.OK);
+        }catch (NullPointerException exception){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Patient is not found",exception);
+        }
+
     }
 
     @PostMapping
     public ResponseEntity<Patient> savePatient(@RequestBody Patient patient) {
-        patientService.savePatient(patient);
-        return new ResponseEntity<>(patient, HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(patientService.savePatient(patient), HttpStatus.CREATED);
+        }catch (NullPointerException exception){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Patient is empty",exception);
+        }
+
     }
 
     @PutMapping
     public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient) {
-        patientService.updatePatient(patient);
-        return new ResponseEntity<>(patient, HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(patientService.updatePatient(patient), HttpStatus.OK);
+        }catch (NullPointerException exception){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Patient is empty",exception);
+        }
+
     }
 
     @DeleteMapping(value = "{id}")
     public ResponseEntity<Patient> deletePatient(@PathVariable("id") Long id) {
-        patientService.deletePatient(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            patientService.deletePatient(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (NullPointerException exception){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Patient is not found");
+        }
+
     }
 
     @GetMapping
     public ResponseEntity<List<Patient>> getAllPatients() {
-        return new ResponseEntity<>(patientService.getAllPatients(), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(patientService.getAllPatients(), HttpStatus.OK);
+        }catch (NullPointerException exception){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Patients are not found",exception);
+        }
+
     }
 }

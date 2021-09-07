@@ -25,7 +25,7 @@ public class PatientServiceImpl implements PatientService {
     public List<Patient> getAllPatients() {
         List<Patient> patient = patientRepository.findAll();
         if (patient.isEmpty()) {
-            return (List<Patient>) new ResponseEntity<Patient>(HttpStatus.NOT_FOUND);
+            throw new NullPointerException();
         }
         return patient;
     }
@@ -34,7 +34,7 @@ public class PatientServiceImpl implements PatientService {
     public Optional<Patient> getPatientById(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
         if (patient.isEmpty()) {
-            ResponseEntity rs = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NullPointerException();
         }
         return patient;
     }
@@ -42,7 +42,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient savePatient(Patient patient) {
         if (patient == null) {
-            ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new NullPointerException();
         }
         return patientRepository.save(patient);
     }
@@ -50,7 +50,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient updatePatient(Patient patient) {
         if (patient == null) {
-            ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new NullPointerException();
         }
         return patientRepository.saveAndFlush(patient);
     }
@@ -59,7 +59,7 @@ public class PatientServiceImpl implements PatientService {
     public void deletePatient(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
         if (patient.isEmpty()) {
-            ResponseEntity rs = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new NullPointerException();
         } else {
             patientRepository.deleteById(id);
         }
