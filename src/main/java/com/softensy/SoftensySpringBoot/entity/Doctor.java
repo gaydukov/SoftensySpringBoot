@@ -1,108 +1,41 @@
 package com.softensy.SoftensySpringBoot.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
 @Table
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
+@Builder
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column
+    @NonNull
     private String firstName;
     @Column
+    @NonNull
     private String lastName;
     @Column
+    @NonNull
     private String middleName;
     @Column
+    @NonNull
     private String position;
     @Column
+    @NonNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date dateOfBirth;
     @Column
+    @NonNull
     private long phoneNumber;
-
-    public Doctor() {
-    }
-
-    public Doctor(String firstName, String lastName, String middleName, String position, Date dateOfBirth, long phoneNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.middleName = middleName;
-        this.position = position;
-        this.dateOfBirth = dateOfBirth;
-        this.phoneNumber = phoneNumber;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public long getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(long phoneNamber) {
-        this.phoneNumber = phoneNamber;
-    }
-
-    @Override
-    public String toString() {
-        return "Doctor{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", position='" + position + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", phoneNumber=" + phoneNumber +
-                '}';
-    }
 }

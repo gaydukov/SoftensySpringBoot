@@ -37,8 +37,15 @@ class DoctorControllerTest {
     @DisplayName("get doctor by id returned doctor end status")
     void givenId_whenGetDoctor_thenStatus200andDoctorReturned() throws Exception {
         //given
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345)
+                .build();
         //when
         when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(firstDoctor));
         //then
@@ -57,8 +64,15 @@ class DoctorControllerTest {
     @DisplayName("save doctor returned doctor end status")
     void givenDoctor_whenAdd_thenStatus201() throws Exception {
         //given
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345)
+                .build();
         //when
         when(doctorService.saveDoctor(firstDoctor)).thenReturn(firstDoctor);
         //then
@@ -81,8 +95,15 @@ class DoctorControllerTest {
     @DisplayName("update doctor returned doctor end status")
     void givenDoctor_whenUpdate_thenStatus200() throws Exception {
         //given
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345)
+                .build();
         //when
         when(doctorService.updateDoctor(firstDoctor)).thenReturn(firstDoctor);
         //then
@@ -105,8 +126,15 @@ class DoctorControllerTest {
     @DisplayName("delete doctor returned status")
     void givenDoctor_whenDeleteDoctor_thenStatus204() throws Exception {
         //given
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345)
+                .build();
         //when
         when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(firstDoctor));
         //then
@@ -119,10 +147,24 @@ class DoctorControllerTest {
     void givenDoctors_whenGetDoctors_thenStatus200() throws Exception {
         //given
         List<Doctor> doctors = new ArrayList<>();
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
-        Doctor secondDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
-        secondDoctor.setId(2);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345)
+                .build();
+        Doctor secondDoctor = Doctor.builder()
+                .id(2)
+                .firstName("Petr")
+                .lastName("Petrov")
+                .middleName("Petrov")
+                .position("Terapevt")
+                .dateOfBirth(Date.valueOf("1988-07-19"))
+                .phoneNumber(54321L)
+                .build();
         doctors.add(firstDoctor);
         doctors.add(secondDoctor);
         //when

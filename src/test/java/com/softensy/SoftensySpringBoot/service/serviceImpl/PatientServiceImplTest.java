@@ -28,9 +28,24 @@ class PatientServiceImplTest {
     void givenPatients_whenGetAllPatients_thenReturnAllPatients() {
         // before
         List<Patient> expectedListPatients = new ArrayList<>();
-        Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        firstPatient.setId(1);
-        Patient secondPatient = new Patient("Petr", "Petrov", "Petrov", 2, Date.valueOf("1988-07-19"), 54321L);
+        Patient firstPatient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345L)
+                .build();
+        Patient secondPatient = Patient.builder()
+                .id(2)
+                .firstName("Petr")
+                .lastName("Petrov")
+                .middleName("Petrov")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1988-07-19"))
+                .phoneNumber(54321L)
+                .build();
         expectedListPatients.add(firstPatient);
         expectedListPatients.add(secondPatient);
         // when
@@ -48,8 +63,15 @@ class PatientServiceImplTest {
     @DisplayName("get patient by id returned patient")
     void givenPatient_whenGetPatient_thenReturnPatient() {
         // before
-        Patient expectedPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        expectedPatient.setId(1);
+        Patient expectedPatient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345L)
+                .build();
         // when
         when(patientRepository.findById(1L)).thenReturn(Optional.of(expectedPatient));
         Patient actualPatient = patientService.getPatientById(1L).get();
@@ -64,9 +86,24 @@ class PatientServiceImplTest {
     @DisplayName("save patient by id returned patient")
     void givenPatient_whenAddPatient_thenReturnPatientAndVerifyPatientSave() {
         // given
-        Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        firstPatient.setId(1);
-        Patient secondPatient = new Patient("Petr", "Petrov", "Petrov", 1, Date.valueOf("1988-07-19"), 54321L);
+        Patient firstPatient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345L)
+                .build();
+        Patient secondPatient = Patient.builder()
+                .id(2)
+                .firstName("Petr")
+                .lastName("Petrov")
+                .middleName("Petrov")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1988-07-19"))
+                .phoneNumber(54321L)
+                .build();
         // when
         when(patientRepository.save(secondPatient)).thenReturn(firstPatient);
         Patient actualPatient = patientService.savePatient(secondPatient);
@@ -83,9 +120,24 @@ class PatientServiceImplTest {
     @DisplayName("update patient by id returned patient")
     void givenPatient_whenUpdatePatient_thenReturnPatientAndVerifyPatientUpdate() {
         // given
-        Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        firstPatient.setId(1);
-        Patient secondPatient = new Patient("Petr", "Petrov", "Petrov", 1, Date.valueOf("1988-07-19"), 54321L);
+        Patient firstPatient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345L)
+                .build();
+        Patient secondPatient = Patient.builder()
+                .id(2)
+                .firstName("Petr")
+                .lastName("Petrov")
+                .middleName("Petrov")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1988-07-19"))
+                .phoneNumber(54321L)
+                .build();
         // when
         when(patientRepository.saveAndFlush(secondPatient)).thenReturn(firstPatient);
         Patient actualPatient = patientService.updatePatient(secondPatient);
@@ -101,18 +153,20 @@ class PatientServiceImplTest {
     @Test
     @DisplayName("delete patient")
     void givenPatient_whenDeletePatient_thenVerifyPatientDelete() {
-        Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        firstPatient.setId(1);
+        Patient firstPatient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345L)
+                .build();
         // when
         patientRepository.delete(firstPatient);
-        boolean isPatientDelete = true;
-        if (firstPatient == null) {
-            isPatientDelete = false;
-        }
         patientService.deletePatient(firstPatient.getId());
         //then
         Assertions.assertNotNull(firstPatient);
-        Assertions.assertTrue(isPatientDelete);
         verify(patientRepository, times(1)).delete(firstPatient);
         verify(patientRepository).delete(firstPatient);
     }

@@ -28,9 +28,24 @@ class DoctorServiceImplTest {
     void givenDoctors_whenGetAllDoctors_thenReturnAllDoctors() {
         // given
         List<Doctor> expectedDoctors = new ArrayList<>();
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
-        Doctor secondDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(45632147)
+                .build();
+        Doctor secondDoctor = Doctor.builder()
+                .id(2)
+                .firstName("Petr")
+                .lastName("Petrov")
+                .middleName("Petrov")
+                .position("Terapevt")
+                .dateOfBirth(Date.valueOf("1988-07-19"))
+                .phoneNumber(54321L)
+                .build();
         expectedDoctors.add(firstDoctor);
         expectedDoctors.add(secondDoctor);
         // when
@@ -48,8 +63,15 @@ class DoctorServiceImplTest {
     @DisplayName("get doctor by id returned doctor")
     void givenDoctor_whenGetDoctor_thenReturnDoctor() {
         // given
-        Doctor expectedDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345);
-        expectedDoctor.setId(1L);
+        Doctor expectedDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(45632147)
+                .build();
         // when
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(expectedDoctor));
         Doctor actualDoctor = doctorService.getDoctorById(1L).get();
@@ -64,9 +86,24 @@ class DoctorServiceImplTest {
     @DisplayName("save doctor returned doctor")
     void givenDoctor_whenAddDoctor_thenReturnDoctorAndVerifyDoctorSave() {
         // given
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
-        Doctor secondDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(45632147)
+                .build();
+        Doctor secondDoctor = Doctor.builder()
+                .id(2)
+                .firstName("Petr")
+                .lastName("Petrov")
+                .middleName("Petrov")
+                .position("Terapevt")
+                .dateOfBirth(Date.valueOf("1988-07-19"))
+                .phoneNumber(54321L)
+                .build();
         // when
         when(doctorRepository.save(secondDoctor)).thenReturn(firstDoctor);
         Doctor actualDoctor = doctorService.saveDoctor(secondDoctor);
@@ -83,9 +120,24 @@ class DoctorServiceImplTest {
     @DisplayName("update doctor returned doctor")
     void givenDoctor_whenUpdateDoctor_thenReturnDoctorAndVerifyDoctorUpdate() {
         // given
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
-        Doctor secondDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(45632147)
+                .build();
+        Doctor secondDoctor = Doctor.builder()
+                .id(2)
+                .firstName("Petr")
+                .lastName("Petrov")
+                .middleName("Petrov")
+                .position("Terapevt")
+                .dateOfBirth(Date.valueOf("1988-07-19"))
+                .phoneNumber(54321L)
+                .build();
         // when
         when(doctorRepository.saveAndFlush(secondDoctor)).thenReturn(firstDoctor);
         Doctor actualDoctor = doctorService.updateDoctor(secondDoctor);
@@ -102,17 +154,19 @@ class DoctorServiceImplTest {
     @DisplayName("delete doctor")
     void givenDoctor_whenDeleteDoctor_thenVerifyDoctorDelete() {
         // given
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(45632147)
+                .build();
         // when
         doctorRepository.delete(firstDoctor);
-        boolean isDoctorDelete = true;
-        if (firstDoctor == null) {
-            isDoctorDelete = false;
-        }
         doctorService.deleteDoctor(firstDoctor.getId());
         //then
-        Assertions.assertTrue(isDoctorDelete);
         Assertions.assertNotNull(firstDoctor);
         verify(doctorRepository, times(1)).delete(firstDoctor);
         verify(doctorRepository).delete(firstDoctor);

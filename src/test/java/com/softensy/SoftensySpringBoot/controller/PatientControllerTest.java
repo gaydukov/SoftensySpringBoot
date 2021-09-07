@@ -37,8 +37,15 @@ class PatientControllerTest {
     @DisplayName("get patient by id returned doctor end status")
     void givenId_whenGetPatient_thenStatus200andPatientReturned() throws Exception {
         //given
-        Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        patient.setId(1);
+        Patient patient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345L)
+                .build();
         //when
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
@@ -57,8 +64,15 @@ class PatientControllerTest {
     @DisplayName("save patient returned doctor end status")
     void givenPatient_whenAdd_thenStatus201() throws Exception {
         //given
-        Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        patient.setId(1);
+        Patient patient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345L)
+                .build();
         //when
         when(patientService.savePatient(patient)).thenReturn(patient);
         //then
@@ -80,8 +94,15 @@ class PatientControllerTest {
     @DisplayName("update patient returned doctor end status")
     void givenPatient_whenUpdate_thenStatus200() throws Exception {
         //given
-        Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        patient.setId(1);
+        Patient patient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345L)
+                .build();
         //when
         when(patientService.updatePatient(patient)).thenReturn(patient);
         //then
@@ -103,8 +124,15 @@ class PatientControllerTest {
     @DisplayName("delete patient returned status")
     void givenPatient_whenDeletePatient_thenStatus204() throws Exception {
         //given
-        Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        patient.setId(1);
+        Patient patient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345L)
+                .build();
         //when
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
@@ -117,10 +145,24 @@ class PatientControllerTest {
     void givenPatients_whenGetPatients_thenStatus200andPatientsReturned() throws Exception {
         //given
         List<Patient> patients = new ArrayList<>();
-        Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        firstPatient.setId(1);
-        Patient secondPatient = new Patient("Petr", "Petrov", "Petrov", 2, Date.valueOf("1988-07-19"), 54321L);
-        secondPatient.setId(2);
+        Patient firstPatient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1987-05-12"))
+                .phoneNumber(12345L)
+                .build();
+        Patient secondPatient = Patient.builder()
+                .id(2)
+                .firstName("Petr")
+                .lastName("Petrov")
+                .middleName("Petrov")
+                .doctorId(1)
+                .dateOfBirth(Date.valueOf("1988-07-19"))
+                .phoneNumber(54321L)
+                .build();
         patients.add(firstPatient);
         patients.add(secondPatient);
         //when
