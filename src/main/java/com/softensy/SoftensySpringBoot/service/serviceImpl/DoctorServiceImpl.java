@@ -24,7 +24,7 @@ public class DoctorServiceImpl implements DoctorService {
     public List<Doctor> getAllDoctors() {
         List<Doctor> doctors = doctorRepository.findAll();
         if (doctors.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctors are not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctors not found");
         }
         return doctors;
     }
@@ -58,7 +58,7 @@ public class DoctorServiceImpl implements DoctorService {
     public void deleteDoctor(Long id) {
         Optional<Doctor> doctor = doctorRepository.findById(id);
         if (doctor.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Doctor is not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Doctor not found");
         }
         doctorRepository.deleteById(id);
     }

@@ -25,7 +25,7 @@ public class PatientServiceImpl implements PatientService {
     public List<Patient> getAllPatients() {
         List<Patient> patient = patientRepository.findAll();
         if (patient.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Patients are not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Patients not found");
         }
         return patient;
     }
@@ -34,7 +34,7 @@ public class PatientServiceImpl implements PatientService {
     public Optional<Patient> getPatientById(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
         if (patient.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient is not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient not found");
         }
         return patient;
     }
@@ -59,7 +59,7 @@ public class PatientServiceImpl implements PatientService {
     public void deletePatient(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
         if (patient.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Patient is not found");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Patient not found");
         } else {
             patientRepository.deleteById(id);
         }
