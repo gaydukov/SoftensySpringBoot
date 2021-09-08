@@ -25,7 +25,7 @@ class PatientServiceImplTest {
 
     @Test
     @DisplayName("get all patients returned list patients")
-    void givenPatients_whenGetAllPatients_thenReturnAllPatients() {
+    void givenPatientsWhenGetAllPatientsThenReturnAllPatients() {
         // before
         List<Patient> expectedListPatients = new ArrayList<>();
         Patient firstPatient = Patient.builder()
@@ -61,7 +61,7 @@ class PatientServiceImplTest {
 
     @Test
     @DisplayName("get patient by id returned patient")
-    void givenPatient_whenGetPatient_thenReturnPatient() {
+    void givenPatientWhenGetPatientThenReturnPatient() {
         // before
         Patient expectedPatient = Patient.builder()
                 .id(1)
@@ -84,7 +84,7 @@ class PatientServiceImplTest {
 
     @Test
     @DisplayName("save patient by id returned patient")
-    void givenPatient_whenAddPatient_thenReturnPatientAndVerifyPatientSave() {
+    void givenPatientWhenAddPatientThenReturnPatientAndVerifyPatientSave() {
         // given
         Patient firstPatient = Patient.builder()
                 .id(1)
@@ -118,7 +118,7 @@ class PatientServiceImplTest {
 
     @Test
     @DisplayName("update patient by id returned patient")
-    void givenPatient_whenUpdatePatient_thenReturnPatientAndVerifyPatientUpdate() {
+    void givenPatientWhenUpdatePatientThenReturnPatientAndVerifyPatientUpdate() {
         // given
         Patient firstPatient = Patient.builder()
                 .id(1)
@@ -151,8 +151,8 @@ class PatientServiceImplTest {
     }
 
     @Test
-    @DisplayName("delete patient")
-    void givenPatient_whenDeletePatient_thenVerifyPatientDelete() {
+    @DisplayName("find patient by id and delete him")
+    void givenPatientWhenDeletePatientThenVerifyPatientDelete() {
         Patient firstPatient = Patient.builder()
                 .id(1)
                 .firstName("Ivan")

@@ -17,5 +17,4 @@ public interface DoctorService {
 
     void deleteDoctor(Long id);
 
-
 }

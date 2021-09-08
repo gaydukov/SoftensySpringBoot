@@ -36,7 +36,7 @@ class DoctorControllerTest {
 
     @Test
     @DisplayName("get doctor by id returned doctor end status")
-    void givenId_whenGetDoctor_thenStatus200andDoctorReturned() throws Exception {
+    void givenIdWhenGetDoctorThenStatus200andDoctorReturned() throws Exception {
         //given
         Doctor firstDoctor = Doctor.builder()
                 .id(1)
@@ -63,7 +63,7 @@ class DoctorControllerTest {
 
     @Test
     @DisplayName("save doctor returned doctor end status")
-    void givenDoctor_whenAdd_thenStatus201() throws Exception {
+    void givenDoctorWhenAddThenStatus201() throws Exception {
         //given
         Doctor firstDoctor = Doctor.builder()
                 .id(1)
@@ -94,7 +94,7 @@ class DoctorControllerTest {
 
     @Test
     @DisplayName("update doctor returned doctor end status")
-    void givenDoctor_whenUpdate_thenStatus200() throws Exception {
+    void givenDoctorWhenUpdateThenStatus200() throws Exception {
         //given
         Doctor firstDoctor = Doctor.builder()
                 .id(1)
@@ -125,7 +125,7 @@ class DoctorControllerTest {
 
     @Test
     @DisplayName("delete doctor returned status")
-    void givenDoctor_whenDeleteDoctor_thenStatus204() throws Exception {
+    void givenDoctorWhenDeleteDoctorThenStatus204() throws Exception {
         //given
         Doctor firstDoctor = Doctor.builder()
                 .id(1)
@@ -145,7 +145,7 @@ class DoctorControllerTest {
 
     @Test
     @DisplayName("get all doctors returned doctor end status")
-    void givenDoctors_whenGetDoctors_thenStatus200() throws Exception {
+    void givenDoctorsWhenGetDoctorsThenStatus200() throws Exception {
         //given
         List<Doctor> doctors = new ArrayList<>();
         Doctor firstDoctor = Doctor.builder()

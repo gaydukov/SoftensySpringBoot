@@ -25,7 +25,7 @@ class DoctorServiceImplTest {
 
     @Test
     @DisplayName("get all doctors return list doctors")
-    void givenDoctors_whenGetAllDoctors_thenReturnAllDoctors() {
+    void givenDoctorsWhenGetAllDoctorsThenReturnAllDoctors() {
         // given
         List<Doctor> expectedDoctors = new ArrayList<>();
         Doctor firstDoctor = Doctor.builder()
@@ -61,7 +61,7 @@ class DoctorServiceImplTest {
 
     @Test
     @DisplayName("get doctor by id returned doctor")
-    void givenDoctor_whenGetDoctor_thenReturnDoctor() {
+    void givenDoctorWhenGetDoctorThenReturnDoctor() {
         // given
         Doctor expectedDoctor = Doctor.builder()
                 .id(1)
@@ -84,7 +84,7 @@ class DoctorServiceImplTest {
 
     @Test
     @DisplayName("save doctor returned doctor")
-    void givenDoctor_whenAddDoctor_thenReturnDoctorAndVerifyDoctorSave() {
+    void givenDoctorWhenAddDoctorThenReturnDoctorAndVerifyDoctorSave() {
         // given
         Doctor firstDoctor = Doctor.builder()
                 .id(1)
@@ -118,7 +118,7 @@ class DoctorServiceImplTest {
 
     @Test
     @DisplayName("update doctor returned doctor")
-    void givenDoctor_whenUpdateDoctor_thenReturnDoctorAndVerifyDoctorUpdate() {
+    void givenDoctorWhenUpdateDoctorThenReturnDoctorAndVerifyDoctorUpdate() {
         // given
         Doctor firstDoctor = Doctor.builder()
                 .id(1)
@@ -151,8 +151,8 @@ class DoctorServiceImplTest {
     }
 
     @Test
-    @DisplayName("delete doctor")
-    void givenDoctor_whenDeleteDoctor_thenVerifyDoctorDelete() {
+    @DisplayName("find doctor by id and delete him")
+    void givenDoctorWhenDeleteDoctorThenVerifyDoctorDelete() {
         // given
         Doctor firstDoctor = Doctor.builder()
                 .id(1)

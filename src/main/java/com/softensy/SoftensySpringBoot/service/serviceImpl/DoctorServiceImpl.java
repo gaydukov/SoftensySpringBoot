@@ -21,7 +21,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<Doctor> getAllDoctors() throws NullPointerException {
+    public List<Doctor> getAllDoctors() {
         List<Doctor> doctors = doctorRepository.findAll();
         if (doctors.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctors are not found");
@@ -30,7 +30,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Optional<Doctor> getDoctorById(Long id) throws NullPointerException {
+    public Optional<Doctor> getDoctorById(Long id) {
         Optional<Doctor> doctor = doctorRepository.findById(id);
         if (doctor.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found");
@@ -39,7 +39,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Doctor saveDoctor(Doctor doctor) throws NullPointerException {
+    public Doctor saveDoctor(Doctor doctor) {
         if (doctor == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Doctor is empty");
         }
@@ -47,7 +47,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Doctor updateDoctor(Doctor doctor) throws NullPointerException {
+    public Doctor updateDoctor(Doctor doctor) {
         if (doctor == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Doctor is empty");
         }
@@ -55,7 +55,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public void deleteDoctor(Long id) throws NullPointerException {
+    public void deleteDoctor(Long id) {
         Optional<Doctor> doctor = doctorRepository.findById(id);
         if (doctor.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Doctor is not found");
