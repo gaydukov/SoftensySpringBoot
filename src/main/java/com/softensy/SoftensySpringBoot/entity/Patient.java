@@ -10,7 +10,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -26,4 +25,5 @@ public class Patient {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dateOfBirth;
     private String phoneNumber;
+
 }

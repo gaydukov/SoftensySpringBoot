@@ -35,7 +35,7 @@ class DoctorControllerTest {
     private DoctorService doctorService;
 
     @Test
-    @DisplayName("get doctor by id returned doctor end status")
+    @DisplayName("checking get doctor by id with status 200")
     void whenGetDoctorByIdThenReturnStatus200andDoctor() throws Exception {
         //given
         Doctor firstDoctor = Doctor.builder()
@@ -62,7 +62,7 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("save doctor returned doctor end status")
+    @DisplayName("checking save doctor with status 201")
     void whenAddNewDoctorThenReturnStatus201AndDoctor() throws Exception {
         //given
         Doctor firstDoctor = Doctor.builder()
@@ -93,7 +93,7 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("update doctor returned doctor end status")
+    @DisplayName("checking update doctor with status 200")
     void whenUpdateDoctorThenReturnStatus200AndDoctor() throws Exception {
         //given
         Doctor firstDoctor = Doctor.builder()
@@ -124,7 +124,7 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("delete doctor by id returned status")
+    @DisplayName("checking remove doctor with status 204")
     void whenRemoveDoctorThenFindDoctorByIdAndReturnStatus204() throws Exception {
         //given
         Doctor firstDoctor = Doctor.builder()
@@ -144,7 +144,7 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("get all doctors returned doctors end status")
+    @DisplayName("checking get all doctors with status 200")
     void whenGetAllDoctorsThenReturnStatus200andListDoctors() throws Exception {
         //given
         List<Doctor> doctors = new ArrayList<>();
@@ -175,4 +175,5 @@ class DoctorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(Arrays.asList(firstDoctor, secondDoctor))));
     }
+
 }

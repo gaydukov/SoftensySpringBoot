@@ -11,8 +11,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {ResponseStatusException.class})
-    protected ResponseEntity<Object> handleConflict(ResponseStatusException ex, WebRequest request) {
-        return handleExceptionInternal(ex, ex.getMessage(),
-                new HttpHeaders(), ex.getStatus(), request);
+    protected ResponseEntity<Object> handleConflict(ResponseStatusException exception, WebRequest request) {
+        return handleExceptionInternal(exception, exception.getMessage(),
+                new HttpHeaders(), exception.getStatus(), request);
     }
+
 }

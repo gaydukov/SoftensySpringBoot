@@ -57,11 +57,11 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public void deletePatient(Long id) {
-        Optional<Patient> patient = patientRepository.findById(id);
-        if (patient.isEmpty()) {
+        if (!patientRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Patient not found");
         } else {
             patientRepository.deleteById(id);
         }
     }
+
 }

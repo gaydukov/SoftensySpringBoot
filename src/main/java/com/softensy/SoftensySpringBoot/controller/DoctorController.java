@@ -45,4 +45,5 @@ public class DoctorController {
     public ResponseEntity<List<Doctor>> getAllDoctors() {
         return new ResponseEntity<>(doctorService.getAllDoctors(), HttpStatus.OK);
     }
+
 }

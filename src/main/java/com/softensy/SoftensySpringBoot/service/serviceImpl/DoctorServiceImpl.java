@@ -56,10 +56,10 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public void deleteDoctor(Long id) {
-        Optional<Doctor> doctor = doctorRepository.findById(id);
-        if (doctor.isEmpty()) {
+        if (!doctorRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Doctor not found");
         }
         doctorRepository.deleteById(id);
     }
+
 }

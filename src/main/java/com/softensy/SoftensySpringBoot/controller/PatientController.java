@@ -44,4 +44,5 @@ public class PatientController {
     public ResponseEntity<List<Patient>> getAllPatients() {
         return new ResponseEntity<>(patientService.getAllPatients(), HttpStatus.OK);
     }
+
 }
