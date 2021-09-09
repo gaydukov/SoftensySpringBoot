@@ -26,14 +26,12 @@ public class PatientController {
 
     @PostMapping
     public ResponseEntity<Patient> savePatient(@RequestBody Patient patient) {
-        patientService.savePatient(patient);
-        return new ResponseEntity<>(patient, HttpStatus.CREATED);
+        return new ResponseEntity<>(patientService.savePatient(patient), HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient) {
-        patientService.updatePatient(patient);
-        return new ResponseEntity<>(patient, HttpStatus.OK);
+        return new ResponseEntity<>(patientService.updatePatient(patient), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "{id}")
@@ -46,4 +44,5 @@ public class PatientController {
     public ResponseEntity<List<Patient>> getAllPatients() {
         return new ResponseEntity<>(patientService.getAllPatients(), HttpStatus.OK);
     }
+
 }

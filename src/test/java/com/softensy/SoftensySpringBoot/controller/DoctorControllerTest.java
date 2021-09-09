@@ -13,12 +13,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -34,11 +35,18 @@ class DoctorControllerTest {
     private DoctorService doctorService;
 
     @Test
-    @DisplayName("get doctor by id returned doctor end status")
-    void givenId_whenGetDoctor_thenStatus200andDoctorReturned() throws Exception {
+    @DisplayName("checking get doctor by id with status 200")
+    void whenGetDoctorByIdThenReturnStatus200andDoctor() throws Exception {
         //given
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .phoneNumber("12345")
+                .build();
         //when
         when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(firstDoctor));
         //then
@@ -49,18 +57,25 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.position").value("Hirurg"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"));
     }
 
     @Test
-    @DisplayName("save doctor returned doctor end status")
-    void givenDoctor_whenAdd_thenStatus201() throws Exception {
+    @DisplayName("checking save doctor with status 201")
+    void whenAddNewDoctorThenReturnStatus201AndDoctor() throws Exception {
         //given
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .phoneNumber("12345")
+                .build();
         //when
-        when(doctorService.saveDoctor(firstDoctor)).thenReturn(firstDoctor);
+        when(doctorService.saveDoctor(any(Doctor.class))).thenReturn(firstDoctor);
         //then
         mockMvc.perform(post("/doctor")
                         .content(objectMapper.writeValueAsString(firstDoctor))
@@ -72,19 +87,26 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.position").value("Hirurg"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"))
                 .andExpect(content().json(objectMapper.writeValueAsString(firstDoctor)));
     }
 
     @Test
-    @DisplayName("update doctor returned doctor end status")
-    void givenDoctor_whenUpdate_thenStatus200() throws Exception {
+    @DisplayName("checking update doctor with status 200")
+    void whenUpdateDoctorThenReturnStatus200AndDoctor() throws Exception {
         //given
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .phoneNumber("12345")
+                .build();
         //when
-        when(doctorService.updateDoctor(firstDoctor)).thenReturn(firstDoctor);
+        when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(firstDoctor);
         //then
         mockMvc.perform(put("/doctor")
                         .content(objectMapper.writeValueAsString(firstDoctor))
@@ -96,17 +118,24 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.position").value("Hirurg"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"))
                 .andExpect(content().json(objectMapper.writeValueAsString(firstDoctor)));
     }
 
     @Test
-    @DisplayName("delete doctor returned status")
-    void givenDoctor_whenDeleteDoctor_thenStatus204() throws Exception {
+    @DisplayName("checking remove doctor with status 204")
+    void whenRemoveDoctorThenFindDoctorByIdAndReturnStatus204() throws Exception {
         //given
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .phoneNumber("12345")
+                .build();
         //when
         when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(firstDoctor));
         //then
@@ -115,14 +144,28 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("get all doctors returned doctor end status")
-    void givenDoctors_whenGetDoctors_thenStatus200() throws Exception {
+    @DisplayName("checking get all doctors with status 200")
+    void whenGetAllDoctorsThenReturnStatus200andListDoctors() throws Exception {
         //given
         List<Doctor> doctors = new ArrayList<>();
-        Doctor firstDoctor = new Doctor("Ivan", "Ivanov", "Ivanovich", "Hirurg", Date.valueOf("1987-05-12"), 12345L);
-        firstDoctor.setId(1);
-        Doctor secondDoctor = new Doctor("Petr", "Petrov", "Petrov", "Terapevt", Date.valueOf("1988-07-19"), 54321L);
-        secondDoctor.setId(2);
+        Doctor firstDoctor = Doctor.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .position("Hirurg")
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .phoneNumber("12345")
+                .build();
+        Doctor secondDoctor = Doctor.builder()
+                .id(2)
+                .firstName("Petr")
+                .lastName("Petrov")
+                .middleName("Petrov")
+                .position("Terapevt")
+                .dateOfBirth(LocalDate.of(1988, 07, 19))
+                .phoneNumber("54321")
+                .build();
         doctors.add(firstDoctor);
         doctors.add(secondDoctor);
         //when
@@ -132,4 +175,5 @@ class DoctorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(Arrays.asList(firstDoctor, secondDoctor))));
     }
+
 }

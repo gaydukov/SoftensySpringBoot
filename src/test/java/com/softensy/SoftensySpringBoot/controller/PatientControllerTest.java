@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,11 +34,18 @@ class PatientControllerTest {
     private PatientService patientService;
 
     @Test
-    @DisplayName("get patient by id returned doctor end status")
-    void givenId_whenGetPatient_thenStatus200andPatientReturned() throws Exception {
+    @DisplayName("checking get patient by id with status 200")
+    void whenGetPatientByIdThenReturnStatus200andPatient() throws Exception {
         //given
-        Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        patient.setId(1);
+        Patient patient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .phoneNumber("12345")
+                .build();
         //when
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
@@ -49,16 +56,23 @@ class PatientControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.doctorId").value("1"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"));
     }
 
     @Test
-    @DisplayName("save patient returned doctor end status")
-    void givenPatient_whenAdd_thenStatus201() throws Exception {
+    @DisplayName("checking save patient with status 201")
+    void whenAddNewPatientThenReturnStatus201AndPatient() throws Exception {
         //given
-        Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        patient.setId(1);
+        Patient patient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .phoneNumber("12345")
+                .build();
         //when
         when(patientService.savePatient(patient)).thenReturn(patient);
         //then
@@ -71,17 +85,24 @@ class PatientControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.doctorId").value("1"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"))
                 .andExpect(content().json(objectMapper.writeValueAsString(patient)));
     }
 
     @Test
-    @DisplayName("update patient returned doctor end status")
-    void givenPatient_whenUpdate_thenStatus200() throws Exception {
+    @DisplayName("checking update patient with status 200")
+    void whenUpdatePatientThenReturnStatus200AndPatient() throws Exception {
         //given
-        Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        patient.setId(1);
+        Patient patient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .phoneNumber("12345")
+                .build();
         //when
         when(patientService.updatePatient(patient)).thenReturn(patient);
         //then
@@ -94,17 +115,24 @@ class PatientControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
                 .andExpect(jsonPath("$.doctorId").value("1"))
-                .andExpect(jsonPath("$.dateOfBirth").value("11-05-1987"))
+                .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("12345"))
                 .andExpect(content().json(objectMapper.writeValueAsString(patient)));
     }
 
     @Test
-    @DisplayName("delete patient returned status")
-    void givenPatient_whenDeletePatient_thenStatus204() throws Exception {
+    @DisplayName("checking remove patient with status 204")
+    void whenRemovePatientThenFindPatientByIdAndReturnStatus204() throws Exception {
         //given
-        Patient patient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        patient.setId(1);
+        Patient patient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .phoneNumber("12345")
+                .build();
         //when
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
@@ -113,14 +141,28 @@ class PatientControllerTest {
     }
 
     @Test
-    @DisplayName("get all patients returned doctor end status")
-    void givenPatients_whenGetPatients_thenStatus200andPatientsReturned() throws Exception {
+    @DisplayName("checking get all patients with status 200")
+    void whenGetAllPatientsThenReturnStatus200andListPatients() throws Exception {
         //given
         List<Patient> patients = new ArrayList<>();
-        Patient firstPatient = new Patient("Ivan", "Ivanov", "Ivanovich", 1, Date.valueOf("1987-05-12"), 12345L);
-        firstPatient.setId(1);
-        Patient secondPatient = new Patient("Petr", "Petrov", "Petrov", 2, Date.valueOf("1988-07-19"), 54321L);
-        secondPatient.setId(2);
+        Patient firstPatient = Patient.builder()
+                .id(1)
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
+                .doctorId(1)
+                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .phoneNumber("12345")
+                .build();
+        Patient secondPatient = Patient.builder()
+                .id(2)
+                .firstName("Petr")
+                .lastName("Petrov")
+                .middleName("Petrov")
+                .doctorId(1)
+                .dateOfBirth(LocalDate.of(1988, 07, 19))
+                .phoneNumber("54321")
+                .build();
         patients.add(firstPatient);
         patients.add(secondPatient);
         //when
@@ -130,4 +172,5 @@ class PatientControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(Arrays.asList(firstPatient, secondPatient))));
     }
+
 }
