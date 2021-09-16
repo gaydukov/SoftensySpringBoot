@@ -43,7 +43,7 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -70,7 +70,7 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -100,7 +100,7 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -130,7 +130,7 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("12345")
                 .build();
         //when
@@ -151,7 +151,7 @@ class PatientControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("12345")
                 .build();
         Patient secondPatient = Patient.builder()
@@ -160,7 +160,7 @@ class PatientControllerTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988, 07, 19))
+                .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
         patients.add(firstPatient);

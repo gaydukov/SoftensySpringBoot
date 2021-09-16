@@ -51,7 +51,7 @@ class VisitControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("45632147")
                 .build();
         Patient patient = Patient.builder()
@@ -60,10 +60,10 @@ class VisitControllerTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988, 07, 19))
+                .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfVisit = LocalDateTime.of(2021, 11, 01, 9, 30);
+        LocalDateTime dateOfVisit = LocalDateTime.of(2021, 11, 1, 9, 30);
         Visit visit = new Visit(1, patient, doctor, dateOfVisit);
         //when
         when(visitService.createVisit(any(Visit.class))).thenReturn(visit);
@@ -86,12 +86,12 @@ class VisitControllerTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988, 07, 19))
+                .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfFirstVisit = LocalDateTime.of(2021, 11, 01, 9, 30);
-        LocalDateTime dateOfSecondVisit = LocalDateTime.of(2021, 11, 02, 10, 30);
-        LocalDateTime dateOfThirdVisit = LocalDateTime.of(2021, 11, 04, 11, 30);
+        LocalDateTime dateOfFirstVisit = LocalDateTime.of(2021, 11, 1, 9, 30);
+        LocalDateTime dateOfSecondVisit = LocalDateTime.of(2021, 11, 2, 10, 30);
+        LocalDateTime dateOfThirdVisit = LocalDateTime.of(2021, 11, 4, 11, 30);
         PatientDto firstPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
@@ -133,12 +133,12 @@ class VisitControllerTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("45632147")
                 .build();
-        LocalDateTime dateOfFirstVisit = LocalDateTime.of(2021, 11, 01, 9, 30);
-        LocalDateTime dateOfSecondVisit = LocalDateTime.of(2021, 11, 02, 10, 30);
-        LocalDateTime dateOfThirdVisit = LocalDateTime.of(2021, 11, 04, 11, 30);
+        LocalDateTime dateOfFirstVisit = LocalDateTime.of(2021, 11, 1, 9, 30);
+        LocalDateTime dateOfSecondVisit = LocalDateTime.of(2021, 11, 2, 10, 30);
+        LocalDateTime dateOfThirdVisit = LocalDateTime.of(2021, 11, 4, 11, 30);
         DoctorDto firstDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
@@ -174,30 +174,8 @@ class VisitControllerTest {
 
     @Test
     @DisplayName("checking remove visit with status 204")
-    void whenRemoveVisitThenFindVisitByIdAndReturnStatus204() throws Exception {
-        // given
-        Doctor doctor = Doctor.builder()
-                .id(1)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .middleName("Ivanovich")
-                .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
-                .phoneNumber("45632147")
-                .build();
-        Patient patient = Patient.builder()
-                .id(2)
-                .firstName("Petr")
-                .lastName("Petrov")
-                .middleName("Petrov")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988, 07, 19))
-                .phoneNumber("54321")
-                .build();
-        LocalDateTime dateOfVisit = LocalDateTime.of(2021, 11, 01, 9, 30);
-        Visit visit = new Visit(1, patient, doctor, dateOfVisit);
+    void whenRemoveVisitThenReturnStatus204() throws Exception {
         //when
-        // when(visitService.deleteVisit(1L)).;
         doNothing().when(visitService).deleteVisit(1L);
         //then
         mockMvc.perform(delete("/visit/1"))

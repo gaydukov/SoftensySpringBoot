@@ -34,7 +34,7 @@ class DoctorServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("45632147")
                 .build();
         Doctor secondDoctor = Doctor.builder()
@@ -43,7 +43,7 @@ class DoctorServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .position("Terapevt")
-                .dateOfBirth(LocalDate.of(1988, 07, 19))
+                .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
         expectedDoctors.add(firstDoctor);
@@ -69,7 +69,7 @@ class DoctorServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("45632147")
                 .build();
         // when
@@ -92,7 +92,7 @@ class DoctorServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("45632147")
                 .build();
         Doctor secondDoctor = Doctor.builder()
@@ -101,7 +101,7 @@ class DoctorServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .position("Terapevt")
-                .dateOfBirth(LocalDate.of(1988, 07, 19))
+                .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
         // when
@@ -126,7 +126,7 @@ class DoctorServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("45632147")
                 .build();
         Doctor secondDoctor = Doctor.builder()
@@ -135,7 +135,7 @@ class DoctorServiceImplTest {
                 .lastName("Petrov")
                 .middleName("Petrov")
                 .position("Terapevt")
-                .dateOfBirth(LocalDate.of(1988, 07, 19))
+                .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
         // when
@@ -160,7 +160,7 @@ class DoctorServiceImplTest {
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987, 05, 12))
+                .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("45632147")
                 .build();
         // when
