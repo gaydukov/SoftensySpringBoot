@@ -4,12 +4,11 @@ import com.softensy.SoftensySpringBoot.dto.DoctorDto;
 import com.softensy.SoftensySpringBoot.dto.PatientDto;
 import com.softensy.SoftensySpringBoot.entity.Visit;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface VisitService {
 
-    Visit createVisit(long patientId, LocalDateTime dataOfVisit);
+    Visit createVisit(Visit visit);
 
     List<PatientDto> getAllVisitsToDoctor(long doctorId);
 

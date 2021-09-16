@@ -2,10 +2,7 @@ package com.softensy.SoftensySpringBoot.service.serviceImpl;
 
 import com.softensy.SoftensySpringBoot.dto.DoctorDto;
 import com.softensy.SoftensySpringBoot.dto.PatientDto;
-import com.softensy.SoftensySpringBoot.entity.Patient;
 import com.softensy.SoftensySpringBoot.entity.Visit;
-import com.softensy.SoftensySpringBoot.repository.DoctorRepository;
-import com.softensy.SoftensySpringBoot.repository.PatientRepository;
 import com.softensy.SoftensySpringBoot.repository.VisitRepository;
 import com.softensy.SoftensySpringBoot.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,27 +17,17 @@ import java.util.List;
 @Service
 public class VisitServiceImpl implements VisitService {
     private final VisitRepository visitRepository;
-    private final DoctorRepository doctorRepository;
-    private final PatientRepository patientRepository;
 
     @Autowired
-    public VisitServiceImpl(VisitRepository visitRepository, DoctorRepository doctorRepository, PatientRepository patientRepository) {
+    public VisitServiceImpl(VisitRepository visitRepository) {
         this.visitRepository = visitRepository;
-        this.doctorRepository = doctorRepository;
-        this.patientRepository = patientRepository;
     }
 
     @Override
-    public Visit createVisit(long patientId, LocalDateTime dataOfVisit) {
-        Patient patient = patientRepository.findById(patientId).get();
-        if ((patient == null) || (dataOfVisit == null)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Patient or visit data is empty");
+    public Visit createVisit(Visit visit) {
+        if (visit == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Visit not found");
         }
-        Visit visit = Visit.builder()
-                .patient(patient)
-                .doctor(doctorRepository.findById(patient.getDoctorId()).get())
-                .dateOfVisit(dataOfVisit)
-                .build();
         return visitRepository.save(visit);
     }
 

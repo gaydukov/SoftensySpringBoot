@@ -164,6 +164,7 @@ class PatientServiceImplTest {
                 .build();
         // when
         when(patientRepository.findById(1L)).thenReturn(Optional.of(firstPatient));
+        when(patientRepository.existsById(1L)).thenReturn(true);
         patientRepository.delete(firstPatient);
         patientService.deletePatient(firstPatient.getId());
         //then

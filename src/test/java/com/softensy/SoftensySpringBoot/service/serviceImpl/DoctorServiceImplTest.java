@@ -165,6 +165,7 @@ class DoctorServiceImplTest {
                 .build();
         // when
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(firstDoctor));
+        when(doctorRepository.existsById(1L)).thenReturn(true);
         doctorRepository.delete(firstDoctor);
         doctorService.deleteDoctor(firstDoctor.getId());
         //then

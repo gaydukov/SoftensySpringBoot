@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -22,10 +21,9 @@ public class VisitController {
         this.visitService = visitService;
     }
 
-    @PostMapping("{id}")
-    public ResponseEntity<Visit> createVisit(@PathVariable("id") long patientId, @RequestBody LocalDateTime dateOfVisit) {
-        System.out.println("test");
-        return new ResponseEntity<Visit>(visitService.createVisit(patientId, dateOfVisit), HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<Visit> createVisit(@RequestBody Visit visit) {
+        return new ResponseEntity<>(visitService.createVisit(visit), HttpStatus.CREATED);
     }
 
     @GetMapping("/doctor/{id}")
