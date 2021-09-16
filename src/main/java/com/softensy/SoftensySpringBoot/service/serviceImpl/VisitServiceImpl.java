@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,7 +33,7 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     public Visit createVisit(long patientId, LocalDateTime dataOfVisit) {
-        Patient patient=patientRepository.findById(patientId).get();
+        Patient patient = patientRepository.findById(patientId).get();
         if ((patient == null) || (dataOfVisit == null)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Patient or visit data is empty");
         }
@@ -55,7 +54,7 @@ public class VisitServiceImpl implements VisitService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Visits not found");
         }
         for (Iterator<Visit> iterator = visits.iterator(); iterator.hasNext(); ) {
-            visit=iterator.next();
+            visit = iterator.next();
             if (visit.getDoctor().getId() == doctorId) {
                 PatientDto patientDto = PatientDto.builder()
                         .firstName(visit.getPatient().getFirstName())
@@ -78,7 +77,7 @@ public class VisitServiceImpl implements VisitService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Visits not found");
         }
         for (Iterator<Visit> iterator = visits.iterator(); iterator.hasNext(); ) {
-            visit=iterator.next();
+            visit = iterator.next();
             if (visit.getPatient().getId() == patientId) {
                 DoctorDto doctorDto = DoctorDto.builder()
                         .firstName(visit.getDoctor().getFirstName())

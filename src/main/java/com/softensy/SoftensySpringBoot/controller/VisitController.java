@@ -2,7 +2,6 @@ package com.softensy.SoftensySpringBoot.controller;
 
 import com.softensy.SoftensySpringBoot.dto.DoctorDto;
 import com.softensy.SoftensySpringBoot.dto.PatientDto;
-import com.softensy.SoftensySpringBoot.entity.Patient;
 import com.softensy.SoftensySpringBoot.entity.Visit;
 import com.softensy.SoftensySpringBoot.service.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @RestController

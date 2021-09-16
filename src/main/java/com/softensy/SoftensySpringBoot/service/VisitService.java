@@ -2,10 +2,8 @@ package com.softensy.SoftensySpringBoot.service;
 
 import com.softensy.SoftensySpringBoot.dto.DoctorDto;
 import com.softensy.SoftensySpringBoot.dto.PatientDto;
-import com.softensy.SoftensySpringBoot.entity.Patient;
 import com.softensy.SoftensySpringBoot.entity.Visit;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
