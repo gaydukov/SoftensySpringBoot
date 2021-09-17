@@ -3,10 +3,10 @@ package com.softensy.SoftensySpringBoot.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softensy.SoftensySpringBoot.dto.DoctorDto;
 import com.softensy.SoftensySpringBoot.dto.PatientDto;
+import com.softensy.SoftensySpringBoot.entity.Appointment;
 import com.softensy.SoftensySpringBoot.entity.Doctor;
 import com.softensy.SoftensySpringBoot.entity.Patient;
-import com.softensy.SoftensySpringBoot.entity.Visit;
-import com.softensy.SoftensySpringBoot.service.VisitService;
+import com.softensy.SoftensySpringBoot.service.AppointmentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -32,18 +32,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(VisitController.class)
-class VisitControllerTest {
+@WebMvcTest(AppointmentController.class)
+class AppointmentControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    private VisitService visitService;
+    private AppointmentService appointmentService;
 
     @Test
-    @DisplayName("checking save visit with status 201")
-    void whenCreateNewVisitThenReturnStatus201AndVisit() throws Exception {
+    @DisplayName("checking save appointment with status 201")
+    void whenCreateNewAppointmentThenReturnStatus201AndAppointment() throws Exception {
         //given
         Doctor doctor = Doctor.builder()
                 .id(1)
@@ -63,22 +63,22 @@ class VisitControllerTest {
                 .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfVisit = LocalDateTime.of(2021, 11, 1, 9, 30);
-        Visit visit = new Visit(1, patient, doctor, dateOfVisit);
+        LocalDateTime dateOfAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
+        Appointment appointment = new Appointment(1, patient, doctor, dateOfAppointment);
         //when
-        when(visitService.createVisit(any(Visit.class))).thenReturn(visit);
+        when(appointmentService.createAppointment(any(Appointment.class))).thenReturn(appointment);
         //then
-        mockMvc.perform(post("/visit")
-                        .content(objectMapper.writeValueAsString(visit))
+        mockMvc.perform(post("/appointment")
+                        .content(objectMapper.writeValueAsString(appointment))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(content().json(objectMapper.writeValueAsString(visit)));
+                .andExpect(content().json(objectMapper.writeValueAsString(appointment)));
     }
 
     @Test
-    @DisplayName("checking get list visits to doctor by doctor id with status 200")
-    void whenGetVisitToDoctorByDoctorIdThenReturnStatus200andListPatientsVisit() throws Exception {
+    @DisplayName("checking get list appointments to doctor by doctor id with status 200")
+    void whenGetAppointmentToDoctorByDoctorIdThenReturnStatus200andListPatientsAppointment() throws Exception {
         // given
         Patient patient = Patient.builder()
                 .id(2)
@@ -89,43 +89,43 @@ class VisitControllerTest {
                 .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfFirstVisit = LocalDateTime.of(2021, 11, 1, 9, 30);
-        LocalDateTime dateOfSecondVisit = LocalDateTime.of(2021, 11, 2, 10, 30);
-        LocalDateTime dateOfThirdVisit = LocalDateTime.of(2021, 11, 4, 11, 30);
+        LocalDateTime dateOfFirstAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
+        LocalDateTime dateOfSecondAppointment = LocalDateTime.of(2021, 11, 2, 10, 30);
+        LocalDateTime dateOfThirdAppointment = LocalDateTime.of(2021, 11, 4, 11, 30);
         PatientDto firstPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
-                .dateOfVisit(dateOfFirstVisit)
+                .dateOfAppointment(dateOfFirstAppointment)
                 .build();
         PatientDto secondPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
-                .dateOfVisit(dateOfSecondVisit)
+                .dateOfAppointment(dateOfSecondAppointment)
                 .build();
         PatientDto thirdPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
-                .dateOfVisit(dateOfThirdVisit)
+                .dateOfAppointment(dateOfThirdAppointment)
                 .build();
         List<PatientDto> patientDtoList = new ArrayList<>();
         patientDtoList.add(firstPatient);
         patientDtoList.add(secondPatient);
         patientDtoList.add(thirdPatient);
         //when
-        when(visitService.getAllVisitsToDoctor(anyLong())).thenReturn(patientDtoList);
+        when(appointmentService.getAllAppointmentsToDoctor(anyLong())).thenReturn(patientDtoList);
         //then
-        mockMvc.perform(get("/visit/doctor/1"))
+        mockMvc.perform(get("/appointment/doctor/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper
                         .writeValueAsString(Arrays.asList(firstPatient, secondPatient, thirdPatient))));
     }
 
     @Test
-    @DisplayName("checking get list patient visits to doctors by patient id with status 200")
-    void whenGetPatientVisitToDoctorsByPatientIdThenReturnStatus200andListDoctorsVisit() throws Exception {
+    @DisplayName("checking get list patient appointments to doctors by patient id with status 200")
+    void whenGetPatientAppointmentToDoctorsByPatientIdThenReturnStatus200andListDoctorsAppointment() throws Exception {
         // given
         Doctor doctor = Doctor.builder()
                 .id(1)
@@ -136,49 +136,49 @@ class VisitControllerTest {
                 .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("45632147")
                 .build();
-        LocalDateTime dateOfFirstVisit = LocalDateTime.of(2021, 11, 1, 9, 30);
-        LocalDateTime dateOfSecondVisit = LocalDateTime.of(2021, 11, 2, 10, 30);
-        LocalDateTime dateOfThirdVisit = LocalDateTime.of(2021, 11, 4, 11, 30);
+        LocalDateTime dateOfFirstAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
+        LocalDateTime dateOfSecondAppointment = LocalDateTime.of(2021, 11, 2, 10, 30);
+        LocalDateTime dateOfThirdAppointment = LocalDateTime.of(2021, 11, 4, 11, 30);
         DoctorDto firstDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
-                .dateOfVisit(dateOfFirstVisit)
+                .dateOfAppointment(dateOfFirstAppointment)
                 .build();
         DoctorDto secondDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
-                .dateOfVisit(dateOfSecondVisit)
+                .dateOfAppointment(dateOfSecondAppointment)
                 .build();
         DoctorDto thirdDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
-                .dateOfVisit(dateOfThirdVisit)
+                .dateOfAppointment(dateOfThirdAppointment)
                 .build();
         List<DoctorDto> doctorDtoList = new ArrayList<>();
         doctorDtoList.add(firstDoctor);
         doctorDtoList.add(secondDoctor);
         doctorDtoList.add(thirdDoctor);
         //when
-        when(visitService.getAllPatientVisits(anyLong())).thenReturn(doctorDtoList);
+        when(appointmentService.getAllPatientAppointments(anyLong())).thenReturn(doctorDtoList);
         //then
-        mockMvc.perform(get("/visit/patient/1"))
+        mockMvc.perform(get("/appointment/patient/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(Arrays.asList(firstDoctor, secondDoctor, thirdDoctor))));
     }
 
     @Test
-    @DisplayName("checking remove visit with status 204")
-    void whenRemoveVisitThenReturnStatus204() throws Exception {
+    @DisplayName("checking remove appointment with status 204")
+    void whenRemoveAppointmentThenReturnStatus204() throws Exception {
         //when
-        doNothing().when(visitService).deleteVisit(1L);
+        doNothing().when(appointmentService).deleteAppointment(1L);
         //then
-        mockMvc.perform(delete("/visit/1"))
+        mockMvc.perform(delete("/appointment/1"))
                 .andExpect(status().isNoContent());
     }
 

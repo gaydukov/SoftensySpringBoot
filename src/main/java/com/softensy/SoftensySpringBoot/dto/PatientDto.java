@@ -17,6 +17,6 @@ public class PatientDto {
     private String lastName;
     private String middleName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm dd-MM-yyyy")
-    private LocalDateTime dateOfVisit;
+    private LocalDateTime dateOfAppointment;
 
 }

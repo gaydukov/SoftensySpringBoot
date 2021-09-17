@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Visit {
+public class Appointment {
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -25,6 +25,6 @@ public class Visit {
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm dd-MM-yyyy")
-    private LocalDateTime dateOfVisit;
+    private LocalDateTime dateOfAppointment;
 
 }

@@ -2,10 +2,10 @@ package com.softensy.SoftensySpringBoot.service.serviceImpl;
 
 import com.softensy.SoftensySpringBoot.dto.DoctorDto;
 import com.softensy.SoftensySpringBoot.dto.PatientDto;
+import com.softensy.SoftensySpringBoot.entity.Appointment;
 import com.softensy.SoftensySpringBoot.entity.Doctor;
 import com.softensy.SoftensySpringBoot.entity.Patient;
-import com.softensy.SoftensySpringBoot.entity.Visit;
-import com.softensy.SoftensySpringBoot.repository.VisitRepository;
+import com.softensy.SoftensySpringBoot.repository.AppointmentRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,15 +22,15 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class VisitServiceImplTest {
+class AppointmentServiceImplTest {
     @Autowired
-    private VisitServiceImpl visitService;
+    private AppointmentServiceImpl appointmentService;
     @MockBean
-    private VisitRepository visitRepository;
+    private AppointmentRepository appointmentRepository;
 
     @Test
-    @DisplayName("checking create new visit and saves it")
-    void whenCreateNewVisitThenReturnVisitAndVerifyVisitSave() {
+    @DisplayName("checking create new appointment and saves it")
+    void whenCreateNewAppointmentThenReturnAppointmentAndVerifyAppointmentSave() {
         // given
         Doctor doctor = Doctor.builder()
                 .id(1)
@@ -50,23 +50,23 @@ class VisitServiceImplTest {
                 .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfVisit = LocalDateTime.of(2021, 11, 1, 9, 30);
-        Visit actualVisit = new Visit(1, patient, doctor, dateOfVisit);
+        LocalDateTime dateOfAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
+        Appointment actualAppointment = new Appointment(1, patient, doctor, dateOfAppointment);
         // when
-        when(visitRepository.save(any(Visit.class))).thenReturn(actualVisit);
-        Visit expectedVisit = visitService.createVisit(actualVisit);
+        when(appointmentRepository.save(any(Appointment.class))).thenReturn(actualAppointment);
+        Appointment expectedAppointment = appointmentService.createAppointment(actualAppointment);
         //then
-        Assertions.assertEquals(expectedVisit, actualVisit);
-        verify(visitRepository, times(1)).save(any(Visit.class));
-        verify(visitRepository).save(any(Visit.class));
+        Assertions.assertEquals(expectedAppointment, actualAppointment);
+        verify(appointmentRepository, times(1)).save(any(Appointment.class));
+        verify(appointmentRepository).save(any(Appointment.class));
         Assertions.assertNotNull(doctor);
         Assertions.assertNotNull(patient);
-        Assertions.assertNotNull(actualVisit);
+        Assertions.assertNotNull(actualAppointment);
     }
 
     @Test
-    @DisplayName("checking all visits to doctor by doctor Id")
-    void whenGetAllVisitsToDoctorByDoctorIdReturnListPatientDtoWhoVisitThisDoctor() {
+    @DisplayName("checking all appointments to doctor by doctor Id")
+    void whenGetAllAppointmentsToDoctorByDoctorIdReturnListPatientDtoWhoAppointmentThisDoctor() {
         // given
         Doctor doctor = Doctor.builder()
                 .id(1)
@@ -86,51 +86,51 @@ class VisitServiceImplTest {
                 .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfFirstVisit = LocalDateTime.of(2021, 11, 1, 9, 30);
-        LocalDateTime dateOfSecondVisit = LocalDateTime.of(2021, 11, 2, 10, 30);
-        LocalDateTime dateOfThirdVisit = LocalDateTime.of(2021, 11, 4, 11, 30);
-        Visit firstVisit = new Visit(1, patient, doctor, dateOfFirstVisit);
-        Visit secondVisit = new Visit(2, patient, doctor, dateOfSecondVisit);
-        Visit thirdVisit = new Visit(3, patient, doctor, dateOfThirdVisit);
-        List<Visit> visitList = new ArrayList<>();
-        visitList.add(firstVisit);
-        visitList.add(secondVisit);
-        visitList.add(thirdVisit);
+        LocalDateTime dateOfFirstAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
+        LocalDateTime dateOfSecondAppointment = LocalDateTime.of(2021, 11, 2, 10, 30);
+        LocalDateTime dateOfThirdAppointment = LocalDateTime.of(2021, 11, 4, 11, 30);
+        Appointment firstAppointment = new Appointment(1, patient, doctor, dateOfFirstAppointment);
+        Appointment secondAppointment = new Appointment(2, patient, doctor, dateOfSecondAppointment);
+        Appointment thirdAppointment = new Appointment(3, patient, doctor, dateOfThirdAppointment);
+        List<Appointment> appointmentList = new ArrayList<>();
+        appointmentList.add(firstAppointment);
+        appointmentList.add(secondAppointment);
+        appointmentList.add(thirdAppointment);
         PatientDto actualFirstPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
-                .dateOfVisit(dateOfFirstVisit)
+                .dateOfAppointment(dateOfFirstAppointment)
                 .build();
         PatientDto actualSecondPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
-                .dateOfVisit(dateOfSecondVisit)
+                .dateOfAppointment(dateOfSecondAppointment)
                 .build();
         PatientDto actualThirdPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
-                .dateOfVisit(dateOfThirdVisit)
+                .dateOfAppointment(dateOfThirdAppointment)
                 .build();
         List<PatientDto> actualPatientList = new ArrayList<>();
         actualPatientList.add(actualFirstPatient);
         actualPatientList.add(actualSecondPatient);
         actualPatientList.add(actualThirdPatient);
         // when
-        when(visitRepository.findAll()).thenReturn(visitList);
-        List<PatientDto> expectedPatientList = visitService.getAllVisitsToDoctor(1L);
+        when(appointmentRepository.findAll()).thenReturn(appointmentList);
+        List<PatientDto> expectedPatientList = appointmentService.getAllAppointmentsToDoctor(1L);
         //then
         Assertions.assertEquals(expectedPatientList, actualPatientList);
         Assertions.assertNotNull(expectedPatientList);
         Assertions.assertNotNull(actualPatientList);
-        verify(visitRepository, times(1)).findAll();
+        verify(appointmentRepository, times(1)).findAll();
     }
 
     @Test
-    @DisplayName("checking all patient's visits to doctor by patient Id")
-    void whenGetAllPatientVisitsByPatientIdReturnListDoctorDtoWhichThisPatientIsAssigned() {
+    @DisplayName("checking all patient's appointments to doctor by patient Id")
+    void whenGetAllPatientAppointmentsByPatientIdReturnListDoctorDtoWhichThisPatientIsAssigned() {
         // given
         Doctor doctor = Doctor.builder()
                 .id(1)
@@ -150,54 +150,54 @@ class VisitServiceImplTest {
                 .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfFirstVisit = LocalDateTime.of(2021, 11, 1, 9, 30);
-        LocalDateTime dateOfSecondVisit = LocalDateTime.of(2021, 11, 2, 10, 30);
-        LocalDateTime dateOfThirdVisit = LocalDateTime.of(2021, 11, 4, 11, 30);
-        Visit firstVisit = new Visit(1, patient, doctor, dateOfFirstVisit);
-        Visit secondVisit = new Visit(2, patient, doctor, dateOfSecondVisit);
-        Visit thirdVisit = new Visit(3, patient, doctor, dateOfThirdVisit);
-        List<Visit> visitList = new ArrayList<>();
-        visitList.add(firstVisit);
-        visitList.add(secondVisit);
-        visitList.add(thirdVisit);
+        LocalDateTime dateOfFirstAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
+        LocalDateTime dateOfSecondAppointment = LocalDateTime.of(2021, 11, 2, 10, 30);
+        LocalDateTime dateOfThirdAppointment = LocalDateTime.of(2021, 11, 4, 11, 30);
+        Appointment firstAppointment = new Appointment(1, patient, doctor, dateOfFirstAppointment);
+        Appointment secondAppointment = new Appointment(2, patient, doctor, dateOfSecondAppointment);
+        Appointment thirdAppointment = new Appointment(3, patient, doctor, dateOfThirdAppointment);
+        List<Appointment> appointmentList = new ArrayList<>();
+        appointmentList.add(firstAppointment);
+        appointmentList.add(secondAppointment);
+        appointmentList.add(thirdAppointment);
         DoctorDto actualFirstDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
-                .dateOfVisit(dateOfFirstVisit)
+                .dateOfAppointment(dateOfFirstAppointment)
                 .build();
         DoctorDto actualSecondDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
-                .dateOfVisit(dateOfSecondVisit)
+                .dateOfAppointment(dateOfSecondAppointment)
                 .build();
         DoctorDto actualThirdDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
-                .dateOfVisit(dateOfThirdVisit)
+                .dateOfAppointment(dateOfThirdAppointment)
                 .build();
         List<DoctorDto> actualDoctorList = new ArrayList<>();
         actualDoctorList.add(actualFirstDoctor);
         actualDoctorList.add(actualSecondDoctor);
         actualDoctorList.add(actualThirdDoctor);
         // when
-        when(visitRepository.findAll()).thenReturn(visitList);
-        List<DoctorDto> expectedDoctorList = visitService.getAllPatientVisits(2L);
+        when(appointmentRepository.findAll()).thenReturn(appointmentList);
+        List<DoctorDto> expectedDoctorList = appointmentService.getAllPatientAppointments(2L);
         //then
         Assertions.assertEquals(expectedDoctorList, actualDoctorList);
         Assertions.assertNotNull(expectedDoctorList);
         Assertions.assertNotNull(actualDoctorList);
-        verify(visitRepository, times(1)).findAll();
+        verify(appointmentRepository, times(1)).findAll();
     }
 
     @Test
-    @DisplayName("checking get by id visit and delete him")
-    void whenDeleteVisitByIdThenVerifyVisitDelete() {
+    @DisplayName("checking get by id appointment and delete him")
+    void whenDeleteAppointmentByIdThenVerifyAppointmentDelete() {
         // given
         Doctor doctor = Doctor.builder()
                 .id(1)
@@ -217,16 +217,16 @@ class VisitServiceImplTest {
                 .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfVisit = LocalDateTime.of(2021, 11, 1, 9, 30);
-        Visit visit = new Visit(1, patient, doctor, dateOfVisit);
+        LocalDateTime dateOfAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
+        Appointment appointment = new Appointment(1, patient, doctor, dateOfAppointment);
         // when
-        when(visitRepository.findById(1L)).thenReturn(Optional.of(visit));
-        when(visitRepository.existsById(1L)).thenReturn(true);
-        visitRepository.deleteById(1L);
-        visitService.deleteVisit(1L);
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
+        when(appointmentRepository.existsById(1L)).thenReturn(true);
+        appointmentRepository.deleteById(1L);
+        appointmentService.deleteAppointment(1L);
         //then
-        Assertions.assertNotNull(visit);
-        verify(visitRepository, times(2)).deleteById(visit.getId());
+        Assertions.assertNotNull(appointment);
+        verify(appointmentRepository, times(2)).deleteById(appointment.getId());
     }
 
 }
