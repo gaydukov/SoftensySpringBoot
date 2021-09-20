@@ -1,11 +1,14 @@
 package com.softensy.SoftensySpringBoot.service.serviceImpl;
 
+import com.softensy.SoftensySpringBoot.dto.AppointmentDto;
 import com.softensy.SoftensySpringBoot.dto.DoctorDto;
 import com.softensy.SoftensySpringBoot.dto.PatientDto;
 import com.softensy.SoftensySpringBoot.entity.Appointment;
 import com.softensy.SoftensySpringBoot.entity.Doctor;
 import com.softensy.SoftensySpringBoot.entity.Patient;
 import com.softensy.SoftensySpringBoot.repository.AppointmentRepository;
+import com.softensy.SoftensySpringBoot.repository.DoctorRepository;
+import com.softensy.SoftensySpringBoot.repository.PatientRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,9 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
@@ -27,10 +28,14 @@ class AppointmentServiceImplTest {
     private AppointmentServiceImpl appointmentService;
     @MockBean
     private AppointmentRepository appointmentRepository;
+    @MockBean
+    private DoctorRepository doctorRepository;
+    @MockBean
+    private PatientRepository patientRepository;
 
     @Test
     @DisplayName("checking create new appointment and saves it")
-    void whenCreateNewAppointmentThenReturnAppointmentAndVerifyAppointmentSave() {
+    void testCreateNewAppointmentReturnAppointmentDtoAndVerifyAppointmentSave() {
         // given
         Doctor doctor = Doctor.builder()
                 .id(1)
@@ -51,22 +56,27 @@ class AppointmentServiceImplTest {
                 .phoneNumber("54321")
                 .build();
         LocalDateTime dateOfAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
-        Appointment actualAppointment = new Appointment(1, patient, doctor, dateOfAppointment);
+        Appointment appointment = new Appointment(1, patient, doctor, dateOfAppointment);
+        AppointmentDto actualAppointmentDto = new AppointmentDto(2, 1, dateOfAppointment);
         // when
-        when(appointmentRepository.save(any(Appointment.class))).thenReturn(actualAppointment);
-        Appointment expectedAppointment = appointmentService.createAppointment(actualAppointment);
+        when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
+        when(patientRepository.findById(anyLong())).thenReturn(Optional.of(patient));
+        when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
+        AppointmentDto expectedAppointmentDto = appointmentService.createAppointment(actualAppointmentDto);
         //then
-        Assertions.assertEquals(expectedAppointment, actualAppointment);
+        Assertions.assertEquals(expectedAppointmentDto, actualAppointmentDto);
         verify(appointmentRepository, times(1)).save(any(Appointment.class));
+        verify(doctorRepository, times(1)).findById(anyLong());
+        verify(patientRepository, times(1)).findById(anyLong());
         verify(appointmentRepository).save(any(Appointment.class));
         Assertions.assertNotNull(doctor);
         Assertions.assertNotNull(patient);
-        Assertions.assertNotNull(actualAppointment);
+        Assertions.assertNotNull(expectedAppointmentDto);
     }
 
     @Test
     @DisplayName("checking all appointments to doctor by doctor Id")
-    void whenGetAllAppointmentsToDoctorByDoctorIdReturnListPatientDtoWhoAppointmentThisDoctor() {
+    void testGetAllAppointmentsToDoctorByDoctorIdReturnListPatientDtoWhoAppointmentThisDoctor() {
         // given
         Doctor doctor = Doctor.builder()
                 .id(1)
@@ -100,27 +110,24 @@ class AppointmentServiceImplTest {
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
-                .dateOfAppointment(dateOfFirstAppointment)
                 .build();
         PatientDto actualSecondPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
-                .dateOfAppointment(dateOfSecondAppointment)
                 .build();
         PatientDto actualThirdPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
-                .dateOfAppointment(dateOfThirdAppointment)
                 .build();
-        List<PatientDto> actualPatientList = new ArrayList<>();
-        actualPatientList.add(actualFirstPatient);
-        actualPatientList.add(actualSecondPatient);
-        actualPatientList.add(actualThirdPatient);
+        Map<LocalDateTime, PatientDto> actualPatientList = new HashMap<>();
+        actualPatientList.put(dateOfFirstAppointment, actualFirstPatient);
+        actualPatientList.put(dateOfSecondAppointment, actualSecondPatient);
+        actualPatientList.put(dateOfThirdAppointment, actualThirdPatient);
         // when
         when(appointmentRepository.findAll()).thenReturn(appointmentList);
-        List<PatientDto> expectedPatientList = appointmentService.getAllAppointmentsToDoctor(1L);
+        Map<LocalDateTime, PatientDto> expectedPatientList = appointmentService.getAllAppointmentsToDoctor(1L);
         //then
         Assertions.assertEquals(expectedPatientList, actualPatientList);
         Assertions.assertNotNull(expectedPatientList);
@@ -130,7 +137,7 @@ class AppointmentServiceImplTest {
 
     @Test
     @DisplayName("checking all patient's appointments to doctor by patient Id")
-    void whenGetAllPatientAppointmentsByPatientIdReturnListDoctorDtoWhichThisPatientIsAssigned() {
+    void testGetAllPatientAppointmentsByPatientIdReturnListDoctorDtoWhichThisPatientIsAssigned() {
         // given
         Doctor doctor = Doctor.builder()
                 .id(1)
@@ -165,29 +172,26 @@ class AppointmentServiceImplTest {
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
-                .dateOfAppointment(dateOfFirstAppointment)
                 .build();
         DoctorDto actualSecondDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
-                .dateOfAppointment(dateOfSecondAppointment)
                 .build();
         DoctorDto actualThirdDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
-                .dateOfAppointment(dateOfThirdAppointment)
                 .build();
-        List<DoctorDto> actualDoctorList = new ArrayList<>();
-        actualDoctorList.add(actualFirstDoctor);
-        actualDoctorList.add(actualSecondDoctor);
-        actualDoctorList.add(actualThirdDoctor);
+        Map<LocalDateTime, DoctorDto> actualDoctorList = new HashMap<>();
+        actualDoctorList.put(dateOfFirstAppointment, actualFirstDoctor);
+        actualDoctorList.put(dateOfSecondAppointment, actualSecondDoctor);
+        actualDoctorList.put(dateOfThirdAppointment, actualThirdDoctor);
         // when
         when(appointmentRepository.findAll()).thenReturn(appointmentList);
-        List<DoctorDto> expectedDoctorList = appointmentService.getAllPatientAppointments(2L);
+        Map<LocalDateTime, DoctorDto> expectedDoctorList = appointmentService.getAllPatientAppointments(2L);
         //then
         Assertions.assertEquals(expectedDoctorList, actualDoctorList);
         Assertions.assertNotNull(expectedDoctorList);
@@ -197,7 +201,7 @@ class AppointmentServiceImplTest {
 
     @Test
     @DisplayName("checking get by id appointment and delete him")
-    void whenDeleteAppointmentByIdThenVerifyAppointmentDelete() {
+    void testDeleteAppointmentByIdThenVerifyAppointmentDelete() {
         // given
         Doctor doctor = Doctor.builder()
                 .id(1)

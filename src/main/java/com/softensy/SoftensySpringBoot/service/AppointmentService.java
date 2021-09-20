@@ -1,18 +1,19 @@
 package com.softensy.SoftensySpringBoot.service;
 
+import com.softensy.SoftensySpringBoot.dto.AppointmentDto;
 import com.softensy.SoftensySpringBoot.dto.DoctorDto;
 import com.softensy.SoftensySpringBoot.dto.PatientDto;
-import com.softensy.SoftensySpringBoot.entity.Appointment;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 public interface AppointmentService {
 
-    Appointment createAppointment(Appointment appointment);
+    AppointmentDto createAppointment(AppointmentDto appointmentDto);
 
-    List<PatientDto> getAllAppointmentsToDoctor(long doctorId);
+    Map<LocalDateTime, PatientDto> getAllAppointmentsToDoctor(long doctorId);
 
-    List<DoctorDto> getAllPatientAppointments(long patientId);
+    Map<LocalDateTime, DoctorDto> getAllPatientAppointments(long patientId);
 
     void deleteAppointment(long id);
 

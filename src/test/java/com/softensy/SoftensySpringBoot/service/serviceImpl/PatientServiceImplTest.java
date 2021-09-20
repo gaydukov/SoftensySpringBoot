@@ -25,7 +25,7 @@ class PatientServiceImplTest {
 
     @Test
     @DisplayName("checking get all patients")
-    void whenGetAllPatientsThenReturnAllPatientsAndVerifyFindAll() {
+    void testGetAllPatientsReturnAllPatientsAndVerifyFindAll() {
         // before
         List<Patient> expectedListPatients = new ArrayList<>();
         Patient firstPatient = Patient.builder()
@@ -61,7 +61,7 @@ class PatientServiceImplTest {
 
     @Test
     @DisplayName("checking get by id patient")
-    void whenGetPatientByIdThenReturnPatientAndVerifyFindById() {
+    void testGetPatientByIdReturnPatientAndVerifyFindById() {
         // before
         Patient expectedPatient = Patient.builder()
                 .id(1)
@@ -84,7 +84,7 @@ class PatientServiceImplTest {
 
     @Test
     @DisplayName("checking save patient")
-    void whenAddPatientThenReturnPatientAndVerifyPatientSave() {
+    void testAddPatientReturnPatientAndVerifyPatientSave() {
         // given
         Patient firstPatient = Patient.builder()
                 .id(1)
@@ -118,7 +118,7 @@ class PatientServiceImplTest {
 
     @Test
     @DisplayName("checking update patient")
-    void whenUpdatePatientThenReturnPatientAndVerifyPatientUpdate() {
+    void testUpdatePatientReturnPatientAndVerifyPatientUpdate() {
         // given
         Patient firstPatient = Patient.builder()
                 .id(1)
@@ -152,7 +152,7 @@ class PatientServiceImplTest {
 
     @Test
     @DisplayName("checking get by id patient and delete him")
-    void whenDeletePatientByIdThenFindPatientByIdAndVerifyPatientDelete() {
+    void testDeletePatientByIdFindPatientByIdAndVerifyPatientDelete() {
         Patient firstPatient = Patient.builder()
                 .id(1)
                 .firstName("Ivan")

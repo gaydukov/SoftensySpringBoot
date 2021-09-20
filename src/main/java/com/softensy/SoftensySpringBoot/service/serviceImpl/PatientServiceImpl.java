@@ -4,7 +4,7 @@ package com.softensy.SoftensySpringBoot.service.serviceImpl;
 import com.softensy.SoftensySpringBoot.entity.Patient;
 import com.softensy.SoftensySpringBoot.repository.PatientRepository;
 import com.softensy.SoftensySpringBoot.service.PatientService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,13 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
-
-    @Autowired
-    public PatientServiceImpl(PatientRepository patientRepository) {
-        this.patientRepository = patientRepository;
-    }
 
     @Override
     public List<Patient> getAllPatients() {

@@ -1,53 +1,65 @@
 package com.softensy.SoftensySpringBoot.service.serviceImpl;
 
+import com.softensy.SoftensySpringBoot.dto.AppointmentDto;
 import com.softensy.SoftensySpringBoot.dto.DoctorDto;
 import com.softensy.SoftensySpringBoot.dto.PatientDto;
 import com.softensy.SoftensySpringBoot.entity.Appointment;
 import com.softensy.SoftensySpringBoot.repository.AppointmentRepository;
+import com.softensy.SoftensySpringBoot.repository.DoctorRepository;
+import com.softensy.SoftensySpringBoot.repository.PatientRepository;
 import com.softensy.SoftensySpringBoot.service.AppointmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
+    private final DoctorRepository doctorRepository;
+    private final PatientRepository patientRepository;
 
     @Override
-    public Appointment createAppointment(Appointment appointment) {
-        if (appointment == null) {
+    public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
+        if (appointmentDto == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Appointment not found");
         }
-        return appointmentRepository.save(appointment);
+        Appointment appointment = Appointment.builder()
+                .doctor(doctorRepository.findById(appointmentDto.getDoctorId()).get())
+                .patient(patientRepository.findById(appointmentDto.getPatientId()).get())
+                .dateOfAppointment(appointmentDto.getDateOfAppointment())
+                .build();
+        appointmentRepository.save(appointment);
+        return appointmentDto;
     }
 
     @Override
-    public List<PatientDto> getAllAppointmentsToDoctor(long doctorId) {
+    public Map<LocalDateTime, PatientDto> getAllAppointmentsToDoctor(long doctorId) {
         List<Appointment> listAppointments = appointmentRepository.findAll();
-        List<PatientDto> result = new ArrayList<>();
+        Map<LocalDateTime, PatientDto> result = new HashMap<>();
         for (Appointment appointment : listAppointments) {
             if (appointment.getDoctor().getId() == doctorId) {
                 PatientDto patientDto = PatientDto.builder()
                         .firstName(appointment.getPatient().getFirstName())
                         .lastName(appointment.getPatient().getLastName())
                         .middleName(appointment.getPatient().getMiddleName())
-                        .dateOfAppointment(appointment.getDateOfAppointment())
                         .build();
-                result.add(patientDto);
+                result.put(appointment.getDateOfAppointment(), patientDto);
             }
         }
         return result;
     }
 
     @Override
-    public List<DoctorDto> getAllPatientAppointments(long patientId) {
+    public Map<LocalDateTime, DoctorDto> getAllPatientAppointments(long patientId) {
         List<Appointment> listAppointments = appointmentRepository.findAll();
-        List<DoctorDto> result = new ArrayList<>();
+        Map<LocalDateTime, DoctorDto> result = new HashMap<>();
         for (Appointment appointment : listAppointments) {
             if (appointment.getPatient().getId() == patientId) {
                 DoctorDto doctorDto = DoctorDto.builder()
@@ -55,9 +67,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                         .lastName(appointment.getDoctor().getLastName())
                         .middleName(appointment.getDoctor().getMiddleName())
                         .position(appointment.getDoctor().getPosition())
-                        .dateOfAppointment(appointment.getDateOfAppointment())
                         .build();
-                result.add(doctorDto);
+                result.put(appointment.getDateOfAppointment(), doctorDto);
             }
         }
         return result;

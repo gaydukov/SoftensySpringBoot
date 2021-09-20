@@ -35,7 +35,7 @@ class PatientControllerTest {
 
     @Test
     @DisplayName("checking get patient by id with status 200")
-    void whenGetPatientByIdThenReturnStatus200andPatient() throws Exception {
+    void testGetPatientByIdReturnStatus200andPatient() throws Exception {
         //given
         Patient patient = Patient.builder()
                 .id(1)
@@ -62,7 +62,7 @@ class PatientControllerTest {
 
     @Test
     @DisplayName("checking save patient with status 201")
-    void whenAddNewPatientThenReturnStatus201AndPatient() throws Exception {
+    void testAddNewPatientReturnStatus201AndPatient() throws Exception {
         //given
         Patient patient = Patient.builder()
                 .id(1)
@@ -92,7 +92,7 @@ class PatientControllerTest {
 
     @Test
     @DisplayName("checking update patient with status 200")
-    void whenUpdatePatientThenReturnStatus200AndPatient() throws Exception {
+    void testUpdatePatientReturnStatus200AndPatient() throws Exception {
         //given
         Patient patient = Patient.builder()
                 .id(1)
@@ -122,7 +122,7 @@ class PatientControllerTest {
 
     @Test
     @DisplayName("checking remove patient with status 204")
-    void whenRemovePatientThenFindPatientByIdAndReturnStatus204() throws Exception {
+    void testRemovePatientFindPatientByIdAndReturnStatus204() throws Exception {
         //given
         Patient patient = Patient.builder()
                 .id(1)
@@ -142,7 +142,7 @@ class PatientControllerTest {
 
     @Test
     @DisplayName("checking get all patients with status 200")
-    void whenGetAllPatientsThenReturnStatus200andListPatients() throws Exception {
+    void testGetAllPatientsReturnStatus200andListPatients() throws Exception {
         //given
         List<Patient> patients = new ArrayList<>();
         Patient firstPatient = Patient.builder()
