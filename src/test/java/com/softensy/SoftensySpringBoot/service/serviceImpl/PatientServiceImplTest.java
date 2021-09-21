@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.softensy.SoftensySpringBoot.TestDataGeneration.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -27,34 +26,15 @@ class PatientServiceImplTest {
     @DisplayName("checking get all patients")
     void testGetAllPatientsReturnAllPatientsAndVerifyFindAll() {
         // before
-        List<Patient> expectedListPatients = new ArrayList<>();
-        Patient firstPatient = Patient.builder()
-                .id(1)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .middleName("Ivanovich")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 5, 12))
-                .phoneNumber("12345")
-                .build();
-        Patient secondPatient = Patient.builder()
-                .id(2)
-                .firstName("Petr")
-                .lastName("Petrov")
-                .middleName("Petrov")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988, 7, 19))
-                .phoneNumber("54321")
-                .build();
-        expectedListPatients.add(firstPatient);
-        expectedListPatients.add(secondPatient);
+        List<Patient> expectedListPatients = getPatientList();
         // when
         when(patientRepository.findAll()).thenReturn(expectedListPatients);
         List<Patient> actualListPatients = patientService.getAllPatients();
         //then
         Assertions.assertEquals(expectedListPatients, actualListPatients);
-        Assertions.assertNotNull(firstPatient);
-        Assertions.assertNotNull(secondPatient);
+        Assertions.assertNotNull(expectedListPatients.get(0));
+        Assertions.assertNotNull(expectedListPatients.get(1));
+        Assertions.assertNotNull(expectedListPatients.get(2));
         verify(patientRepository).findAll();
         verify(patientRepository, times(1)).findAll();
     }
@@ -63,15 +43,7 @@ class PatientServiceImplTest {
     @DisplayName("checking get by id patient")
     void testGetPatientByIdReturnPatientAndVerifyFindById() {
         // before
-        Patient expectedPatient = Patient.builder()
-                .id(1)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .middleName("Ivanovich")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 5, 12))
-                .phoneNumber("12345")
-                .build();
+        Patient expectedPatient = getFirstPatient();
         // when
         when(patientRepository.findById(1L)).thenReturn(Optional.of(expectedPatient));
         Patient actualPatient = patientService.getPatientById(1L).get();
@@ -86,24 +58,8 @@ class PatientServiceImplTest {
     @DisplayName("checking save patient")
     void testAddPatientReturnPatientAndVerifyPatientSave() {
         // given
-        Patient firstPatient = Patient.builder()
-                .id(1)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .middleName("Ivanovich")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 5, 12))
-                .phoneNumber("12345")
-                .build();
-        Patient secondPatient = Patient.builder()
-                .id(2)
-                .firstName("Petr")
-                .lastName("Petrov")
-                .middleName("Petrov")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988, 7, 19))
-                .phoneNumber("54321")
-                .build();
+        Patient firstPatient = getFirstPatient();
+        Patient secondPatient = getSecondPatient();
         // when
         when(patientRepository.save(secondPatient)).thenReturn(firstPatient);
         Patient actualPatient = patientService.savePatient(secondPatient);
@@ -120,24 +76,8 @@ class PatientServiceImplTest {
     @DisplayName("checking update patient")
     void testUpdatePatientReturnPatientAndVerifyPatientUpdate() {
         // given
-        Patient firstPatient = Patient.builder()
-                .id(1)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .middleName("Ivanovich")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 5, 12))
-                .phoneNumber("12345")
-                .build();
-        Patient secondPatient = Patient.builder()
-                .id(2)
-                .firstName("Petr")
-                .lastName("Petrov")
-                .middleName("Petrov")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988, 7, 19))
-                .phoneNumber("54321")
-                .build();
+        Patient firstPatient = getFirstPatient();
+        Patient secondPatient = getSecondPatient();
         // when
         when(patientRepository.saveAndFlush(secondPatient)).thenReturn(firstPatient);
         Patient actualPatient = patientService.updatePatient(secondPatient);
@@ -153,24 +93,16 @@ class PatientServiceImplTest {
     @Test
     @DisplayName("checking get by id patient and delete him")
     void testDeletePatientByIdFindPatientByIdAndVerifyPatientDelete() {
-        Patient firstPatient = Patient.builder()
-                .id(1)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .middleName("Ivanovich")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 5, 12))
-                .phoneNumber("12345")
-                .build();
+        Patient patient = getFirstPatient();
         // when
-        when(patientRepository.findById(1L)).thenReturn(Optional.of(firstPatient));
+        when(patientRepository.findById(1L)).thenReturn(Optional.of(patient));
         when(patientRepository.existsById(1L)).thenReturn(true);
-        patientRepository.delete(firstPatient);
-        patientService.deletePatient(firstPatient.getId());
+        patientRepository.delete(patient);
+        patientService.deletePatient(patient.getId());
         //then
-        Assertions.assertNotNull(firstPatient);
-        verify(patientRepository, times(1)).delete(firstPatient);
-        verify(patientRepository).delete(firstPatient);
+        Assertions.assertNotNull(patient);
+        verify(patientRepository, times(1)).delete(patient);
+        verify(patientRepository).delete(patient);
     }
 
 }

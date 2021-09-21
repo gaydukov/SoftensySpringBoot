@@ -4,15 +4,17 @@ import com.softensy.SoftensySpringBoot.dto.*;
 import com.softensy.SoftensySpringBoot.entity.Appointment;
 import com.softensy.SoftensySpringBoot.entity.Doctor;
 import com.softensy.SoftensySpringBoot.entity.Patient;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
 public class TestDataGeneration {
 
-    public Doctor getFirstDoctor() {
+    public static Doctor getFirstDoctor() {
         return Doctor.builder()
                 .id(1)
                 .firstName("Ivan")
@@ -24,7 +26,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public Doctor getSecondDoctor() {
+    public static Doctor getSecondDoctor() {
         return Doctor.builder()
                 .id(2)
                 .firstName("Petr")
@@ -36,7 +38,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public Doctor getThirdDoctor() {
+    public static Doctor getThirdDoctor() {
         return Doctor.builder()
                 .id(3)
                 .firstName("Semen")
@@ -48,7 +50,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public DoctorDto getDoctorDto(Doctor doctor) {
+    public static DoctorDto getDoctorDto(Doctor doctor) {
         return DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
@@ -57,7 +59,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public List<Doctor> getDoctorList() {
+    public static List<Doctor> getDoctorList() {
         List<Doctor> result = new ArrayList<>();
         result.add(getFirstDoctor());
         result.add(getSecondDoctor());
@@ -65,7 +67,7 @@ public class TestDataGeneration {
         return result;
     }
 
-    public List<DoctorDto> getDoctorDtoList() {
+    public static List<DoctorDto> getDoctorDtoList() {
         List<DoctorDto> result = new ArrayList<>();
         result.add(getDoctorDto(getFirstDoctor()));
         result.add(getDoctorDto(getSecondDoctor()));
@@ -73,7 +75,7 @@ public class TestDataGeneration {
         return result;
     }
 
-    public Patient getFirstPatient() {
+    public static Patient getFirstPatient() {
         return Patient.builder()
                 .id(1)
                 .firstName("Ivan")
@@ -85,7 +87,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public Patient getSecondPatient() {
+    public static Patient getSecondPatient() {
         return Patient.builder()
                 .id(2)
                 .firstName("Petr")
@@ -97,7 +99,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public Patient getThirdPatient() {
+    public static Patient getThirdPatient() {
         return Patient.builder()
                 .id(3)
                 .firstName("Ivan")
@@ -109,7 +111,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public PatientDto getPatientDto(Patient patient) {
+    public static PatientDto getPatientDto(Patient patient) {
         return PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
@@ -117,7 +119,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public List<Patient> getPatientList() {
+    public static List<Patient> getPatientList() {
         List<Patient> result = new ArrayList<>();
         result.add(getFirstPatient());
         result.add(getSecondPatient());
@@ -125,7 +127,7 @@ public class TestDataGeneration {
         return result;
     }
 
-    public List<PatientDto> getPatientDtoList() {
+    public static List<PatientDto> getPatientDtoList() {
         List<PatientDto> result = new ArrayList<>();
         result.add(getPatientDto(getFirstPatient()));
         result.add(getPatientDto(getSecondPatient()));
@@ -133,7 +135,7 @@ public class TestDataGeneration {
         return result;
     }
 
-    public List<LocalDateTime> getAppointmentDateList() {
+    public static List<LocalDateTime> getAppointmentDateList() {
         List<LocalDateTime> result = new ArrayList<>();
         result.add(LocalDateTime.of(2021, 11, 1, 9, 30));
         result.add(LocalDateTime.of(2021, 11, 2, 10, 30));
@@ -141,7 +143,7 @@ public class TestDataGeneration {
         return result;
     }
 
-    public Appointment getFirstAppointment() {
+    public static Appointment getFirstAppointment() {
         return Appointment.builder()
                 .id(1)
                 .doctor(getFirstDoctor())
@@ -150,7 +152,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public Appointment getSecondAppointment() {
+    public static Appointment getSecondAppointment() {
         return Appointment.builder()
                 .id(2)
                 .doctor(getSecondDoctor())
@@ -159,7 +161,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public Appointment getThirdAppointment() {
+    public static Appointment getThirdAppointment() {
         return Appointment.builder()
                 .id(3)
                 .doctor(getThirdDoctor())
@@ -168,7 +170,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public List<Appointment> getAppointmentList() {
+    public static List<Appointment> getAppointmentList() {
         List<Appointment> result = new ArrayList<>();
         result.add(getFirstAppointment());
         result.add(getSecondAppointment());
@@ -176,7 +178,7 @@ public class TestDataGeneration {
         return result;
     }
 
-    public AppointmentDto getAppointmentDto(Appointment appointment) {
+    public static AppointmentDto getAppointmentDto(Appointment appointment) {
         return AppointmentDto.builder()
                 .patientId(appointment.getPatient().getId())
                 .doctorId(appointment.getDoctor().getId())
@@ -184,7 +186,7 @@ public class TestDataGeneration {
                 .build();
     }
 
-    public List<AppointmentDto> getAppointmentDtoList() {
+    public static List<AppointmentDto> getAppointmentDtoList() {
         List<AppointmentDto> result = new ArrayList<>();
         result.add(getAppointmentDto(getFirstAppointment()));
         result.add(getAppointmentDto(getSecondAppointment()));
@@ -192,28 +194,28 @@ public class TestDataGeneration {
         return result;
     }
 
-    public DoctorAppointmentDto getFirstDoctorAppointmentDto() {
+    public static DoctorAppointmentDto getFirstDoctorAppointmentDto() {
         return DoctorAppointmentDto.builder()
                 .patientDto(getPatientDto(getFirstPatient()))
                 .appointmentDate(getAppointmentDateList().get(0))
                 .build();
     }
 
-    public DoctorAppointmentDto getSecondDoctorAppointmentDto() {
+    public static DoctorAppointmentDto getSecondDoctorAppointmentDto() {
         return DoctorAppointmentDto.builder()
                 .patientDto(getPatientDto(getSecondPatient()))
                 .appointmentDate(getAppointmentDateList().get(1))
                 .build();
     }
 
-    public DoctorAppointmentDto getThirdDoctorAppointmentDto() {
+    public static DoctorAppointmentDto getThirdDoctorAppointmentDto() {
         return DoctorAppointmentDto.builder()
                 .patientDto(getPatientDto(getThirdPatient()))
                 .appointmentDate(getAppointmentDateList().get(2))
                 .build();
     }
 
-    public List<DoctorAppointmentDto> getDoctorAppointmentDtoList() {
+    public static List<DoctorAppointmentDto> getDoctorAppointmentDtoList() {
         List<DoctorAppointmentDto> result = new ArrayList<>();
         result.add(getFirstDoctorAppointmentDto());
         result.add(getSecondDoctorAppointmentDto());
@@ -221,28 +223,28 @@ public class TestDataGeneration {
         return result;
     }
 
-    public PatientAppointmentDto getFirstPatientAppointmentDto() {
+    public static PatientAppointmentDto getFirstPatientAppointmentDto() {
         return PatientAppointmentDto.builder()
                 .doctorDto(getDoctorDto(getFirstDoctor()))
                 .appointmentDate(getAppointmentDateList().get(0))
                 .build();
     }
 
-    public PatientAppointmentDto getSecondPatientAppointmentDto() {
+    public static PatientAppointmentDto getSecondPatientAppointmentDto() {
         return PatientAppointmentDto.builder()
                 .doctorDto(getDoctorDto(getSecondDoctor()))
                 .appointmentDate(getAppointmentDateList().get(1))
                 .build();
     }
 
-    public PatientAppointmentDto getThirdPatientAppointmentDto() {
+    public static PatientAppointmentDto getThirdPatientAppointmentDto() {
         return PatientAppointmentDto.builder()
                 .doctorDto(getDoctorDto(getThirdDoctor()))
                 .appointmentDate(getAppointmentDateList().get(2))
                 .build();
     }
 
-    public List<PatientAppointmentDto> getPatientAppointmentDtoList() {
+    public static List<PatientAppointmentDto> getPatientAppointmentDtoList() {
         List<PatientAppointmentDto> result = new ArrayList<>();
         result.add(getFirstPatientAppointmentDto());
         result.add(getSecondPatientAppointmentDto());

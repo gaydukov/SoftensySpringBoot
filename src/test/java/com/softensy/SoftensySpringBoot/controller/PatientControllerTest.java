@@ -13,12 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.softensy.SoftensySpringBoot.TestDataGeneration.getFirstPatient;
+import static com.softensy.SoftensySpringBoot.TestDataGeneration.getPatientList;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -37,15 +37,7 @@ class PatientControllerTest {
     @DisplayName("checking get patient by id with status 200")
     void testGetPatientByIdReturnStatus200andPatient() throws Exception {
         //given
-        Patient patient = Patient.builder()
-                .id(1)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .middleName("Ivanovich")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 5, 12))
-                .phoneNumber("12345")
-                .build();
+        Patient patient = getFirstPatient();
         //when
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
@@ -64,15 +56,7 @@ class PatientControllerTest {
     @DisplayName("checking save patient with status 201")
     void testAddNewPatientReturnStatus201AndPatient() throws Exception {
         //given
-        Patient patient = Patient.builder()
-                .id(1)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .middleName("Ivanovich")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 5, 12))
-                .phoneNumber("12345")
-                .build();
+        Patient patient = getFirstPatient();
         //when
         when(patientService.savePatient(patient)).thenReturn(patient);
         //then
@@ -94,15 +78,7 @@ class PatientControllerTest {
     @DisplayName("checking update patient with status 200")
     void testUpdatePatientReturnStatus200AndPatient() throws Exception {
         //given
-        Patient patient = Patient.builder()
-                .id(1)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .middleName("Ivanovich")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 5, 12))
-                .phoneNumber("12345")
-                .build();
+        Patient patient = getFirstPatient();
         //when
         when(patientService.updatePatient(patient)).thenReturn(patient);
         //then
@@ -124,15 +100,7 @@ class PatientControllerTest {
     @DisplayName("checking remove patient with status 204")
     void testRemovePatientFindPatientByIdAndReturnStatus204() throws Exception {
         //given
-        Patient patient = Patient.builder()
-                .id(1)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .middleName("Ivanovich")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 5, 12))
-                .phoneNumber("12345")
-                .build();
+        Patient patient = getFirstPatient();
         //when
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
@@ -144,33 +112,14 @@ class PatientControllerTest {
     @DisplayName("checking get all patients with status 200")
     void testGetAllPatientsReturnStatus200andListPatients() throws Exception {
         //given
-        List<Patient> patients = new ArrayList<>();
-        Patient firstPatient = Patient.builder()
-                .id(1)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .middleName("Ivanovich")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1987, 5, 12))
-                .phoneNumber("12345")
-                .build();
-        Patient secondPatient = Patient.builder()
-                .id(2)
-                .firstName("Petr")
-                .lastName("Petrov")
-                .middleName("Petrov")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988, 7, 19))
-                .phoneNumber("54321")
-                .build();
-        patients.add(firstPatient);
-        patients.add(secondPatient);
+        List<Patient> patients = getPatientList();
         //when
         when(patientService.getAllPatients()).thenReturn(patients);
         //then
         mockMvc.perform(get("/patient"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(Arrays.asList(firstPatient, secondPatient))));
+                .andExpect(content().json(objectMapper.writeValueAsString(Arrays
+                        .asList(patients.get(0), patients.get(1), patients.get(2)))));
     }
 
 }
