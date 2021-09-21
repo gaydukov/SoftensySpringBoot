@@ -1,11 +1,11 @@
 package com.softensy.SoftensySpringBoot.service.serviceImpl;
 
-import com.softensy.SoftensySpringBoot.dto.AppointmentDto;
-import com.softensy.SoftensySpringBoot.dto.DoctorDto;
-import com.softensy.SoftensySpringBoot.dto.PatientDto;
+import com.softensy.SoftensySpringBoot.dto.*;
 import com.softensy.SoftensySpringBoot.entity.Appointment;
 import com.softensy.SoftensySpringBoot.entity.Doctor;
 import com.softensy.SoftensySpringBoot.entity.Patient;
+import com.softensy.SoftensySpringBoot.mapper.DoctorAppointmentMapper;
+import com.softensy.SoftensySpringBoot.mapper.PatientAppointmentMapper;
 import com.softensy.SoftensySpringBoot.repository.AppointmentRepository;
 import com.softensy.SoftensySpringBoot.repository.DoctorRepository;
 import com.softensy.SoftensySpringBoot.repository.PatientRepository;
@@ -18,7 +18,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -27,11 +29,15 @@ class AppointmentServiceImplTest {
     @Autowired
     private AppointmentServiceImpl appointmentService;
     @MockBean
+    private PatientAppointmentMapper patientAppointmentMapper;
+    @MockBean
     private AppointmentRepository appointmentRepository;
     @MockBean
     private DoctorRepository doctorRepository;
     @MockBean
     private PatientRepository patientRepository;
+    @MockBean
+    private DoctorAppointmentMapper doctorAppointmentMapper;
 
     @Test
     @DisplayName("checking create new appointment and saves it")
@@ -55,9 +61,9 @@ class AppointmentServiceImplTest {
                 .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
-        Appointment appointment = new Appointment(1, patient, doctor, dateOfAppointment);
-        AppointmentDto actualAppointmentDto = new AppointmentDto(2, 1, dateOfAppointment);
+        LocalDateTime appointmentDate = LocalDateTime.of(2021, 11, 1, 9, 30);
+        Appointment appointment = new Appointment(1, patient, doctor, appointmentDate);
+        AppointmentDto actualAppointmentDto = new AppointmentDto(2, 1, appointmentDate);
         // when
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
         when(patientRepository.findById(anyLong())).thenReturn(Optional.of(patient));
@@ -96,43 +102,57 @@ class AppointmentServiceImplTest {
                 .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfFirstAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
-        LocalDateTime dateOfSecondAppointment = LocalDateTime.of(2021, 11, 2, 10, 30);
-        LocalDateTime dateOfThirdAppointment = LocalDateTime.of(2021, 11, 4, 11, 30);
-        Appointment firstAppointment = new Appointment(1, patient, doctor, dateOfFirstAppointment);
-        Appointment secondAppointment = new Appointment(2, patient, doctor, dateOfSecondAppointment);
-        Appointment thirdAppointment = new Appointment(3, patient, doctor, dateOfThirdAppointment);
+        LocalDateTime firstAppointmentDate = LocalDateTime.of(2021, 11, 1, 9, 30);
+        LocalDateTime secondAppointmentDate = LocalDateTime.of(2021, 11, 2, 10, 30);
+        LocalDateTime thirdAppointmentDate = LocalDateTime.of(2021, 11, 4, 11, 30);
+        Appointment firstAppointment = new Appointment(1, patient, doctor, firstAppointmentDate);
+        Appointment secondAppointment = new Appointment(2, patient, doctor, secondAppointmentDate);
+        Appointment thirdAppointment = new Appointment(3, patient, doctor, thirdAppointmentDate);
         List<Appointment> appointmentList = new ArrayList<>();
         appointmentList.add(firstAppointment);
         appointmentList.add(secondAppointment);
         appointmentList.add(thirdAppointment);
-        PatientDto actualFirstPatient = PatientDto.builder()
+        PatientDto firstPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
                 .build();
-        PatientDto actualSecondPatient = PatientDto.builder()
+        PatientDto secondPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
                 .build();
-        PatientDto actualThirdPatient = PatientDto.builder()
+        PatientDto thirdPatient = PatientDto.builder()
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
                 .build();
-        Map<LocalDateTime, PatientDto> actualPatientList = new HashMap<>();
-        actualPatientList.put(dateOfFirstAppointment, actualFirstPatient);
-        actualPatientList.put(dateOfSecondAppointment, actualSecondPatient);
-        actualPatientList.put(dateOfThirdAppointment, actualThirdPatient);
+        DoctorAppointmentDto firstDoctorAppointmentDto = DoctorAppointmentDto.builder()
+                .patientDto(firstPatient)
+                .appointmentDate(firstAppointmentDate)
+                .build();
+        DoctorAppointmentDto secondDoctorAppointmentDto = DoctorAppointmentDto.builder()
+                .patientDto(secondPatient)
+                .appointmentDate(secondAppointmentDate)
+                .build();
+        DoctorAppointmentDto thirdDoctorAppointmentDto = DoctorAppointmentDto.builder()
+                .patientDto(thirdPatient)
+                .appointmentDate(thirdAppointmentDate)
+                .build();
+        List<DoctorAppointmentDto> actualPatientList = new ArrayList<>();
+        actualPatientList.add(firstDoctorAppointmentDto);
+        actualPatientList.add(secondDoctorAppointmentDto);
+        actualPatientList.add(thirdDoctorAppointmentDto);
         // when
-        when(appointmentRepository.findAll()).thenReturn(appointmentList);
-        Map<LocalDateTime, PatientDto> expectedPatientList = appointmentService.getAllAppointmentsToDoctor(1L);
+        when(appointmentRepository.findAllByDoctorId(anyLong())).thenReturn(appointmentList);
+        when(doctorAppointmentMapper.entityToDto(appointmentList)).thenReturn(actualPatientList);
+        List<DoctorAppointmentDto> expectedPatientList = appointmentService.getAllDoctorAppointments(1L);
         //then
         Assertions.assertEquals(expectedPatientList, actualPatientList);
         Assertions.assertNotNull(expectedPatientList);
         Assertions.assertNotNull(actualPatientList);
-        verify(appointmentRepository, times(1)).findAll();
+        verify(appointmentRepository, times(1)).findAllByDoctorId(anyLong());
+        verify(doctorAppointmentMapper, times(1)).entityToDto(any(List.class));
     }
 
     @Test
@@ -157,46 +177,60 @@ class AppointmentServiceImplTest {
                 .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfFirstAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
-        LocalDateTime dateOfSecondAppointment = LocalDateTime.of(2021, 11, 2, 10, 30);
-        LocalDateTime dateOfThirdAppointment = LocalDateTime.of(2021, 11, 4, 11, 30);
-        Appointment firstAppointment = new Appointment(1, patient, doctor, dateOfFirstAppointment);
-        Appointment secondAppointment = new Appointment(2, patient, doctor, dateOfSecondAppointment);
-        Appointment thirdAppointment = new Appointment(3, patient, doctor, dateOfThirdAppointment);
+        LocalDateTime firstAppointmentDate = LocalDateTime.of(2021, 11, 1, 9, 30);
+        LocalDateTime secondAppointmentDate = LocalDateTime.of(2021, 11, 2, 10, 30);
+        LocalDateTime thirdAppointmentDate = LocalDateTime.of(2021, 11, 4, 11, 30);
+        Appointment firstAppointment = new Appointment(1, patient, doctor, firstAppointmentDate);
+        Appointment secondAppointment = new Appointment(2, patient, doctor, secondAppointmentDate);
+        Appointment thirdAppointment = new Appointment(3, patient, doctor, thirdAppointmentDate);
         List<Appointment> appointmentList = new ArrayList<>();
         appointmentList.add(firstAppointment);
         appointmentList.add(secondAppointment);
         appointmentList.add(thirdAppointment);
-        DoctorDto actualFirstDoctor = DoctorDto.builder()
+        DoctorDto firstDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
                 .build();
-        DoctorDto actualSecondDoctor = DoctorDto.builder()
+        DoctorDto secondDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
                 .build();
-        DoctorDto actualThirdDoctor = DoctorDto.builder()
+        DoctorDto thirdDoctor = DoctorDto.builder()
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
                 .build();
-        Map<LocalDateTime, DoctorDto> actualDoctorList = new HashMap<>();
-        actualDoctorList.put(dateOfFirstAppointment, actualFirstDoctor);
-        actualDoctorList.put(dateOfSecondAppointment, actualSecondDoctor);
-        actualDoctorList.put(dateOfThirdAppointment, actualThirdDoctor);
+        PatientAppointmentDto firstPatientAppointmentDto = PatientAppointmentDto.builder()
+                .doctorDto(firstDoctor)
+                .appointmentDate(firstAppointmentDate)
+                .build();
+        PatientAppointmentDto secondPatientAppointmentDto = PatientAppointmentDto.builder()
+                .doctorDto(secondDoctor)
+                .appointmentDate(secondAppointmentDate)
+                .build();
+        PatientAppointmentDto thirdPatientAppointmentDto = PatientAppointmentDto.builder()
+                .doctorDto(thirdDoctor)
+                .appointmentDate(thirdAppointmentDate)
+                .build();
+        List<PatientAppointmentDto> actualDoctorList = new ArrayList<>();
+        actualDoctorList.add(firstPatientAppointmentDto);
+        actualDoctorList.add(secondPatientAppointmentDto);
+        actualDoctorList.add(thirdPatientAppointmentDto);
         // when
-        when(appointmentRepository.findAll()).thenReturn(appointmentList);
-        Map<LocalDateTime, DoctorDto> expectedDoctorList = appointmentService.getAllPatientAppointments(2L);
+        when(appointmentRepository.findAllByPatientId(anyLong())).thenReturn(appointmentList);
+        when(patientAppointmentMapper.entityToDto(appointmentList)).thenReturn(actualDoctorList);
+        List<PatientAppointmentDto> expectedDoctorList = appointmentService.getAllPatientAppointments(2L);
         //then
         Assertions.assertEquals(expectedDoctorList, actualDoctorList);
         Assertions.assertNotNull(expectedDoctorList);
         Assertions.assertNotNull(actualDoctorList);
-        verify(appointmentRepository, times(1)).findAll();
+        verify(appointmentRepository, times(1)).findAllByPatientId(anyLong());
+        verify(patientAppointmentMapper, times(1)).entityToDto(any(List.class));
     }
 
     @Test
@@ -221,8 +255,8 @@ class AppointmentServiceImplTest {
                 .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
-        LocalDateTime dateOfAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
-        Appointment appointment = new Appointment(1, patient, doctor, dateOfAppointment);
+        LocalDateTime appointmentDate = LocalDateTime.of(2021, 11, 1, 9, 30);
+        Appointment appointment = new Appointment(1, patient, doctor, appointmentDate);
         // when
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
         when(appointmentRepository.existsById(1L)).thenReturn(true);

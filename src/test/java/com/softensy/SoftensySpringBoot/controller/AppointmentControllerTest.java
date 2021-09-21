@@ -1,11 +1,7 @@
 package com.softensy.SoftensySpringBoot.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softensy.SoftensySpringBoot.dto.AppointmentDto;
-import com.softensy.SoftensySpringBoot.dto.DoctorDto;
-import com.softensy.SoftensySpringBoot.dto.PatientDto;
-import com.softensy.SoftensySpringBoot.entity.Doctor;
-import com.softensy.SoftensySpringBoot.entity.Patient;
+import com.softensy.SoftensySpringBoot.dto.*;
 import com.softensy.SoftensySpringBoot.service.AppointmentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,18 +13,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.hamcrest.Matchers.hasKey;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AppointmentController.class)
@@ -47,7 +42,7 @@ class AppointmentControllerTest {
         AppointmentDto appointmentDto = AppointmentDto.builder()
                 .patientId(1L)
                 .doctorId(1L)
-                .dateOfAppointment(LocalDateTime.of(2021, 9, 19, 00, 33))
+                .appointmentDate(LocalDateTime.of(2021, 9, 19, 0, 33))
                 .build();
         //when
         when(appointmentService.createAppointment(any(AppointmentDto.class))).thenReturn(appointmentDto);
@@ -64,95 +59,97 @@ class AppointmentControllerTest {
     @DisplayName("checking get list appointments to doctor by doctor id with status 200")
     void testGetAppointmentToDoctorByDoctorIdReturnStatus200andListPatientsAppointment() throws Exception {
         // given
-        Patient patient = Patient.builder()
-                .id(2)
-                .firstName("Petr")
-                .lastName("Petrov")
-                .middleName("Petrov")
-                .doctorId(1)
-                .dateOfBirth(LocalDate.of(1988, 7, 19))
-                .phoneNumber("54321")
-                .build();
-        LocalDateTime dateOfFirstAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
-        LocalDateTime dateOfSecondAppointment = LocalDateTime.of(2021, 11, 2, 10, 30);
-        LocalDateTime dateOfThirdAppointment = LocalDateTime.of(2021, 11, 4, 11, 30);
+        LocalDateTime firstAppointmentDate = LocalDateTime.of(2021, 11, 1, 9, 30);
+        LocalDateTime secondAppointmentDate = LocalDateTime.of(2021, 11, 2, 10, 30);
+        LocalDateTime thirdAppointmentDate = LocalDateTime.of(2021, 11, 4, 11, 30);
         PatientDto firstPatient = PatientDto.builder()
-                .firstName(patient.getFirstName())
-                .lastName(patient.getLastName())
-                .middleName(patient.getMiddleName())
+                .firstName("Petr")
+                .lastName("Pet")
+                .middleName("Petrovich")
                 .build();
         PatientDto secondPatient = PatientDto.builder()
-                .firstName(patient.getFirstName())
-                .lastName(patient.getLastName())
-                .middleName(patient.getMiddleName())
+                .firstName("Ivan")
+                .lastName("Ivanov")
+                .middleName("Ivanovich")
                 .build();
         PatientDto thirdPatient = PatientDto.builder()
-                .firstName(patient.getFirstName())
-                .lastName(patient.getLastName())
-                .middleName(patient.getMiddleName())
+                .firstName("Semen")
+                .lastName("Semenev")
+                .middleName("Semenovicyh")
                 .build();
-        Map<LocalDateTime, PatientDto> patientDtoList = new HashMap<>();
-        patientDtoList.put(dateOfFirstAppointment, firstPatient);
-        patientDtoList.put(dateOfSecondAppointment, secondPatient);
-        patientDtoList.put(dateOfThirdAppointment, thirdPatient);
+        DoctorAppointmentDto firstDoctorAppointmentDto = DoctorAppointmentDto.builder()
+                .patientDto(firstPatient)
+                .appointmentDate(firstAppointmentDate)
+                .build();
+        DoctorAppointmentDto secondDoctorAppointmentDto = DoctorAppointmentDto.builder()
+                .patientDto(secondPatient)
+                .appointmentDate(secondAppointmentDate)
+                .build();
+        DoctorAppointmentDto thirdDoctorAppointmentDto = DoctorAppointmentDto.builder()
+                .patientDto(thirdPatient)
+                .appointmentDate(thirdAppointmentDate)
+                .build();
+        List<DoctorAppointmentDto> doctorAppointmentDtoList = new ArrayList<>();
+        doctorAppointmentDtoList.add(firstDoctorAppointmentDto);
+        doctorAppointmentDtoList.add(secondDoctorAppointmentDto);
+        doctorAppointmentDtoList.add(thirdDoctorAppointmentDto);
         //when
-        when(appointmentService.getAllAppointmentsToDoctor(anyLong())).thenReturn(patientDtoList);
+        when(appointmentService.getAllDoctorAppointments(anyLong())).thenReturn(doctorAppointmentDtoList);
         //then
         mockMvc.perform(get("/appointment/doctor/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isMap())
-                .andExpect(jsonPath("$").value(hasKey("2021-11-01T09:30")))
-                .andExpect(jsonPath("$").value(hasKey("2021-11-02T10:30")))
-                .andExpect(jsonPath("$").value(hasKey("2021-11-04T11:30")));
+                .andExpect(content().json(objectMapper.
+                        writeValueAsString(Arrays.asList(firstDoctorAppointmentDto, secondDoctorAppointmentDto, thirdDoctorAppointmentDto))));
     }
 
     @Test
     @DisplayName("checking get list patient appointments to doctors by patient id with status 200")
     void testGetPatientAppointmentToDoctorsByPatientIdReturnStatus200andListDoctorsAppointment() throws Exception {
         // given
-        Doctor doctor = Doctor.builder()
-                .id(1)
+        LocalDateTime firstAppointmentDate = LocalDateTime.of(2021, 11, 1, 9, 30);
+        LocalDateTime secondAppointmentDate = LocalDateTime.of(2021, 11, 2, 10, 30);
+        LocalDateTime thirdAppointmentDate = LocalDateTime.of(2021, 11, 4, 11, 30);
+        DoctorDto firstDoctor = DoctorDto.builder()
                 .firstName("Ivan")
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
                 .position("Hirurg")
-                .dateOfBirth(LocalDate.of(1987, 5, 12))
-                .phoneNumber("45632147")
-                .build();
-        LocalDateTime dateOfFirstAppointment = LocalDateTime.of(2021, 11, 1, 9, 30);
-        LocalDateTime dateOfSecondAppointment = LocalDateTime.of(2021, 11, 2, 10, 30);
-        LocalDateTime dateOfThirdAppointment = LocalDateTime.of(2021, 11, 4, 11, 30);
-        DoctorDto firstDoctor = DoctorDto.builder()
-                .firstName(doctor.getFirstName())
-                .lastName(doctor.getLastName())
-                .middleName(doctor.getMiddleName())
-                .position(doctor.getPosition())
                 .build();
         DoctorDto secondDoctor = DoctorDto.builder()
-                .firstName(doctor.getFirstName())
-                .lastName(doctor.getLastName())
-                .middleName(doctor.getMiddleName())
-                .position(doctor.getPosition())
+                .firstName("Petr")
+                .lastName("Pet")
+                .middleName("Petrovich")
+                .position("Terape")
                 .build();
         DoctorDto thirdDoctor = DoctorDto.builder()
-                .firstName(doctor.getFirstName())
-                .lastName(doctor.getLastName())
-                .middleName(doctor.getMiddleName())
-                .position(doctor.getPosition())
+                .firstName("Semen")
+                .lastName("Semenev")
+                .middleName("Semenovicyh")
+                .position("Okulist")
                 .build();
-        Map<LocalDateTime, DoctorDto> doctorDtoList = new HashMap<>();
-        doctorDtoList.put(dateOfFirstAppointment, firstDoctor);
-        doctorDtoList.put(dateOfSecondAppointment, secondDoctor);
-        doctorDtoList.put(dateOfThirdAppointment, thirdDoctor);
+        PatientAppointmentDto firstPatientAppointmentDto = PatientAppointmentDto.builder()
+                .doctorDto(firstDoctor)
+                .appointmentDate(firstAppointmentDate)
+                .build();
+        PatientAppointmentDto secondPatientAppointmentDto = PatientAppointmentDto.builder()
+                .doctorDto(secondDoctor)
+                .appointmentDate(secondAppointmentDate)
+                .build();
+        PatientAppointmentDto thirdPatientAppointmentDto = PatientAppointmentDto.builder()
+                .doctorDto(thirdDoctor)
+                .appointmentDate(thirdAppointmentDate)
+                .build();
+        List<PatientAppointmentDto> doctorDtoList = new ArrayList<>();
+        doctorDtoList.add(firstPatientAppointmentDto);
+        doctorDtoList.add(secondPatientAppointmentDto);
+        doctorDtoList.add(thirdPatientAppointmentDto);
         //when
         when(appointmentService.getAllPatientAppointments(anyLong())).thenReturn(doctorDtoList);
         //then
         mockMvc.perform(get("/appointment/patient/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isMap())
-                .andExpect(jsonPath("$").value(hasKey("2021-11-01T09:30")))
-                .andExpect(jsonPath("$").value(hasKey("2021-11-02T10:30")))
-                .andExpect(jsonPath("$").value(hasKey("2021-11-04T11:30")));
+                .andExpect(content().json(objectMapper.
+                        writeValueAsString(Arrays.asList(firstPatientAppointmentDto, secondPatientAppointmentDto, thirdPatientAppointmentDto))));
     }
 
     @Test
@@ -163,6 +160,7 @@ class AppointmentControllerTest {
         //then
         mockMvc.perform(delete("/appointment/1"))
                 .andExpect(status().isNoContent());
+        verify(appointmentService, times(1)).deleteAppointment(1L);
     }
 
 }

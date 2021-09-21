@@ -12,9 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AppointmentDto {
-    private long patientId;
-    private long doctorId;
+public class PatientAppointmentDto {
+    DoctorDto doctorDto;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm dd-MM-yyyy")
     private LocalDateTime appointmentDate;
 
