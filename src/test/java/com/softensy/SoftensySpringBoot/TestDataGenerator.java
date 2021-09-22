@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-public class TestDataGeneration {
+public class TestDataGenerator {
 
     public static Doctor getFirstDoctor() {
         return Doctor.builder()

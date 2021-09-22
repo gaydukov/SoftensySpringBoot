@@ -12,7 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
-import static com.softensy.SoftensySpringBoot.TestDataGeneration.*;
+import static com.softensy.SoftensySpringBoot.TestDataGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,6 +38,12 @@ class PatientAppointmentMapperTest {
         when(doctorMapper.entityToDto(getThirdDoctor())).thenReturn(doctorDtoList.get(2));
         List<PatientAppointmentDto> actualAppointmentDtoList = patientAppointmentMapper.entityToDto(appointmentList);
         //then
+        for (int index = 0; index < expectedAppointmentDtoList.size(); index++) {
+            assertEquals(expectedAppointmentDtoList.get(index).getDoctorDto()
+                    , actualAppointmentDtoList.get(index).getDoctorDto());
+            assertEquals(expectedAppointmentDtoList.get(index).getAppointmentDate()
+                    , actualAppointmentDtoList.get(index).getAppointmentDate());
+        }
         assertEquals(expectedAppointmentDtoList, actualAppointmentDtoList);
         assertNotNull(expectedAppointmentDtoList);
         assertNotNull(actualAppointmentDtoList);

@@ -3,6 +3,7 @@ package com.softensy.SoftensySpringBoot.service.serviceImpl;
 import com.softensy.SoftensySpringBoot.dto.AppointmentDto;
 import com.softensy.SoftensySpringBoot.dto.DoctorAppointmentDto;
 import com.softensy.SoftensySpringBoot.dto.PatientAppointmentDto;
+import com.softensy.SoftensySpringBoot.exception.NotFoundException;
 import com.softensy.SoftensySpringBoot.mapper.AppointmentMapper;
 import com.softensy.SoftensySpringBoot.mapper.DoctorAppointmentMapper;
 import com.softensy.SoftensySpringBoot.mapper.PatientAppointmentMapper;
@@ -11,9 +12,7 @@ import com.softensy.SoftensySpringBoot.repository.DoctorRepository;
 import com.softensy.SoftensySpringBoot.repository.PatientRepository;
 import com.softensy.SoftensySpringBoot.service.AppointmentService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
         AppointmentMapper appointmentMapper = new AppointmentMapper(doctorRepository, patientRepository);
         if (appointmentDto == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Appointment not found");
+            throw new NotFoundException("Appointment not found");
         }
         appointmentRepository.save(appointmentMapper.dtoToEntity(appointmentDto));
         return appointmentDto;
@@ -49,7 +48,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void deleteAppointment(long id) {
         if (!appointmentRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Appointment not found");
+            throw new NotFoundException("Appointment not found");
         }
         appointmentRepository.deleteById(id);
     }

@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.softensy.SoftensySpringBoot.TestDataGeneration.getFirstPatient;
-import static com.softensy.SoftensySpringBoot.TestDataGeneration.getPatientDto;
+import static com.softensy.SoftensySpringBoot.TestDataGenerator.getFirstPatient;
+import static com.softensy.SoftensySpringBoot.TestDataGenerator.getPatientDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -26,6 +26,9 @@ class PatientMapperTest {
         // when
         PatientDto actualPatientDto = patientMapper.entityToDto(patient);
         //then
+        assertEquals(expectedPatientDto.getFirstName(), actualPatientDto.getFirstName());
+        assertEquals(expectedPatientDto.getLastName(), actualPatientDto.getLastName());
+        assertEquals(expectedPatientDto.getMiddleName(), actualPatientDto.getMiddleName());
         assertEquals(expectedPatientDto, actualPatientDto);
         assertNotNull(expectedPatientDto);
         assertNotNull(actualPatientDto);

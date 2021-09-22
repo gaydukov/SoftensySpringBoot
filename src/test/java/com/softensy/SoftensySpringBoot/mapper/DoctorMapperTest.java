@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.softensy.SoftensySpringBoot.TestDataGeneration.getDoctorDto;
-import static com.softensy.SoftensySpringBoot.TestDataGeneration.getFirstDoctor;
+import static com.softensy.SoftensySpringBoot.TestDataGenerator.getDoctorDto;
+import static com.softensy.SoftensySpringBoot.TestDataGenerator.getFirstDoctor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -26,6 +26,10 @@ class DoctorMapperTest {
         // when
         DoctorDto actualDoctorDto = doctorMapper.entityToDto(doctor);
         //then
+        assertEquals(expectedDoctorDto.getFirstName(), actualDoctorDto.getFirstName());
+        assertEquals(expectedDoctorDto.getLastName(), actualDoctorDto.getLastName());
+        assertEquals(expectedDoctorDto.getMiddleName(), actualDoctorDto.getMiddleName());
+        assertEquals(expectedDoctorDto.getPosition(), actualDoctorDto.getPosition());
         assertEquals(expectedDoctorDto, actualDoctorDto);
         assertNotNull(expectedDoctorDto);
         assertNotNull(actualDoctorDto);

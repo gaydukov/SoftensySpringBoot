@@ -14,7 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Optional;
 
-import static com.softensy.SoftensySpringBoot.TestDataGeneration.*;
+import static com.softensy.SoftensySpringBoot.TestDataGenerator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -42,6 +42,10 @@ class AppointmentMapperTest {
         when(patientRepository.findById(anyLong())).thenReturn(Optional.of(patient));
         Appointment actualAppointment = appointmentMapper.dtoToEntity(appointmentDto);
         //then
+        assertEquals(expectedAppointment.getId(), actualAppointment.getId());
+        assertEquals(expectedAppointment.getDoctor(), actualAppointment.getDoctor());
+        assertEquals(expectedAppointment.getPatient(), actualAppointment.getPatient());
+        assertEquals(expectedAppointment.getAppointmentDate(), actualAppointment.getAppointmentDate());
         assertEquals(expectedAppointment, actualAppointment);
         assertNotNull(expectedAppointment);
         assertNotNull(actualAppointment);

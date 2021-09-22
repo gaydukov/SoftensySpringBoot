@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.softensy.SoftensySpringBoot.TestDataGeneration.getFirstPatient;
-import static com.softensy.SoftensySpringBoot.TestDataGeneration.getPatientList;
+import static com.softensy.SoftensySpringBoot.TestDataGenerator.getFirstPatient;
+import static com.softensy.SoftensySpringBoot.TestDataGenerator.getPatientList;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

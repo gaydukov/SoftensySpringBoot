@@ -1,12 +1,12 @@
 package com.softensy.SoftensySpringBoot.service.serviceImpl;
 
 import com.softensy.SoftensySpringBoot.entity.Doctor;
+import com.softensy.SoftensySpringBoot.exception.BadRequestException;
+import com.softensy.SoftensySpringBoot.exception.NotFoundException;
 import com.softensy.SoftensySpringBoot.repository.DoctorRepository;
 import com.softensy.SoftensySpringBoot.service.DoctorService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ public class DoctorServiceImpl implements DoctorService {
     public List<Doctor> getAllDoctors() {
         List<Doctor> doctors = doctorRepository.findAll();
         if (doctors.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctors not found");
+            throw new NotFoundException("Doctor not found");
         }
         return doctors;
     }
@@ -29,7 +29,7 @@ public class DoctorServiceImpl implements DoctorService {
     public Optional<Doctor> getDoctorById(Long id) {
         Optional<Doctor> doctor = doctorRepository.findById(id);
         if (doctor.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found");
+            throw new NotFoundException("Doctor not found");
         }
         return doctor;
     }
@@ -37,7 +37,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public Doctor saveDoctor(Doctor doctor) {
         if (doctor == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Doctor is empty");
+            throw new BadRequestException("Doctor is empty");
         }
         return doctorRepository.save(doctor);
     }
@@ -45,7 +45,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public Doctor updateDoctor(Doctor doctor) {
         if (doctor == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Doctor is empty");
+            throw new BadRequestException("Doctor is empty");
         }
         return doctorRepository.saveAndFlush(doctor);
     }
@@ -53,7 +53,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public void deleteDoctor(Long id) {
         if (!doctorRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Doctor not found");
+            throw new BadRequestException("Doctor is empty");
         }
         doctorRepository.deleteById(id);
     }

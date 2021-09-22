@@ -21,7 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 import java.util.Optional;
 
-import static com.softensy.SoftensySpringBoot.TestDataGeneration.*;
+import static com.softensy.SoftensySpringBoot.TestDataGenerator.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest

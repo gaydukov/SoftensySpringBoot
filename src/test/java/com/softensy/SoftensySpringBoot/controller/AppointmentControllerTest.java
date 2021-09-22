@@ -18,13 +18,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.softensy.SoftensySpringBoot.TestDataGeneration.*;
+import static com.softensy.SoftensySpringBoot.TestDataGenerator.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AppointmentController.class)
@@ -48,7 +48,9 @@ class AppointmentControllerTest {
                         .content(objectMapper.writeValueAsString(appointmentDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.patientId").value(1))
+                .andExpect(jsonPath("$.doctorId").value(1))
+                .andExpect(jsonPath("$.appointmentDate").value("09:30 01-11-2021"))
                 .andExpect(content().json(objectMapper.writeValueAsString(appointmentDto)));
     }
 
