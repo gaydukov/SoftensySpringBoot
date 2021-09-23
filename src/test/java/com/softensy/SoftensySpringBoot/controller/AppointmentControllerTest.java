@@ -15,16 +15,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.softensy.SoftensySpringBoot.TestDataGenerator.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AppointmentController.class)
@@ -64,8 +65,21 @@ class AppointmentControllerTest {
         //then
         mockMvc.perform(get("/appointment/doctor/1"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(content().json(objectMapper.writeValueAsString(Arrays.
                         asList(doctorAppointmentDtoList.get(0), doctorAppointmentDtoList.get(1), doctorAppointmentDtoList.get(2)))));
+        for (int index = 0; index < doctorAppointmentDtoList.size(); index++) {
+            mockMvc.perform(get("/appointment/doctor/1"))
+                    .andExpect(jsonPath("$[" + index + "].patientDto.firstName")
+                            .value(doctorAppointmentDtoList.get(index).getPatientDto().getFirstName()))
+                    .andExpect(jsonPath("$[" + index + "].patientDto.lastName")
+                            .value(doctorAppointmentDtoList.get(index).getPatientDto().getLastName()))
+                    .andExpect(jsonPath("$[" + index + "].patientDto.middleName")
+                            .value(doctorAppointmentDtoList.get(index).getPatientDto().getMiddleName()))
+                    .andExpect(jsonPath("$[" + index + "].appointmentDate")
+                            .value(doctorAppointmentDtoList.get(index).getAppointmentDate().format(DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy"))));
+        }
+
     }
 
     @Test
@@ -78,8 +92,20 @@ class AppointmentControllerTest {
         //then
         mockMvc.perform(get("/appointment/patient/1"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(content().json(objectMapper.writeValueAsString(Arrays
                         .asList(patientAppointmentDtoList.get(0), patientAppointmentDtoList.get(1), patientAppointmentDtoList.get(2)))));
+        for (int index = 0; index < patientAppointmentDtoList.size(); index++) {
+            mockMvc.perform(get("/appointment/patient/1"))
+                    .andExpect(jsonPath("$[" + index + "].doctorDto.firstName")
+                            .value(patientAppointmentDtoList.get(index).getDoctorDto().getFirstName()))
+                    .andExpect(jsonPath("$[" + index + "].doctorDto.lastName")
+                            .value(patientAppointmentDtoList.get(index).getDoctorDto().getLastName()))
+                    .andExpect(jsonPath("$[" + index + "].doctorDto.middleName")
+                            .value(patientAppointmentDtoList.get(index).getDoctorDto().getMiddleName()))
+                    .andExpect(jsonPath("$[" + index + "].appointmentDate")
+                            .value(patientAppointmentDtoList.get(index).getAppointmentDate().format(DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy"))));
+        }
     }
 
     @Test

@@ -8,8 +8,6 @@ import com.softensy.SoftensySpringBoot.mapper.AppointmentMapper;
 import com.softensy.SoftensySpringBoot.mapper.DoctorAppointmentMapper;
 import com.softensy.SoftensySpringBoot.mapper.PatientAppointmentMapper;
 import com.softensy.SoftensySpringBoot.repository.AppointmentRepository;
-import com.softensy.SoftensySpringBoot.repository.DoctorRepository;
-import com.softensy.SoftensySpringBoot.repository.PatientRepository;
 import com.softensy.SoftensySpringBoot.service.AppointmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,14 +18,12 @@ import java.util.List;
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
-    private final DoctorRepository doctorRepository;
-    private final PatientRepository patientRepository;
+    private final AppointmentMapper appointmentMapper;
     private final DoctorAppointmentMapper doctorAppointmentMapper;
     private final PatientAppointmentMapper patientAppointmentMapper;
 
     @Override
     public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
-        AppointmentMapper appointmentMapper = new AppointmentMapper(doctorRepository, patientRepository);
         if (appointmentDto == null) {
             throw new NotFoundException("Appointment not found");
         }
