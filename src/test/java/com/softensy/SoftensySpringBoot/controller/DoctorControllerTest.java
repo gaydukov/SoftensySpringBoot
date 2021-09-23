@@ -108,7 +108,7 @@ class DoctorControllerTest {
         when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(doctor));
         //then
         mockMvc.perform(delete("/doctor/1"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
     }
 
     @Test

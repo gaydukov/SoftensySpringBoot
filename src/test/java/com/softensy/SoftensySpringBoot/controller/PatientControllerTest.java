@@ -105,7 +105,7 @@ class PatientControllerTest {
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
         mockMvc.perform(delete("/patient/1"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
     }
 
     @Test
