@@ -1,15 +1,18 @@
 package com.softensy.SoftensySpringBoot;
 
 import com.softensy.SoftensySpringBoot.dto.*;
-import com.softensy.SoftensySpringBoot.entity.Appointment;
-import com.softensy.SoftensySpringBoot.entity.Doctor;
-import com.softensy.SoftensySpringBoot.entity.Patient;
+import com.softensy.SoftensySpringBoot.entity.*;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 public class TestDataGenerator {
@@ -250,6 +253,52 @@ public class TestDataGenerator {
         result.add(getSecondPatientAppointmentDto());
         result.add(getThirdPatientAppointmentDto());
         return result;
+    }
+
+    public static UserSecurity getUserSecurity() {
+        UserSecurity userSecurity = new UserSecurity();
+        userSecurity.setId(1L);
+        userSecurity.setLogin("user");
+        userSecurity.setPassword("user");
+        userSecurity.setRole(Role.ADMIN);
+        return userSecurity;
+    }
+
+    private static Set<SimpleGrantedAuthority> getAuthorities() {
+        Set<SimpleGrantedAuthority> authority = new HashSet<>();
+        authority.add(new SimpleGrantedAuthority("admin:write"));
+        authority.add(new SimpleGrantedAuthority("appointment:read"));
+        authority.add(new SimpleGrantedAuthority("appointment:write"));
+        authority.add(new SimpleGrantedAuthority("doctor:read"));
+        authority.add(new SimpleGrantedAuthority("doctor:write"));
+        authority.add(new SimpleGrantedAuthority("patient:read"));
+        authority.add(new SimpleGrantedAuthority("patient:write"));
+        return authority;
+    }
+
+    public static UserDetails getUserDetails() {
+        return new User("user", "user", true, true, true, true,
+                getAuthorities());
+    }
+
+    public static PatientSecurity getPatientSecurity() {
+        PatientSecurity patientSecurity = new PatientSecurity();
+        patientSecurity.setId(1L);
+        patientSecurity.setLogin("user");
+        patientSecurity.setPassword("user");
+        patientSecurity.setRole(Role.PATIENT);
+        patientSecurity.setPatient(getFirstPatient());
+        return patientSecurity;
+    }
+
+    public static DoctorSecurity getDoctorSecurity() {
+        DoctorSecurity doctorSecurity = new DoctorSecurity();
+        doctorSecurity.setId(1L);
+        doctorSecurity.setLogin("user");
+        doctorSecurity.setPassword("user");
+        doctorSecurity.setRole(Role.PATIENT);
+        doctorSecurity.setDoctor(getFirstDoctor());
+        return doctorSecurity;
     }
 
 }

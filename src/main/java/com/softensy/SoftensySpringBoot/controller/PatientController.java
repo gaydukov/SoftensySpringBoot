@@ -33,7 +33,7 @@ public class PatientController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('patient:write') or (hasAuthority('patient:write') and @userDetailsServiceImpl.hasPatient(#patient))")
+    @PreAuthorize("hasAuthority('admin:write') or (hasAuthority('patient:write') and @userDetailsServiceImpl.hasPatient(#patient))")
     public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient) {
         return new ResponseEntity<>(patientService.updatePatient(patient), HttpStatus.OK);
     }

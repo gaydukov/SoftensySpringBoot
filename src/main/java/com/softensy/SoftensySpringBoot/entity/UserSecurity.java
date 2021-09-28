@@ -1,11 +1,13 @@
 package com.softensy.SoftensySpringBoot.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @MappedSuperclass
 @Data
+@NoArgsConstructor
 public class UserSecurity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

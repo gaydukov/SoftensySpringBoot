@@ -5,6 +5,7 @@ import com.softensy.SoftensySpringBoot.dto.AppointmentDto;
 import com.softensy.SoftensySpringBoot.dto.DoctorAppointmentDto;
 import com.softensy.SoftensySpringBoot.dto.PatientAppointmentDto;
 import com.softensy.SoftensySpringBoot.service.AppointmentService;
+import com.softensy.SoftensySpringBoot.service.serviceImpl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,17 +32,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(AppointmentController.class)
+@ContextConfiguration()
 class AppointmentControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+    @MockBean(name = "userDetailsServiceImpl")
+    private UserDetailsServiceImpl userDetailsService;
     @MockBean
     private AppointmentService appointmentService;
 
     @Test
-    @DisplayName("checking save appointment with status 201")
-    void testCreateNewAppointmentReturnStatus201AndAppointmentDto() throws Exception {
+    @DisplayName("checking save appointment with authenticated with status 201")
+    @WithMockUser(authorities = "appointment:write")
+    void testCreateNewAppointmentWithAuthenticatedReturnStatus201AndAppointmentDto() throws Exception {
         //given
         AppointmentDto appointmentDto = getAppointmentDto(getFirstAppointment());
         //when
@@ -56,11 +63,29 @@ class AppointmentControllerTest {
     }
 
     @Test
-    @DisplayName("checking get list appointments to doctor by doctor id with status 200")
-    void testGetAppointmentToDoctorByDoctorIdReturnStatus200andListPatientsAppointment() throws Exception {
+    @DisplayName("checking forbidden save appointment with status 403")
+    @WithMockUser
+    void testCreateNewAppointmentWithoutAuthenticatedReturnStatus403() throws Exception {
+        //given
+        AppointmentDto appointmentDto = getAppointmentDto(getFirstAppointment());
+        //when
+        when(appointmentService.createAppointment(any(AppointmentDto.class))).thenReturn(appointmentDto);
+        //then
+        mockMvc.perform(post("/appointment")
+                        .content(objectMapper.writeValueAsString(appointmentDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking get list appointments to doctor by doctor id with authenticated with status 200")
+    @WithMockUser(authorities = "doctor:read")
+    void testGetAppointmentToDoctorByDoctorIdWithAuthenticatedReturnStatus200andListPatientsAppointment() throws Exception {
         // given
         List<DoctorAppointmentDto> doctorAppointmentDtoList = getDoctorAppointmentDtoList();
         //when
+        when(userDetailsService.hasDoctorId(1L)).thenReturn(true);
         when(appointmentService.getAllDoctorAppointments(anyLong())).thenReturn(doctorAppointmentDtoList);
         //then
         mockMvc.perform(get("/appointment/doctor/1"))
@@ -83,11 +108,41 @@ class AppointmentControllerTest {
     }
 
     @Test
-    @DisplayName("checking get list patient appointments to doctors by patient id with status 200")
-    void testGetPatientAppointmentToDoctorsByPatientIdReturnStatus200andListDoctorsAppointment() throws Exception {
+    @DisplayName("checking forbidden get list appointments to doctor by doctor id with another authenticated with status 403")
+    @WithMockUser(authorities = "patient:read")
+    void testGetAppointmentToDoctorByDoctorIdWithAnotherAuthenticatedReturnStatus403() throws Exception {
+        // given
+        List<DoctorAppointmentDto> doctorAppointmentDtoList = getDoctorAppointmentDtoList();
+        //when
+        when(userDetailsService.hasDoctorId(1L)).thenReturn(true);
+        when(appointmentService.getAllDoctorAppointments(anyLong())).thenReturn(doctorAppointmentDtoList);
+        //then
+        mockMvc.perform(get("/appointment/doctor/1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking forbidden get list appointments to doctor by doctor id with another authenticated with status 403")
+    @WithMockUser(authorities = "doctor:read")
+    void testGetAppointmentToDoctorByDoctorIdWithAnotherIdReturnStatus403() throws Exception {
+        // given
+        List<DoctorAppointmentDto> doctorAppointmentDtoList = getDoctorAppointmentDtoList();
+        //when
+        when(userDetailsService.hasDoctorId(2L)).thenReturn(true);
+        when(appointmentService.getAllDoctorAppointments(anyLong())).thenReturn(doctorAppointmentDtoList);
+        //then
+        mockMvc.perform(get("/appointment/doctor/1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking get list patient appointments to doctors by patient id with authenticated with status 200")
+    @WithMockUser(authorities = "patient:read")
+    void testGetPatientAppointmentToDoctorsByPatientIdWithAuthenticatedReturnStatus200andListDoctorsAppointment() throws Exception {
         // given
         List<PatientAppointmentDto> patientAppointmentDtoList = getPatientAppointmentDtoList();
         //when
+        when(userDetailsService.hasPatientId(1L)).thenReturn(true);
         when(appointmentService.getAllPatientAppointments(anyLong())).thenReturn(patientAppointmentDtoList);
         //then
         mockMvc.perform(get("/appointment/patient/1"))
@@ -109,14 +164,95 @@ class AppointmentControllerTest {
     }
 
     @Test
-    @DisplayName("checking remove appointment with status 204")
-    void testRemoveAppointmentReturnStatus204() throws Exception {
+    @DisplayName("checking forbidden get list patient appointments to doctors by patient id with another authenticated with status 403")
+    @WithMockUser(authorities = "doctor:read")
+    void testGetPatientAppointmentToDoctorsByPatientIdWithAnotherAuthenticatedReturnStatus403() throws Exception {
+        // given
+        List<PatientAppointmentDto> patientAppointmentDtoList = getPatientAppointmentDtoList();
+        //when
+        when(userDetailsService.hasPatientId(1L)).thenReturn(true);
+        when(appointmentService.getAllPatientAppointments(anyLong())).thenReturn(patientAppointmentDtoList);
+        //then
+        mockMvc.perform(get("/appointment/patient/1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking forbidden get list patient appointments to doctors by patient id with another id with status 403")
+    @WithMockUser(authorities = "patient:read")
+    void testGetPatientAppointmentToDoctorsByPatientIdWithAnotherIdReturnStatus200andListDoctorsAppointment() throws Exception {
+        // given
+        List<PatientAppointmentDto> patientAppointmentDtoList = getPatientAppointmentDtoList();
+        //when
+        when(userDetailsService.hasPatientId(2L)).thenReturn(true);
+        when(appointmentService.getAllPatientAppointments(anyLong())).thenReturn(patientAppointmentDtoList);
+        //then
+        mockMvc.perform(get("/appointment/patient/1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking remove appointment with authenticated admin with status 200")
+    @WithMockUser(authorities = "admin:write")
+    void testRemoveAppointmentWithAuthenticatedAdminReturnStatus200() throws Exception {
         //when
         doNothing().when(appointmentService).deleteAppointment(1L);
         //then
         mockMvc.perform(delete("/appointment/1"))
                 .andExpect(status().isOk());
         verify(appointmentService, times(1)).deleteAppointment(1L);
+    }
+
+    @Test
+    @DisplayName("checking remove appointment with authenticated doctor with status 200")
+    @WithMockUser(authorities = "doctor:write")
+    void testRemoveAppointmentWithAuthenticatedDoctorReturnStatus200() throws Exception {
+        //when
+        when(userDetailsService.hasAppointmentAuthorityDoctor(1L)).thenReturn(true);
+        doNothing().when(appointmentService).deleteAppointment(1L);
+        //then
+        mockMvc.perform(delete("/appointment/1"))
+                .andExpect(status().isOk());
+        verify(appointmentService, times(1)).deleteAppointment(1L);
+        verify(userDetailsService, times(1)).hasAppointmentAuthorityDoctor(1L);
+    }
+
+    @Test
+    @DisplayName("checking remove appointment with authenticated patient with status 200")
+    @WithMockUser(authorities = "patient:write")
+    void testRemoveAppointmentWithAuthenticatedPatientReturnStatus200() throws Exception {
+        //when
+        when(userDetailsService.hasAppointmentAuthorityPatient(1L)).thenReturn(true);
+        doNothing().when(appointmentService).deleteAppointment(1L);
+        //then
+        mockMvc.perform(delete("/appointment/1"))
+                .andExpect(status().isOk());
+        verify(appointmentService, times(1)).deleteAppointment(1L);
+        verify(userDetailsService, times(1)).hasAppointmentAuthorityPatient(1L);
+    }
+
+    @Test
+    @DisplayName("checking forbidden remove appointment with another doctor with status 403")
+    @WithMockUser(authorities = "doctor:write")
+    void testRemoveAppointmentWithAnotherDoctorReturnStatus403() throws Exception {
+        //when
+        when(userDetailsService.hasAppointmentAuthorityDoctor(1L)).thenReturn(false);
+        doNothing().when(appointmentService).deleteAppointment(1L);
+        //then
+        mockMvc.perform(delete("/appointment/1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking forbidden remove appointment with another patient with status 403")
+    @WithMockUser(authorities = "patient:write")
+    void testRemoveAppointmentWithAnotherPatientReturnStatus403() throws Exception {
+        //when
+        when(userDetailsService.hasAppointmentAuthorityPatient(1L)).thenReturn(false);
+        doNothing().when(appointmentService).deleteAppointment(1L);
+        //then
+        mockMvc.perform(delete("/appointment/1"))
+                .andExpect(status().isForbidden());
     }
 
 }
