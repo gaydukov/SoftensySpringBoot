@@ -37,8 +37,8 @@ public class AppointmentController {
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasAuthority('admin:write') or (hasAuthority('doctor:write') and @userDetailsServiceImpl.hasAppointmentAuthorityDoctor(#id))" +
-            "or (hasAuthority('patient:write') and @userDetailsServiceImpl.hasAppointmentAuthorityPatient(#id))")
+    @PreAuthorize("hasAuthority('admin:write') or (hasAuthority('doctor:write') and @userDetailsServiceImpl.hasAuthorityDoctorInAppointment(#id))" +
+            "or (hasAuthority('patient:write') and @userDetailsServiceImpl.hasAuthorityPatientInAppointment(#id))")
     public void deleteAppointment(@PathVariable long id) {
         appointmentService.deleteAppointment(id);
     }

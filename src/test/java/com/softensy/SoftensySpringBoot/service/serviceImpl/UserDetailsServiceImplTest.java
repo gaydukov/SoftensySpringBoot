@@ -136,7 +136,7 @@ class UserDetailsServiceImplTest {
 
     @Test
     @DisplayName("checking appointment contains authority patient")
-    void testHasAppointmentWhichHasAuthorityPatient() {
+    void testHasAuthorityPatientInAppointment() {
         // given
         PatientSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
         Appointment appointment = getFirstAppointment();
@@ -144,14 +144,14 @@ class UserDetailsServiceImplTest {
         // when
         when(patientSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(patientSecurity));
         when(appointmentRepository.findById(anyLong())).thenReturn(Optional.ofNullable(appointment));
-        boolean hasAppointmentAuthorityPatient = userDetailsService.hasAppointmentAuthorityPatient(patientSecurity.getPatient().getId());
+        boolean hasAppointmentAuthorityPatient = userDetailsService.hasAuthorityPatientInAppointment(patientSecurity.getPatient().getId());
         //then
         assertTrue(hasAppointmentAuthorityPatient);
     }
 
     @Test
     @DisplayName("checking appointment contains authority doctor")
-    void testHasAppointmentWhichHasAuthorityDoctor() {
+    void testHasAuthorityDoctorInAppointment() {
         // given
         DoctorSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
         Appointment appointment = getFirstAppointment();
@@ -159,7 +159,7 @@ class UserDetailsServiceImplTest {
         // when
         when(doctorSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(doctorSecurity));
         when(appointmentRepository.findById(anyLong())).thenReturn(Optional.ofNullable(appointment));
-        boolean hasAppointmentAuthorityDoctor = userDetailsService.hasAppointmentAuthorityDoctor(doctorSecurity.getDoctor().getId());
+        boolean hasAppointmentAuthorityDoctor = userDetailsService.hasAuthorityDoctorInAppointment(doctorSecurity.getDoctor().getId());
         //then
         assertTrue(hasAppointmentAuthorityDoctor);
     }

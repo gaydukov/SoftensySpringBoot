@@ -1,6 +1,10 @@
 package com.softensy.SoftensySpringBoot.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@AllArgsConstructor
+@Getter
 public enum Permission {
     DOCTOR_READ("doctor:read"),
     DOCTOR_WRITE("doctor:write"),
@@ -11,13 +15,5 @@ public enum Permission {
     ADMIN_WRITE("admin:write");
 
     private final String permission;
-
-    Permission(String permission) {
-        this.permission = permission;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
 
 }

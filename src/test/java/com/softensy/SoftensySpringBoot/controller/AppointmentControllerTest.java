@@ -208,13 +208,13 @@ class AppointmentControllerTest {
     @WithMockUser(authorities = "doctor:write")
     void testRemoveAppointmentWithAuthenticatedDoctorReturnStatus200() throws Exception {
         //when
-        when(userDetailsService.hasAppointmentAuthorityDoctor(1L)).thenReturn(true);
+        when(userDetailsService.hasAuthorityDoctorInAppointment(1L)).thenReturn(true);
         doNothing().when(appointmentService).deleteAppointment(1L);
         //then
         mockMvc.perform(delete("/appointment/1"))
                 .andExpect(status().isOk());
         verify(appointmentService, times(1)).deleteAppointment(1L);
-        verify(userDetailsService, times(1)).hasAppointmentAuthorityDoctor(1L);
+        verify(userDetailsService, times(1)).hasAuthorityDoctorInAppointment(1L);
     }
 
     @Test
@@ -222,13 +222,13 @@ class AppointmentControllerTest {
     @WithMockUser(authorities = "patient:write")
     void testRemoveAppointmentWithAuthenticatedPatientReturnStatus200() throws Exception {
         //when
-        when(userDetailsService.hasAppointmentAuthorityPatient(1L)).thenReturn(true);
+        when(userDetailsService.hasAuthorityPatientInAppointment(1L)).thenReturn(true);
         doNothing().when(appointmentService).deleteAppointment(1L);
         //then
         mockMvc.perform(delete("/appointment/1"))
                 .andExpect(status().isOk());
         verify(appointmentService, times(1)).deleteAppointment(1L);
-        verify(userDetailsService, times(1)).hasAppointmentAuthorityPatient(1L);
+        verify(userDetailsService, times(1)).hasAuthorityPatientInAppointment(1L);
     }
 
     @Test
@@ -236,7 +236,7 @@ class AppointmentControllerTest {
     @WithMockUser(authorities = "doctor:write")
     void testRemoveAppointmentWithAnotherDoctorReturnStatus403() throws Exception {
         //when
-        when(userDetailsService.hasAppointmentAuthorityDoctor(1L)).thenReturn(false);
+        when(userDetailsService.hasAuthorityDoctorInAppointment(1L)).thenReturn(false);
         doNothing().when(appointmentService).deleteAppointment(1L);
         //then
         mockMvc.perform(delete("/appointment/1"))
@@ -248,7 +248,7 @@ class AppointmentControllerTest {
     @WithMockUser(authorities = "patient:write")
     void testRemoveAppointmentWithAnotherPatientReturnStatus403() throws Exception {
         //when
-        when(userDetailsService.hasAppointmentAuthorityPatient(1L)).thenReturn(false);
+        when(userDetailsService.hasAuthorityPatientInAppointment(1L)).thenReturn(false);
         doNothing().when(appointmentService).deleteAppointment(1L);
         //then
         mockMvc.perform(delete("/appointment/1"))

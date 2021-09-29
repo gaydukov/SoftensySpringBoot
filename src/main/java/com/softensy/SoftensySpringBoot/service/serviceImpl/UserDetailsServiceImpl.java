@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service()
+@Service
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final DoctorSecurityRepository doctorSecurityRepository;
@@ -67,14 +67,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return user.getPatient().getId() == patient.getId();
     }
 
-    public boolean hasAppointmentAuthorityDoctor(long id) {
+    public boolean hasAuthorityDoctorInAppointment(long id) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         DoctorSecurity user = doctorSecurityRepository.findByLogin(login).get();
         Appointment appointment = appointmentRepository.findById(id).get();
         return appointment.getDoctor().getId() == user.getDoctor().getId();
     }
 
-    public boolean hasAppointmentAuthorityPatient(long id) {
+    public boolean hasAuthorityPatientInAppointment(long id) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         PatientSecurity user = patientSecurityRepository.findByLogin(login).get();
         Appointment appointment = appointmentRepository.findById(id).get();
