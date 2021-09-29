@@ -256,12 +256,12 @@ public class TestDataGenerator {
     }
 
     public static UserSecurity getUserSecurity() {
-        UserSecurity userSecurity = new UserSecurity();
-        userSecurity.setId(1L);
-        userSecurity.setLogin("user");
-        userSecurity.setPassword("user");
-        userSecurity.setRole(Role.ADMIN);
-        return userSecurity;
+        return UserSecurity.builder()
+                .id(1L)
+                .login("user")
+                .password("user")
+                .role(Role.ADMIN)
+                .build();
     }
 
     private static Set<SimpleGrantedAuthority> getAuthorities() {
@@ -282,23 +282,23 @@ public class TestDataGenerator {
     }
 
     public static PatientSecurity getPatientSecurity() {
-        PatientSecurity patientSecurity = new PatientSecurity();
-        patientSecurity.setId(1L);
-        patientSecurity.setLogin("user");
-        patientSecurity.setPassword("user");
-        patientSecurity.setRole(Role.PATIENT);
-        patientSecurity.setPatient(getFirstPatient());
-        return patientSecurity;
+        return PatientSecurity.builder()
+                .id(1L)
+                .login("user")
+                .password("user")
+                .role(Role.PATIENT)
+                .patient(getFirstPatient())
+                .build();
     }
 
     public static DoctorSecurity getDoctorSecurity() {
-        DoctorSecurity doctorSecurity = new DoctorSecurity();
-        doctorSecurity.setId(1L);
-        doctorSecurity.setLogin("user");
-        doctorSecurity.setPassword("user");
-        doctorSecurity.setRole(Role.PATIENT);
-        doctorSecurity.setDoctor(getFirstDoctor());
-        return doctorSecurity;
+        return DoctorSecurity.builder()
+                .doctor(getFirstDoctor())
+                .id(1L)
+                .login("user")
+                .password("user")
+                .role(Role.DOCTOR)
+                .build();
     }
 
 }
