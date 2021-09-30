@@ -2,13 +2,12 @@ package com.softensy.SoftensySpringBoot.service.serviceImpl;
 
 import com.softensy.SoftensySpringBoot.TestDataGenerator;
 import com.softensy.SoftensySpringBoot.entity.Appointment;
-import com.softensy.SoftensySpringBoot.entity.DoctorSecurity;
-import com.softensy.SoftensySpringBoot.entity.PatientSecurity;
+import com.softensy.SoftensySpringBoot.entity.Doctor;
+import com.softensy.SoftensySpringBoot.entity.Patient;
 import com.softensy.SoftensySpringBoot.entity.UserSecurity;
 import com.softensy.SoftensySpringBoot.mapper.UserSecurityMapper;
 import com.softensy.SoftensySpringBoot.repository.AppointmentRepository;
-import com.softensy.SoftensySpringBoot.repository.DoctorSecurityRepository;
-import com.softensy.SoftensySpringBoot.repository.PatientSecurityRepository;
+import com.softensy.SoftensySpringBoot.repository.UserSecurityRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,66 +30,37 @@ class UserDetailsServiceImplTest {
     @MockBean
     private UserSecurityMapper userSecurityMapper;
     @MockBean
-    private PatientSecurityRepository patientSecurityRepository;
-    @MockBean
-    private DoctorSecurityRepository doctorSecurityRepository;
-    @MockBean
     private AppointmentRepository appointmentRepository;
+    @MockBean
+    private UserSecurityRepository userSecurityRepository;
 
     @Test
     @DisplayName("checking loud userDetails by userName")
     void testLoadUserDetailsByUserName() {
         // given
-        UserSecurity userSecurity = getUserSecurity();
         UserDetails expectedUserDetails = getUserDetails();
-        PatientSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
+        UserSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
         // when
-        when(patientSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(patientSecurity));
+        when(userSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(patientSecurity));
         when(userSecurityMapper.userSecurityToUserDetails(any(UserSecurity.class))).thenReturn(expectedUserDetails);
-        UserDetails actualDoctor = userDetailsService.loadUserByUsername(userSecurity.getLogin());
+        UserDetails actualDoctor = userDetailsService.loadUserByUsername(patientSecurity.getLogin());
         //then
         assertEquals(expectedUserDetails, actualDoctor);
         assertNotNull(expectedUserDetails);
-        verify(patientSecurityRepository, times(2)).findByLogin(anyString());
+        verify(userSecurityRepository, times(1)).findByLogin(anyString());
         verify(userSecurityMapper, times(1)).userSecurityToUserDetails(any(UserSecurity.class));
-    }
-
-    @Test
-    @DisplayName("checking get doctorSecurity by doctor login")
-    void testGetDoctorSecurityByLogin() {
-        // given
-        DoctorSecurity expectedDoctorSecurity = TestDataGenerator.getDoctorSecurity();
-        // when
-        when(doctorSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(expectedDoctorSecurity));
-        DoctorSecurity actualDoctorSecurity = userDetailsService.getDoctorSecurity(expectedDoctorSecurity.getLogin()).get();
-        //then
-        assertEquals(expectedDoctorSecurity, actualDoctorSecurity);
-        assertNotNull(expectedDoctorSecurity);
-    }
-
-    @Test
-    @DisplayName("checking get patientSecurity by patient login")
-    void testGetPatientSecurityByLogin() {
-        // given
-        PatientSecurity expectedPatientSecurity = TestDataGenerator.getPatientSecurity();
-        // when
-        when(patientSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(expectedPatientSecurity));
-        PatientSecurity actualPatientSecurity = userDetailsService.getPatientSecurity(expectedPatientSecurity.getLogin()).get();
-        //then
-        assertEquals(expectedPatientSecurity, actualPatientSecurity);
-        assertNotNull(expectedPatientSecurity);
     }
 
     @Test
     @DisplayName("checking doctor contains required id")
     void testDoctorContainsRequiredId() {
         // given
-        DoctorSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
+        UserSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
         SecurityContextHolder.getContext().
                 setAuthentication(new UsernamePasswordAuthenticationToken(doctorSecurity.getLogin(), doctorSecurity.getPassword()));
         // when
-        when(doctorSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(doctorSecurity));
-        boolean hasDoctorId = userDetailsService.hasDoctorId(doctorSecurity.getId());
+        when(userSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(doctorSecurity));
+        boolean hasDoctorId = userDetailsService.hasDoctorId(doctorSecurity.getUserId());
         //then
         assertTrue(hasDoctorId);
     }
@@ -99,11 +69,16 @@ class UserDetailsServiceImplTest {
     @DisplayName("required doctor check")
     void testHasRequiredDoctor() {
         // given
-        DoctorSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(doctorSecurity.getLogin(), doctorSecurity.getPassword()));
+        UserSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
+        Doctor doctor = getFirstDoctor();
+        boolean hasDoctor = false;
+        SecurityContextHolder.getContext()
+                .setAuthentication(new UsernamePasswordAuthenticationToken(doctorSecurity.getLogin(), doctorSecurity.getPassword()));
         // when
-        when(doctorSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(doctorSecurity));
-        boolean hasDoctor = userDetailsService.hasDoctor(doctorSecurity.getDoctor());
+        when(userSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(doctorSecurity));
+        if (doctor.getId() == doctorSecurity.getUserId()) {
+            hasDoctor = userDetailsService.hasDoctor(doctor);
+        }
         //then
         assertTrue(hasDoctor);
     }
@@ -112,11 +87,11 @@ class UserDetailsServiceImplTest {
     @DisplayName("checking patient contains required id")
     void testPatientContainsRequiredId() {
         // given
-        PatientSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
+        UserSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(patientSecurity.getLogin(), patientSecurity.getPassword()));
         // when
-        when(patientSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(patientSecurity));
-        boolean hasPatientId = userDetailsService.hasPatientId(patientSecurity.getId());
+        when(userSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(patientSecurity));
+        boolean hasPatientId = userDetailsService.hasPatientId(patientSecurity.getUserId());
         //then
         assertTrue(hasPatientId);
     }
@@ -125,11 +100,15 @@ class UserDetailsServiceImplTest {
     @DisplayName("required patient check ")
     void testHasRequiredPatient() {
         // given
-        PatientSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
+        UserSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
+        Patient patient = getFirstPatient();
+        boolean hasPatient = false;
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(patientSecurity.getLogin(), patientSecurity.getPassword()));
         // when
-        when(patientSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(patientSecurity));
-        boolean hasPatient = userDetailsService.hasPatient(patientSecurity.getPatient());
+        when(userSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(patientSecurity));
+        if (patient.getId() == patientSecurity.getUserId()) {
+            hasPatient = userDetailsService.hasPatient(patient);
+        }
         //then
         assertTrue(hasPatient);
     }
@@ -138,13 +117,13 @@ class UserDetailsServiceImplTest {
     @DisplayName("checking appointment contains authority patient")
     void testHasAuthorityPatientInAppointment() {
         // given
-        PatientSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
+        UserSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
         Appointment appointment = getFirstAppointment();
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(patientSecurity.getLogin(), patientSecurity.getPassword()));
         // when
-        when(patientSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(patientSecurity));
+        when(userSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(patientSecurity));
         when(appointmentRepository.findById(anyLong())).thenReturn(Optional.ofNullable(appointment));
-        boolean hasAppointmentAuthorityPatient = userDetailsService.hasAuthorityPatientInAppointment(patientSecurity.getPatient().getId());
+        boolean hasAppointmentAuthorityPatient = userDetailsService.hasAuthorityPatientInAppointment(patientSecurity.getUserId());
         //then
         assertTrue(hasAppointmentAuthorityPatient);
     }
@@ -153,13 +132,13 @@ class UserDetailsServiceImplTest {
     @DisplayName("checking appointment contains authority doctor")
     void testHasAuthorityDoctorInAppointment() {
         // given
-        DoctorSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
+        UserSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
         Appointment appointment = getFirstAppointment();
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(doctorSecurity.getLogin(), doctorSecurity.getPassword()));
         // when
-        when(doctorSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(doctorSecurity));
+        when(userSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(doctorSecurity));
         when(appointmentRepository.findById(anyLong())).thenReturn(Optional.ofNullable(appointment));
-        boolean hasAppointmentAuthorityDoctor = userDetailsService.hasAuthorityDoctorInAppointment(doctorSecurity.getDoctor().getId());
+        boolean hasAppointmentAuthorityDoctor = userDetailsService.hasAuthorityDoctorInAppointment(doctorSecurity.getUserId());
         //then
         assertTrue(hasAppointmentAuthorityDoctor);
     }

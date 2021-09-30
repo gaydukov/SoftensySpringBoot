@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import static com.softensy.SoftensySpringBoot.TestDataGenerator.getPatientSecurity;
 import static com.softensy.SoftensySpringBoot.TestDataGenerator.getUserDetails;
-import static com.softensy.SoftensySpringBoot.TestDataGenerator.getUserSecurity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -21,7 +21,7 @@ class UserSecurityMapperTest {
     @DisplayName("check mapping userSecurity to userDetails")
     void testMappingUserSecurityToUserDetails() {
         // given
-        UserSecurity userSecurity = getUserSecurity();
+        UserSecurity userSecurity = getPatientSecurity();
         UserDetails expectedUserDetails = getUserDetails();
         // when
         UserDetails actualUserDetails = userSecurityMapper.userSecurityToUserDetails(userSecurity);
