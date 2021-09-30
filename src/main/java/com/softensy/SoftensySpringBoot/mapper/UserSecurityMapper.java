@@ -8,9 +8,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserSecurityMapper {
     public UserDetails userSecurityToUserDetails(UserSecurity userSecurity) {
-        return new User(userSecurity.getLogin(), userSecurity.getPassword(),
-                true, true, true, true,
-                userSecurity.getRole().getAuthorities());
+        return User.builder()
+                .username(userSecurity.getLogin())
+                .password(userSecurity.getPassword())
+                .disabled(false)
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .authorities(userSecurity.getRole().getAuthorities())
+                .build();
     }
 
 }
