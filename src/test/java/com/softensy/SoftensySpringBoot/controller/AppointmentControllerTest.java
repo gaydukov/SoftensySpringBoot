@@ -5,6 +5,9 @@ import com.softensy.SoftensySpringBoot.dto.AppointmentDto;
 import com.softensy.SoftensySpringBoot.dto.DoctorAppointmentDto;
 import com.softensy.SoftensySpringBoot.dto.PatientAppointmentDto;
 import com.softensy.SoftensySpringBoot.service.AppointmentService;
+import com.softensy.SoftensySpringBoot.service.serviceImpl.AppointmentSecurityService;
+import com.softensy.SoftensySpringBoot.service.serviceImpl.DoctorSecurityService;
+import com.softensy.SoftensySpringBoot.service.serviceImpl.PatientSecurityService;
 import com.softensy.SoftensySpringBoot.service.serviceImpl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,10 +41,16 @@ class AppointmentControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @MockBean(name = "userDetailsServiceImpl")
+    @MockBean
     private UserDetailsServiceImpl userDetailsService;
     @MockBean
     private AppointmentService appointmentService;
+    @MockBean(name = "doctorSecurityService")
+    private DoctorSecurityService doctorSecurityService;
+    @MockBean(name = "patientSecurityService")
+    private PatientSecurityService patientSecurityService;
+    @MockBean(name = "appointmentSecurityService")
+    private AppointmentSecurityService appointmentSecurityService;
 
     @Test
     @DisplayName("checking save appointment with authenticated with status 201")
@@ -81,11 +90,11 @@ class AppointmentControllerTest {
     @Test
     @DisplayName("checking get list appointments to doctor by doctor id with authenticated with status 200")
     @WithMockUser(authorities = "doctor:read")
-    void testGetAppointmentToDoctorByDoctorIdWithAuthenticatedReturnStatus200andListPatientsAppointment() throws Exception {
+    void testGetDoctorsAppointmentListByDoctorIdWithAuthenticatedReturnStatus200andPatientList() throws Exception {
         // given
         List<DoctorAppointmentDto> doctorAppointmentDtoList = getDoctorAppointmentDtoList();
         //when
-        when(userDetailsService.hasDoctorId(1L)).thenReturn(true);
+        when(doctorSecurityService.hasDoctorId(1L)).thenReturn(true);
         when(appointmentService.getAllDoctorAppointments(anyLong())).thenReturn(doctorAppointmentDtoList);
         //then
         mockMvc.perform(get("/appointment/doctor/1"))
@@ -110,11 +119,11 @@ class AppointmentControllerTest {
     @Test
     @DisplayName("checking forbidden get list appointments to doctor by doctor id with another authenticated with status 403")
     @WithMockUser(authorities = "patient:read")
-    void testGetAppointmentToDoctorByDoctorIdWithAnotherAuthenticatedReturnStatus403() throws Exception {
+    void testGetDoctorsAppointmentListByDoctorIdWithAnotherAuthenticatedReturnStatus403() throws Exception {
         // given
         List<DoctorAppointmentDto> doctorAppointmentDtoList = getDoctorAppointmentDtoList();
         //when
-        when(userDetailsService.hasDoctorId(1L)).thenReturn(true);
+        when(doctorSecurityService.hasDoctorId(1L)).thenReturn(true);
         when(appointmentService.getAllDoctorAppointments(anyLong())).thenReturn(doctorAppointmentDtoList);
         //then
         mockMvc.perform(get("/appointment/doctor/1"))
@@ -124,11 +133,11 @@ class AppointmentControllerTest {
     @Test
     @DisplayName("checking forbidden get list appointments to doctor by doctor id with another authenticated with status 403")
     @WithMockUser(authorities = "doctor:read")
-    void testGetAppointmentToDoctorByDoctorIdWithAnotherIdReturnStatus403() throws Exception {
+    void testGetDoctorsAppointmentListByDoctorIdWithAnotherIdReturnStatus403() throws Exception {
         // given
         List<DoctorAppointmentDto> doctorAppointmentDtoList = getDoctorAppointmentDtoList();
         //when
-        when(userDetailsService.hasDoctorId(2L)).thenReturn(true);
+        when(doctorSecurityService.hasDoctorId(2L)).thenReturn(true);
         when(appointmentService.getAllDoctorAppointments(anyLong())).thenReturn(doctorAppointmentDtoList);
         //then
         mockMvc.perform(get("/appointment/doctor/1"))
@@ -138,11 +147,11 @@ class AppointmentControllerTest {
     @Test
     @DisplayName("checking get list patient appointments to doctors by patient id with authenticated with status 200")
     @WithMockUser(authorities = "patient:read")
-    void testGetPatientAppointmentToDoctorsByPatientIdWithAuthenticatedReturnStatus200andListDoctorsAppointment() throws Exception {
+    void testGetPatientsAppointmentListByPatientIdWithAuthenticatedReturnStatus200andDoctorList() throws Exception {
         // given
         List<PatientAppointmentDto> patientAppointmentDtoList = getPatientAppointmentDtoList();
         //when
-        when(userDetailsService.hasPatientId(1L)).thenReturn(true);
+        when(patientSecurityService.hasPatientId(1L)).thenReturn(true);
         when(appointmentService.getAllPatientAppointments(anyLong())).thenReturn(patientAppointmentDtoList);
         //then
         mockMvc.perform(get("/appointment/patient/1"))
@@ -166,11 +175,11 @@ class AppointmentControllerTest {
     @Test
     @DisplayName("checking forbidden get list patient appointments to doctors by patient id with another authenticated with status 403")
     @WithMockUser(authorities = "doctor:read")
-    void testGetPatientAppointmentToDoctorsByPatientIdWithAnotherAuthenticatedReturnStatus403() throws Exception {
+    void testGetPatientsAppointmentListByPatientIdWithAnotherAuthenticatedReturnStatus403() throws Exception {
         // given
         List<PatientAppointmentDto> patientAppointmentDtoList = getPatientAppointmentDtoList();
         //when
-        when(userDetailsService.hasPatientId(1L)).thenReturn(true);
+        when(patientSecurityService.hasPatientId(1L)).thenReturn(true);
         when(appointmentService.getAllPatientAppointments(anyLong())).thenReturn(patientAppointmentDtoList);
         //then
         mockMvc.perform(get("/appointment/patient/1"))
@@ -180,11 +189,11 @@ class AppointmentControllerTest {
     @Test
     @DisplayName("checking forbidden get list patient appointments to doctors by patient id with another id with status 403")
     @WithMockUser(authorities = "patient:read")
-    void testGetPatientAppointmentToDoctorsByPatientIdWithAnotherIdReturnStatus200andListDoctorsAppointment() throws Exception {
+    void testGetPatientsAppointmentListByPatientIdWithAnotherIdReturnStatus403() throws Exception {
         // given
         List<PatientAppointmentDto> patientAppointmentDtoList = getPatientAppointmentDtoList();
         //when
-        when(userDetailsService.hasPatientId(2L)).thenReturn(true);
+        when(patientSecurityService.hasPatientId(2L)).thenReturn(true);
         when(appointmentService.getAllPatientAppointments(anyLong())).thenReturn(patientAppointmentDtoList);
         //then
         mockMvc.perform(get("/appointment/patient/1"))
@@ -208,13 +217,13 @@ class AppointmentControllerTest {
     @WithMockUser(authorities = "doctor:write")
     void testRemoveAppointmentWithAuthenticatedDoctorReturnStatus200() throws Exception {
         //when
-        when(userDetailsService.hasAuthorityDoctorInAppointment(1L)).thenReturn(true);
+        when(appointmentSecurityService.hasAuthorityDoctorInAppointment(1L)).thenReturn(true);
         doNothing().when(appointmentService).deleteAppointment(1L);
         //then
         mockMvc.perform(delete("/appointment/1"))
                 .andExpect(status().isOk());
         verify(appointmentService, times(1)).deleteAppointment(1L);
-        verify(userDetailsService, times(1)).hasAuthorityDoctorInAppointment(1L);
+        verify(appointmentSecurityService, times(1)).hasAuthorityDoctorInAppointment(1L);
     }
 
     @Test
@@ -222,13 +231,13 @@ class AppointmentControllerTest {
     @WithMockUser(authorities = "patient:write")
     void testRemoveAppointmentWithAuthenticatedPatientReturnStatus200() throws Exception {
         //when
-        when(userDetailsService.hasAuthorityPatientInAppointment(1L)).thenReturn(true);
+        when(appointmentSecurityService.hasAuthorityPatientInAppointment(1L)).thenReturn(true);
         doNothing().when(appointmentService).deleteAppointment(1L);
         //then
         mockMvc.perform(delete("/appointment/1"))
                 .andExpect(status().isOk());
         verify(appointmentService, times(1)).deleteAppointment(1L);
-        verify(userDetailsService, times(1)).hasAuthorityPatientInAppointment(1L);
+        verify(appointmentSecurityService, times(1)).hasAuthorityPatientInAppointment(1L);
     }
 
     @Test
@@ -236,7 +245,7 @@ class AppointmentControllerTest {
     @WithMockUser(authorities = "doctor:write")
     void testRemoveAppointmentWithAnotherDoctorReturnStatus403() throws Exception {
         //when
-        when(userDetailsService.hasAuthorityDoctorInAppointment(1L)).thenReturn(false);
+        when(appointmentSecurityService.hasAuthorityDoctorInAppointment(1L)).thenReturn(false);
         doNothing().when(appointmentService).deleteAppointment(1L);
         //then
         mockMvc.perform(delete("/appointment/1"))
@@ -248,7 +257,7 @@ class AppointmentControllerTest {
     @WithMockUser(authorities = "patient:write")
     void testRemoveAppointmentWithAnotherPatientReturnStatus403() throws Exception {
         //when
-        when(userDetailsService.hasAuthorityPatientInAppointment(1L)).thenReturn(false);
+        when(appointmentSecurityService.hasAuthorityPatientInAppointment(1L)).thenReturn(false);
         doNothing().when(appointmentService).deleteAppointment(1L);
         //then
         mockMvc.perform(delete("/appointment/1"))

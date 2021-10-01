@@ -3,6 +3,7 @@ package com.softensy.SoftensySpringBoot.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softensy.SoftensySpringBoot.entity.Patient;
 import com.softensy.SoftensySpringBoot.service.PatientService;
+import com.softensy.SoftensySpringBoot.service.serviceImpl.PatientSecurityService;
 import com.softensy.SoftensySpringBoot.service.serviceImpl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,8 +37,10 @@ class PatientControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private PatientService patientService;
-    @MockBean(name = "userDetailsServiceImpl")
+    @MockBean
     private UserDetailsServiceImpl userDetailsService;
+    @MockBean(name = "patientSecurityService")
+    private PatientSecurityService patientSecurityService;
 
     @Test
     @DisplayName("checking get patient by id with authenticated with status 200")
@@ -140,7 +143,7 @@ class PatientControllerTest {
         //given
         Patient patient = getFirstPatient();
         //when
-        when(userDetailsService.hasPatient(patient)).thenReturn(true);
+        when(patientSecurityService.hasPatient(patient)).thenReturn(true);
         when(patientService.updatePatient(patient)).thenReturn(patient);
         //then
         mockMvc.perform(put("/patient")
@@ -164,7 +167,7 @@ class PatientControllerTest {
         //given
         Patient patient = getFirstPatient();
         //when
-        when(userDetailsService.hasPatient(patient)).thenReturn(true);
+        when(patientSecurityService.hasPatient(patient)).thenReturn(true);
         when(patientService.updatePatient(patient)).thenReturn(patient);
         //then
         mockMvc.perform(put("/patient")
@@ -180,7 +183,7 @@ class PatientControllerTest {
         //given
         Patient patient = getFirstPatient();
         //when
-        when(userDetailsService.hasPatient(patient)).thenReturn(false);
+        when(patientSecurityService.hasPatient(patient)).thenReturn(false);
         when(patientService.updatePatient(patient)).thenReturn(patient);
         //then
         mockMvc.perform(put("/patient")
@@ -209,7 +212,7 @@ class PatientControllerTest {
         //given
         Patient patient = getFirstPatient();
         //when
-        when(userDetailsService.hasPatientId(1L)).thenReturn(true);
+        when(patientSecurityService.hasPatientId(1L)).thenReturn(true);
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
         mockMvc.perform(delete("/patient/1"))
@@ -223,7 +226,7 @@ class PatientControllerTest {
         //given
         Patient patient = getFirstPatient();
         //when
-        when(userDetailsService.hasPatientId(1L)).thenReturn(true);
+        when(patientSecurityService.hasPatientId(1L)).thenReturn(true);
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
         mockMvc.perform(delete("/patient/1"))
@@ -237,7 +240,7 @@ class PatientControllerTest {
         //given
         Patient patient = getFirstPatient();
         //when
-        when(userDetailsService.hasPatientId(1L)).thenReturn(false);
+        when(patientSecurityService.hasPatientId(1L)).thenReturn(false);
         when(patientService.getPatientById(1L)).thenReturn(Optional.of(patient));
         //then
         mockMvc.perform(delete("/patient/1"))

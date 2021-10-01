@@ -3,6 +3,7 @@ package com.softensy.SoftensySpringBoot.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softensy.SoftensySpringBoot.entity.Doctor;
 import com.softensy.SoftensySpringBoot.service.DoctorService;
+import com.softensy.SoftensySpringBoot.service.serviceImpl.DoctorSecurityService;
 import com.softensy.SoftensySpringBoot.service.serviceImpl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,8 +38,10 @@ class DoctorControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private DoctorService doctorService;
-    @MockBean(name = "userDetailsServiceImpl")
+    @MockBean
     private UserDetailsServiceImpl userDetailsService;
+    @MockBean(name = "doctorSecurityService")
+    private DoctorSecurityService doctorSecurityService;
 
     @Test
     @DisplayName("checking get doctor by id with authenticated with status 200")
@@ -144,7 +147,7 @@ class DoctorControllerTest {
         //given
         Doctor doctor = getFirstDoctor();
         //when
-        when(userDetailsService.hasDoctor(doctor)).thenReturn(true);
+        when(doctorSecurityService.hasDoctor(doctor)).thenReturn(true);
         when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(put("/doctor")
@@ -161,7 +164,7 @@ class DoctorControllerTest {
         //given
         Doctor doctor = getFirstDoctor();
         //when
-        when(userDetailsService.hasDoctor(doctor)).thenReturn(true);
+        when(doctorSecurityService.hasDoctor(doctor)).thenReturn(true);
         when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(put("/doctor")
@@ -178,7 +181,7 @@ class DoctorControllerTest {
         //given
         Doctor doctor = getFirstDoctor();
         //when
-        when(userDetailsService.hasDoctor(doctor)).thenReturn(false);
+        when(doctorSecurityService.hasDoctor(doctor)).thenReturn(false);
         when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(put("/doctor")
@@ -208,7 +211,7 @@ class DoctorControllerTest {
         //given
         Doctor doctor = getFirstDoctor();
         //when
-        when(userDetailsService.hasDoctorId(1L)).thenReturn(true);
+        when(doctorSecurityService.hasDoctorId(1L)).thenReturn(true);
         when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(doctor));
         //then
         mockMvc.perform(delete("/doctor/1"))
@@ -222,7 +225,7 @@ class DoctorControllerTest {
         //given
         Doctor doctor = getFirstDoctor();
         //when
-        when(userDetailsService.hasDoctorId(1L)).thenReturn(true);
+        when(doctorSecurityService.hasDoctorId(1L)).thenReturn(true);
         when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(doctor));
         //then
         mockMvc.perform(delete("/doctor/1"))
@@ -236,7 +239,7 @@ class DoctorControllerTest {
         //given
         Doctor doctor = getFirstDoctor();
         //when
-        when(userDetailsService.hasDoctorId(1L)).thenReturn(false);
+        when(doctorSecurityService.hasDoctorId(1L)).thenReturn(false);
         when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(doctor));
         //then
         mockMvc.perform(delete("/doctor/1"))

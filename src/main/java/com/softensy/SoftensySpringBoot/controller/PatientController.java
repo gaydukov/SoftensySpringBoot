@@ -33,13 +33,13 @@ public class PatientController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('admin:write') or (hasAuthority('patient:write') and @userDetailsServiceImpl.hasPatient(#patient))")
+    @PreAuthorize("hasAuthority('admin:write') or (hasAuthority('patient:write') and @patientSecurityService.hasPatient(#patient))")
     public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient) {
         return new ResponseEntity<>(patientService.updatePatient(patient), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "{id}")
-    @PreAuthorize("hasAuthority('admin:write') or (hasAuthority('patient:write') and @userDetailsServiceImpl.hasPatientId(#id))")
+    @PreAuthorize("hasAuthority('admin:write') or (hasAuthority('patient:write') and @patientSecurityService.hasPatientId(#id))")
     public void deletePatient(@PathVariable("id") Long id) {
         patientService.deletePatient(id);
     }

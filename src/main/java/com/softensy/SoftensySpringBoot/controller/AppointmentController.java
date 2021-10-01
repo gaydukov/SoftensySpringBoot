@@ -25,20 +25,20 @@ public class AppointmentController {
     }
 
     @GetMapping("/doctor/{id}")
-    @PreAuthorize("hasAuthority('doctor:read') and @userDetailsServiceImpl.hasDoctorId(#doctorId)")
+    @PreAuthorize("hasAuthority('doctor:read') and @doctorSecurityService.hasDoctorId(#doctorId)")
     public ResponseEntity<List<DoctorAppointmentDto>> getAllDoctorAppointments(@PathVariable("id") long doctorId) {
         return new ResponseEntity<>(appointmentService.getAllDoctorAppointments(doctorId), HttpStatus.OK);
     }
 
     @GetMapping("/patient/{id}")
-    @PreAuthorize("hasAuthority('patient:read') and @userDetailsServiceImpl.hasPatientId(#patientId)")
+    @PreAuthorize("hasAuthority('patient:read') and @patientSecurityService.hasPatientId(#patientId)")
     public ResponseEntity<List<PatientAppointmentDto>> getAllPatientAppointments(@PathVariable("id") long patientId) {
         return new ResponseEntity<>(appointmentService.getAllPatientAppointments(patientId), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasAuthority('admin:write') or (hasAuthority('doctor:write') and @userDetailsServiceImpl.hasAuthorityDoctorInAppointment(#id))" +
-            "or (hasAuthority('patient:write') and @userDetailsServiceImpl.hasAuthorityPatientInAppointment(#id))")
+    @PreAuthorize("hasAuthority('admin:write') or (hasAuthority('doctor:write') and @appointmentSecurityService.hasAuthorityDoctorInAppointment(#id))" +
+            "or (hasAuthority('patient:write') and @appointmentSecurityService.hasAuthorityPatientInAppointment(#id))")
     public void deleteAppointment(@PathVariable long id) {
         appointmentService.deleteAppointment(id);
     }

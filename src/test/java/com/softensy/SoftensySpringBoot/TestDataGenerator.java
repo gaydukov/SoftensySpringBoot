@@ -265,8 +265,15 @@ public class TestDataGenerator {
     }
 
     public static UserDetails getUserDetails() {
-        return new User("user", "user", true, true, true, true,
-                getAuthorities());
+        return User.builder()
+                .username("user")
+                .password("user")
+                .disabled(false)
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .authorities(getAuthorities())
+                .build();
     }
 
     public static UserSecurity getPatientSecurity() {
