@@ -5,7 +5,7 @@ jdk:
 services:
   - postgresql
 before_install:
-  - psql -c 'create database softensysecond;' -U postgres
+  - psql -c 'create database softensy;' -U postgres
 env:
   global:
     - ADB_INSTALL_TIMEOUT=8
