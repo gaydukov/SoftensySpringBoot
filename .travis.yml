@@ -4,9 +4,8 @@ jdk:
   - openjdk11
 services:
   - postgresql
-before_script:
+before_install:
   - psql -c 'create database softensySecond;' -U postgres
-  - psql -c "CREATE USER postgres WITH PASSWORD 'root';" -U postgres
 env:
   global:
     - ADB_INSTALL_TIMEOUT=8
