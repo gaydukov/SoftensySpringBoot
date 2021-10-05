@@ -12,7 +12,8 @@ public enum Permission {
     PATIENT_WRITE("patient:write"),
     APPOINTMENT_READ("appointment:read"),
     APPOINTMENT_WRITE("appointment:write"),
-    ADMIN_WRITE("admin:write");
+    ADMIN_WRITE("admin:write"),
+    ADMIN_READ("admin:read");
 
     private final String permission;
 

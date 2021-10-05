@@ -25,13 +25,13 @@ public class AppointmentController {
     }
 
     @GetMapping("/doctor/{id}")
-    @PreAuthorize("hasAuthority('doctor:read') and @doctorSecurityService.hasDoctorId(#doctorId)")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('doctor:read') and @doctorSecurityService.hasDoctorId(#doctorId)")
     public ResponseEntity<List<DoctorAppointmentDto>> getAllDoctorAppointments(@PathVariable("id") long doctorId) {
         return new ResponseEntity<>(appointmentService.getAllDoctorAppointments(doctorId), HttpStatus.OK);
     }
 
     @GetMapping("/patient/{id}")
-    @PreAuthorize("hasAuthority('patient:read') and @patientSecurityService.hasPatientId(#patientId)")
+    @PreAuthorize("hasAuthority('admin:read') or hasAuthority('patient:read') and @patientSecurityService.hasPatientId(#patientId)")
     public ResponseEntity<List<PatientAppointmentDto>> getAllPatientAppointments(@PathVariable("id") long patientId) {
         return new ResponseEntity<>(appointmentService.getAllPatientAppointments(patientId), HttpStatus.OK);
     }

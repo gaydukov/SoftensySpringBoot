@@ -117,6 +117,20 @@ class AppointmentControllerTest {
     }
 
     @Test
+    @DisplayName("checking get list appointments to doctor by doctor id with authenticated admin with status 200")
+    @WithMockUser(authorities = "admin:read")
+    void testGetDoctorsAppointmentListByDoctorIdWithAuthenticatedAdminReturnStatus200andPatientList() throws Exception {
+        // given
+        List<DoctorAppointmentDto> doctorAppointmentDtoList = getDoctorAppointmentDtoList();
+        //when
+        when(doctorSecurityService.hasDoctorId(1L)).thenReturn(true);
+        when(appointmentService.getAllDoctorAppointments(anyLong())).thenReturn(doctorAppointmentDtoList);
+        //then
+        mockMvc.perform(get("/appointment/doctor/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     @DisplayName("checking forbidden get list appointments to doctor by doctor id with another authenticated with status 403")
     @WithMockUser(authorities = "patient:read")
     void testGetDoctorsAppointmentListByDoctorIdWithAnotherAuthenticatedReturnStatus403() throws Exception {
@@ -170,6 +184,20 @@ class AppointmentControllerTest {
                     .andExpect(jsonPath("$[" + index + "].appointmentDate")
                             .value(patientAppointmentDtoList.get(index).getAppointmentDate().format(DateTimeFormatter.ofPattern("HH:mm dd-MM-yyyy"))));
         }
+    }
+
+    @Test
+    @DisplayName("checking get list patient appointments to doctors by patient id with authenticated admin with status 200")
+    @WithMockUser(authorities = "admin:read")
+    void testGetPatientsAppointmentListByPatientIdWithAuthenticatedAdminReturnStatus200andDoctorList() throws Exception {
+        // given
+        List<PatientAppointmentDto> patientAppointmentDtoList = getPatientAppointmentDtoList();
+        //when
+        when(patientSecurityService.hasPatientId(1L)).thenReturn(true);
+        when(appointmentService.getAllPatientAppointments(anyLong())).thenReturn(patientAppointmentDtoList);
+        //then
+        mockMvc.perform(get("/appointment/patient/1"))
+                .andExpect(status().isOk());
     }
 
     @Test

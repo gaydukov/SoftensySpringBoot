@@ -16,7 +16,7 @@ public enum Role {
             , Permission.PATIENT_WRITE, Permission.PATIENT_READ)),
     ADMIN(Set.of(Permission.APPOINTMENT_WRITE, Permission.APPOINTMENT_READ
             , Permission.DOCTOR_WRITE, Permission.DOCTOR_READ
-            , Permission.PATIENT_WRITE, Permission.PATIENT_READ, Permission.ADMIN_WRITE));
+            , Permission.PATIENT_WRITE, Permission.PATIENT_READ, Permission.ADMIN_WRITE, Permission.ADMIN_READ));
 
     private final Set<Permission> permissions;
 
