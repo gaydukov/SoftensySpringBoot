@@ -11,7 +11,6 @@
     <groupId>com.softensy</groupId>
     <artifactId>SoftensySpringBoot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
     <name>SoftensySpringBoot</name>
     <description>Demo project for Spring Boot</description>
     <properties>
@@ -57,4 +56,33 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.softensy.SoftensySpringBoot.SoftensySpringBootApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
