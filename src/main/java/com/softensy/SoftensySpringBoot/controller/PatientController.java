@@ -21,7 +21,7 @@ public class PatientController {
     }
 
     @GetMapping(value = "/{id}")
-    @PreAuthorize("hasAuthority('patient:read')")
+    @PreAuthorize("hasAuthority('doctor:read') or hasAuthority('admin:read') or (hasAuthority('patient:read') and @patientSecurityService.hasPatientId(#id))")
     public ResponseEntity<Patient> getPatient(@PathVariable("id") Long id) {
         return new ResponseEntity<>(patientService.getPatientById(id).get(), HttpStatus.OK);
     }
@@ -45,7 +45,7 @@ public class PatientController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('patient:read')")
+    @PreAuthorize("hasAuthority('doctor:read') or hasAuthority('admin:read')")
     public ResponseEntity<List<Patient>> getAllPatients() {
         return new ResponseEntity<>(patientService.getAllPatients(), HttpStatus.OK);
     }

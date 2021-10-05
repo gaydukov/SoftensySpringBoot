@@ -44,9 +44,9 @@ class DoctorControllerTest {
     private DoctorSecurityService doctorSecurityService;
 
     @Test
-    @DisplayName("checking get doctor by id with authenticated with status 200")
+    @DisplayName("checking get doctor by id with authenticated doctor with status 200")
     @WithMockUser(authorities = ("doctor:read"))
-    void testGetDoctorByIdWithAuthenticatedReturnStatus200andDoctor() throws Exception {
+    void testGetDoctorByIdWithAuthenticatedDoctorReturnStatus200andDoctor() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
         //when
@@ -64,8 +64,34 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("checking forbidden get doctor by id with another authenticated with status 403")
+    @DisplayName("checking get doctor by id with authenticated admin with status 200")
+    @WithMockUser(authorities = ("doctor:read"))
+    void testGetDoctorByIdWithAuthenticatedAdminReturnStatus200() throws Exception {
+        //given
+        Doctor doctor = getFirstDoctor();
+        //when
+        when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(doctor));
+        //then
+        mockMvc.perform(get("/doctor/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("checking get doctor by id with authenticated patient with status 200")
     @WithMockUser(authorities = ("patient:read"))
+    void testGetDoctorByIdWithAuthenticatedPatientReturnStatus200() throws Exception {
+        //given
+        Doctor doctor = getFirstDoctor();
+        //when
+        when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(doctor));
+        //then
+        mockMvc.perform(get("/doctor/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("checking forbidden get doctor by id with another authenticated with status 403")
+    @WithMockUser(authorities = ("patient:write"))
     void testGetDoctorByIdWithAnotherAuthenticatedReturnStatus403() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
@@ -249,7 +275,7 @@ class DoctorControllerTest {
     @Test
     @DisplayName("checking get all doctors with authenticated doctor with status 200")
     @WithMockUser(authorities = "doctor:read")
-    void testGetAllDoctorsWithAuthenticatedReturnStatus200andListDoctors() throws Exception {
+    void testGetAllDoctorsWithAuthenticatedDoctorReturnStatus200andListDoctors() throws Exception {
         //given
         List<Doctor> doctors = getDoctorList();
         //when
@@ -262,8 +288,34 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("checking forbidden get all doctors with another authenticated with status 403")
+    @DisplayName("checking get all doctors with authenticated admin with status 200")
+    @WithMockUser(authorities = "admin:read")
+    void testGetAllDoctorsWithAuthenticatedAdminReturnStatus200() throws Exception {
+        //given
+        List<Doctor> doctors = getDoctorList();
+        //when
+        when(doctorService.getAllDoctors()).thenReturn(doctors);
+        //then
+        mockMvc.perform(get("/doctor"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("checking get all doctors with authenticated patient with status 200")
     @WithMockUser(authorities = "patient:read")
+    void testGetAllDoctorsWithAuthenticatedPatientReturnStatus200() throws Exception {
+        //given
+        List<Doctor> doctors = getDoctorList();
+        //when
+        when(doctorService.getAllDoctors()).thenReturn(doctors);
+        //then
+        mockMvc.perform(get("/doctor"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("checking forbidden get all doctors with another authenticated with status 403")
+    @WithMockUser(authorities = "patient:write")
     void testGetAllDoctorsWithAnotherAuthenticatedReturnStatus403() throws Exception {
         //given
         List<Doctor> doctors = getDoctorList();

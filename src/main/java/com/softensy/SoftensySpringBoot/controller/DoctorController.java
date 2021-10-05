@@ -17,7 +17,7 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping(value = "/{id}")
-    @PreAuthorize("hasAuthority('doctor:read')")
+    @PreAuthorize("hasAuthority('doctor:read') or hasAuthority('admin:read') or hasAuthority('patient:read')")
     public ResponseEntity<Doctor> getDoctor(@PathVariable("id") Long id) {
         return new ResponseEntity<>(doctorService.getDoctorById(id).get(), HttpStatus.OK);
     }
@@ -42,7 +42,7 @@ public class DoctorController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('doctor:read')")
+    @PreAuthorize("hasAuthority('doctor:read') or hasAuthority('admin:read') or hasAuthority('patient:read')")
     public ResponseEntity<List<Doctor>> getAllDoctors() {
         return new ResponseEntity<>(doctorService.getAllDoctors(), HttpStatus.OK);
     }
