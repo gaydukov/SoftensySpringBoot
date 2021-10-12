@@ -87,7 +87,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.softensy.SoftensySpringBoot.SoftensySpringBootApplication</mainClass>
+                            <mainClass>com.softensy.softensyspringboot.SoftensySpringBootApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

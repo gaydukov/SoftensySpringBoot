@@ -27,7 +27,7 @@ INSERT INTO appointment (id, appointment_date, doctor_id, patient_id) VALUES (8,
 INSERT INTO appointment (id, appointment_date, doctor_id, patient_id) VALUES (9, '2021-09-25 10:00:00.000000', 3, 3);
 
 INSERT INTO user_security (user_id, login, password, role, account_type) VALUES
-                                                                                   (1, 'patient1', '$2a$12$HiZKjxK2qkZGU/RnG1gP2O15dj/CSLIlELUNjI6QMsDR9x586HoPu', 'PATIENT', 'PATIENT');
+    (1, 'patient1', '$2a$12$HiZKjxK2qkZGU/RnG1gP2O15dj/CSLIlELUNjI6QMsDR9x586HoPu', 'PATIENT', 'PATIENT');
 
 INSERT INTO user_security (user_id, login, password, role, account_type) VALUES
     (2, 'patient2', '$2a$12$HiZKjxK2qkZGU/RnG1gP2O15dj/CSLIlELUNjI6QMsDR9x586HoPu', 'PATIENT', 'PATIENT');
