@@ -17,4 +17,4 @@ addons:
       secure: "dxl5VYM9oXJ4n71EmcFJeYnkpRVkNeQqDN/gHJ+2x4Wi/VmM3KmIph/wEW6oOu7h3SLCfkHBb0rodKJxb38ebHK8ssbIqiadx6cz6Pe6SOPsXBzHtg86nJl+FUZ7TR2hC6dLF04QUonWNlkVWQC4dld3ktTrdcPW4yIyX6exNOnBkXy083yyHEuQUxzC42WmPbPKzhwZdRNGzsj9PMTnjt/YRk+miI1nVgoDmbgBz5/KjhcStaZ7qTDS9VsbWZvK381+wbC2dT25wRa/6fRO+SFp8Hlv0DWgtLTGQ1dnEd6aBS9ugWMERVtRdDN+tFThKo1i+nfCRPb+2zaOELsPu5RJBXJxIbjQ1/811etcdaPZhr0ygmlQHvnSpqqYAs1q2GEPw3yncm+TEN4+lakJq9d/b4zF0Dg3LIHl1nlZ0D+zTiSfNvqrmx4r8BCaKOl2zdD3vz0I2KM8RaI0vnjJxdFCkstmD7qo1fPpdk35r4yo565Y27NnhtuQB1nv1x8YmLxfGF2XbkrSF7LcdZ2OPwi+LYpUZDrNwOrxgFBZz3BYiA/O15DUJINWFucGjWNqLMRydcbJ/cAnGu99y6sAVK+Mhvjzbaq7vYoS7Wy/1/8e1ryTjyZPk6UvKYNizckZszw00Sqnhx9W1yZFDmA8X8IWqWuKS5l8s6N/jhtWKF4="
 
 script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=gaydukov_SoftensySpringBoot
