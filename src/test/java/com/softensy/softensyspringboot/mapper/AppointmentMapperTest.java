@@ -4,6 +4,7 @@ import com.softensy.softensyspringboot.dto.AppointmentDto;
 import com.softensy.softensyspringboot.entity.Appointment;
 import com.softensy.softensyspringboot.entity.Doctor;
 import com.softensy.softensyspringboot.entity.Patient;
+import com.softensy.softensyspringboot.exception.NotFoundException;
 import com.softensy.softensyspringboot.repository.DoctorRepository;
 import com.softensy.softensyspringboot.repository.PatientRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -15,8 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.Optional;
 
 import static com.softensy.softensyspringboot.TestDataGenerator.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -49,8 +49,34 @@ class AppointmentMapperTest {
         assertEquals(expectedAppointment, actualAppointment);
         assertNotNull(expectedAppointment);
         assertNotNull(actualAppointment);
-        verify(doctorRepository, times(2)).findById(anyLong());
-        verify(patientRepository, times(2)).findById(anyLong());
+        verify(doctorRepository, times(1)).findById(anyLong());
+        verify(patientRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("check mapping appointment dto to entity by invalid doctor id, exception expected")
+    void testMappingAppointmentDtoToAppointmentEntityWithInvalidDoctor() {
+        // given
+        AppointmentDto appointmentDto = getAppointmentDto(getFirstAppointment());
+        // when
+        when(doctorRepository.findById(anyLong())).thenThrow(NotFoundException.class);
+        //then
+        assertThrows(NotFoundException.class, () -> appointmentMapper.dtoToEntity(appointmentDto));
+        verify(doctorRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("check mapping appointment dto to entity by invalid patient id, exception expected")
+    void testMappingAppointmentDtoToAppointmentEntityWithInvalidPatient() {
+        // given
+        AppointmentDto appointmentDto = getAppointmentDto(getFirstAppointment());
+        // when
+        when(doctorRepository.findById(anyLong())).thenReturn(Optional.ofNullable(getFirstDoctor()));
+        when(patientRepository.findById(anyLong())).thenThrow(NotFoundException.class);
+        //then
+        assertThrows(NotFoundException.class, () -> appointmentMapper.dtoToEntity(appointmentDto));
+        verify(doctorRepository, times(1)).findById(anyLong());
+        verify(patientRepository, times(1)).findById(anyLong());
     }
 
 }

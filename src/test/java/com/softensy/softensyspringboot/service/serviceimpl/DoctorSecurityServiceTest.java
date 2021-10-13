@@ -1,6 +1,7 @@
-package com.softensy.softensyspringboot.service.serviceImpl;
+package com.softensy.softensyspringboot.service.serviceimpl;
 
 import com.softensy.softensyspringboot.TestDataGenerator;
+import com.softensy.softensyspringboot.dto.DoctorDto;
 import com.softensy.softensyspringboot.entity.Doctor;
 import com.softensy.softensyspringboot.entity.UserSecurity;
 import com.softensy.softensyspringboot.repository.UserSecurityRepository;
@@ -11,13 +12,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
+import static com.softensy.softensyspringboot.TestDataGenerator.getDoctorDto;
 import static com.softensy.softensyspringboot.TestDataGenerator.getFirstDoctor;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class DoctorSecurityServiceTest {
@@ -41,21 +45,51 @@ class DoctorSecurityServiceTest {
     }
 
     @Test
+    @DisplayName("checking doctor contains id by invalid userSecurity login")
+    void testDoctorHasIdWithInvalidUserLogin() {
+        // given
+        UserSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
+        SecurityContextHolder.getContext().
+                setAuthentication(new UsernamePasswordAuthenticationToken(doctorSecurity.getLogin(), doctorSecurity.getPassword()));
+        // when
+        when(userSecurityRepository.findByLogin(anyString())).thenThrow(UsernameNotFoundException.class);
+        //then
+        assertThrows(UsernameNotFoundException.class, () -> doctorSecurityService.hasDoctorId(doctorSecurity.getUserId()));
+        verify(userSecurityRepository, times(1)).findByLogin(anyString());
+    }
+
+    @Test
     @DisplayName("required doctor check")
     void testHasRequiredDoctor() {
         // given
         UserSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
         Doctor doctor = getFirstDoctor();
+        DoctorDto doctorDto = getDoctorDto(getFirstDoctor());
         boolean hasDoctor = false;
         SecurityContextHolder.getContext()
                 .setAuthentication(new UsernamePasswordAuthenticationToken(doctorSecurity.getLogin(), doctorSecurity.getPassword()));
         // when
         when(userSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(doctorSecurity));
         if (doctor.getId() == doctorSecurity.getUserId()) {
-            hasDoctor = doctorSecurityService.hasDoctor(doctor);
+            hasDoctor = doctorSecurityService.hasDoctor(doctorDto);
         }
         //then
         assertTrue(hasDoctor);
+    }
+
+    @Test
+    @DisplayName("required doctor check by invalid userSecurity login")
+    void testHasRequiredDoctorWithInvalidLogin() {
+        // given
+        UserSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
+        DoctorDto doctorDto = getDoctorDto(getFirstDoctor());
+        SecurityContextHolder.getContext()
+                .setAuthentication(new UsernamePasswordAuthenticationToken(doctorSecurity.getLogin(), doctorSecurity.getPassword()));
+        // when
+        when(userSecurityRepository.findByLogin(anyString())).thenThrow(UsernameNotFoundException.class);
+        //then
+        assertThrows(UsernameNotFoundException.class, () -> doctorSecurityService.hasDoctor(doctorDto));
+        verify(userSecurityRepository, times(1)).findByLogin(anyString());
     }
 
 }

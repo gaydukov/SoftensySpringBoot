@@ -1,4 +1,4 @@
-package com.softensy.softensyspringboot.handlerException;
+package com.softensy.softensyspringboot.handlerexception;
 
 import com.softensy.softensyspringboot.exception.BadRequestException;
 import com.softensy.softensyspringboot.exception.NotFoundException;

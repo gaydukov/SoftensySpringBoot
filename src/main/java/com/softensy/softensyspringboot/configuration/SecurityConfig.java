@@ -1,6 +1,6 @@
 package com.softensy.softensyspringboot.configuration;
 
-import com.softensy.softensyspringboot.service.serviceImpl.UserDetailsServiceImpl;
+import com.softensy.softensyspringboot.service.serviceimpl.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

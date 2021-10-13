@@ -1,10 +1,12 @@
 package com.softensy.softensyspringboot.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softensy.softensyspringboot.dto.PatientDto;
 import com.softensy.softensyspringboot.entity.Patient;
+import com.softensy.softensyspringboot.mapper.PatientMapper;
 import com.softensy.softensyspringboot.service.PatientService;
-import com.softensy.softensyspringboot.service.serviceImpl.PatientSecurityService;
-import com.softensy.softensyspringboot.service.serviceImpl.UserDetailsServiceImpl;
+import com.softensy.softensyspringboot.service.serviceimpl.PatientSecurityService;
+import com.softensy.softensyspringboot.service.serviceimpl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.softensy.softensyspringboot.TestDataGenerator.getFirstPatient;
-import static com.softensy.softensyspringboot.TestDataGenerator.getPatientList;
+import static com.softensy.softensyspringboot.TestDataGenerator.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -36,6 +37,8 @@ class PatientControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private PatientService patientService;
+    @MockBean
+    private PatientMapper patientMapper;
     @MockBean
     private UserDetailsServiceImpl userDetailsService;
     @MockBean(name = "patientSecurityService")
@@ -121,7 +124,9 @@ class PatientControllerTest {
     void testAddNewPatientWithAuthenticatedAdminReturnStatus201AndPatient() throws Exception {
         //given
         Patient patient = getFirstPatient();
+        PatientDto patientDto = getPatientDto(getFirstPatient());
         //when
+        when(patientMapper.dtoToEntity(patientDto)).thenReturn(patient);
         when(patientService.savePatient(patient)).thenReturn(patient);
         //then
         mockMvc.perform(post("/patient")
@@ -158,8 +163,10 @@ class PatientControllerTest {
     @WithMockUser(authorities = "admin:write")
     void testUpdatePatientWithAuthenticatedAdminReturnStatus200AndPatient() throws Exception {
         //given
+        PatientDto patientDto = getPatientDto(getFirstPatient());
         Patient patient = getFirstPatient();
         //when
+        when(patientMapper.dtoToEntity(patientDto)).thenReturn(patient);
         when(patientService.updatePatient(patient)).thenReturn(patient);
         //then
         mockMvc.perform(put("/patient")
@@ -182,8 +189,10 @@ class PatientControllerTest {
     void testUpdatePatientWithAuthenticatedPatientReturnStatus200AndPatient() throws Exception {
         //given
         Patient patient = getFirstPatient();
+        PatientDto patientDto = getPatientDto(getFirstPatient());
         //when
-        when(patientSecurityService.hasPatient(patient)).thenReturn(true);
+        when(patientMapper.dtoToEntity(patientDto)).thenReturn(patient);
+        when(patientSecurityService.hasPatient(patientDto)).thenReturn(true);
         when(patientService.updatePatient(patient)).thenReturn(patient);
         //then
         mockMvc.perform(put("/patient")
@@ -206,8 +215,9 @@ class PatientControllerTest {
     void testUpdatePatientWithAnotherAuthenticatedReturnStatus403t() throws Exception {
         //given
         Patient patient = getFirstPatient();
+        PatientDto patientDto = getPatientDto(getFirstPatient());
         //when
-        when(patientSecurityService.hasPatient(patient)).thenReturn(true);
+        when(patientSecurityService.hasPatient(patientDto)).thenReturn(true);
         when(patientService.updatePatient(patient)).thenReturn(patient);
         //then
         mockMvc.perform(put("/patient")
@@ -222,8 +232,9 @@ class PatientControllerTest {
     void testUpdatePatientWithAuthenticatedAnotherPatientReturnStatus403() throws Exception {
         //given
         Patient patient = getFirstPatient();
+        PatientDto patientDto = getPatientDto(getFirstPatient());
         //when
-        when(patientSecurityService.hasPatient(patient)).thenReturn(false);
+        when(patientSecurityService.hasPatient(patientDto)).thenReturn(false);
         when(patientService.updatePatient(patient)).thenReturn(patient);
         //then
         mockMvc.perform(put("/patient")

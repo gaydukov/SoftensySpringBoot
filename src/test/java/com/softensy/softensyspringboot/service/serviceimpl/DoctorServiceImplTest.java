@@ -1,6 +1,8 @@
-package com.softensy.softensyspringboot.service.serviceImpl;
+package com.softensy.softensyspringboot.service.serviceimpl;
 
 import com.softensy.softensyspringboot.entity.Doctor;
+import com.softensy.softensyspringboot.exception.BadRequestException;
+import com.softensy.softensyspringboot.exception.NotFoundException;
 import com.softensy.softensyspringboot.repository.DoctorRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +42,16 @@ class DoctorServiceImplTest {
     }
 
     @Test
+    @DisplayName("checking get all doctors with empty list")
+    void testGetAllDoctorsWithEmptyListReturnException() {
+        // when
+        when(doctorRepository.findAll()).thenThrow(NotFoundException.class);
+        //then
+        Assertions.assertThrows(NotFoundException.class, () -> doctorService.getAllDoctors());
+        verify(doctorRepository, times(1)).findAll();
+    }
+
+    @Test
     @DisplayName("checking get by id doctor")
     void testGetDoctorByIdReturnDoctorAndVerifyFindById() {
         // given
@@ -51,6 +63,16 @@ class DoctorServiceImplTest {
         Assertions.assertEquals(expectedDoctor, actualDoctor);
         Assertions.assertNotNull(expectedDoctor);
         verify(doctorRepository).findById(1L);
+        verify(doctorRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    @DisplayName("checking get by invalid id doctor")
+    void testGetDoctorByInvalidIdReturnException() {
+        // when
+        when(doctorRepository.findById(1L)).thenThrow(NotFoundException.class);
+        //then
+        Assertions.assertThrows(NotFoundException.class, () -> doctorService.getDoctorById(1L));
         verify(doctorRepository, times(1)).findById(1L);
     }
 
@@ -73,6 +95,12 @@ class DoctorServiceImplTest {
     }
 
     @Test
+    @DisplayName("checking save invalid doctor, expected exception")
+    void testAddInvalidDoctorReturnException() {
+        Assertions.assertThrows(BadRequestException.class, () -> doctorService.saveDoctor(null));
+    }
+
+    @Test
     @DisplayName("checking update doctor")
     void testUpdateDoctorReturnDoctorAndVerifyDoctorUpdate() {
         // given
@@ -91,6 +119,12 @@ class DoctorServiceImplTest {
     }
 
     @Test
+    @DisplayName("checking update invalid doctor, expected exception")
+    void testUpdateInvalidDoctorReturnException() {
+        Assertions.assertThrows(BadRequestException.class, () -> doctorService.updateDoctor(null));
+    }
+
+    @Test
     @DisplayName("checking get by id doctor and delete him")
     void testDeleteDoctorByIdVerifyDoctorDelete() {
         // given
@@ -104,6 +138,16 @@ class DoctorServiceImplTest {
         Assertions.assertNotNull(doctor);
         verify(doctorRepository, times(1)).delete(doctor);
         verify(doctorRepository).delete(doctor);
+    }
+
+    @Test
+    @DisplayName("checking get by invalid id doctor, expected exception")
+    void testDeleteDoctorByInvalidIdReturnedException() {
+        // when
+        when(doctorRepository.existsById(1L)).thenReturn(false);
+        //then
+        Assertions.assertThrows(BadRequestException.class, () -> doctorService.deleteDoctor(1L));
+        verify(doctorRepository, times(1)).existsById(1L);
     }
 
 }

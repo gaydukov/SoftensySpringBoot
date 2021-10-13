@@ -55,10 +55,13 @@ public class TestDataGenerator {
 
     public static DoctorDto getDoctorDto(Doctor doctor) {
         return DoctorDto.builder()
+                .id(doctor.getId())
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
                 .position(doctor.getPosition())
+                .dateOfBirth(doctor.getDateOfBirth())
+                .phoneNumber(doctor.getPhoneNumber())
                 .build();
     }
 
@@ -116,9 +119,13 @@ public class TestDataGenerator {
 
     public static PatientDto getPatientDto(Patient patient) {
         return PatientDto.builder()
+                .id(patient.getId())
                 .firstName(patient.getFirstName())
                 .lastName(patient.getLastName())
                 .middleName(patient.getMiddleName())
+                .doctorId(patient.getDoctorId())
+                .dateOfBirth(patient.getDateOfBirth())
+                .phoneNumber(patient.getPhoneNumber())
                 .build();
     }
 

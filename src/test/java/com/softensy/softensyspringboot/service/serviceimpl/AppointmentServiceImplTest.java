@@ -1,4 +1,4 @@
-package com.softensy.softensyspringboot.service.serviceImpl;
+package com.softensy.softensyspringboot.service.serviceimpl;
 
 import com.softensy.softensyspringboot.dto.AppointmentDto;
 import com.softensy.softensyspringboot.dto.DoctorAppointmentDto;
@@ -6,6 +6,7 @@ import com.softensy.softensyspringboot.dto.PatientAppointmentDto;
 import com.softensy.softensyspringboot.entity.Appointment;
 import com.softensy.softensyspringboot.entity.Doctor;
 import com.softensy.softensyspringboot.entity.Patient;
+import com.softensy.softensyspringboot.exception.NotFoundException;
 import com.softensy.softensyspringboot.mapper.DoctorAppointmentMapper;
 import com.softensy.softensyspringboot.mapper.PatientAppointmentMapper;
 import com.softensy.softensyspringboot.repository.AppointmentRepository;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.softensy.softensyspringboot.TestDataGenerator.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -55,12 +57,19 @@ class AppointmentServiceImplTest {
         //then
         Assertions.assertEquals(expectedAppointmentDto, actualAppointmentDto);
         verify(appointmentRepository, times(1)).save(any(Appointment.class));
-        verify(doctorRepository, times(2)).findById(anyLong());
-        verify(patientRepository, times(2)).findById(anyLong());
+        verify(doctorRepository, times(1)).findById(anyLong());
+        verify(patientRepository, times(1)).findById(anyLong());
         verify(appointmentRepository).save(any(Appointment.class));
         Assertions.assertNotNull(doctor);
         Assertions.assertNotNull(patient);
         Assertions.assertNotNull(expectedAppointmentDto);
+    }
+
+    @Test
+    @DisplayName("checking create new invalid appointment, exception expected")
+    void testCreateNewInvalidAppointmentReturnException() {
+        assertThrows(NotFoundException.class, () -> appointmentService.createAppointment(null));
+
     }
 
     @Test
@@ -78,7 +87,7 @@ class AppointmentServiceImplTest {
         Assertions.assertNotNull(expectedPatientList);
         Assertions.assertNotNull(actualPatientList);
         verify(appointmentRepository, times(1)).findAllByDoctorId(anyLong());
-        verify(doctorAppointmentMapper, times(1)).entityToDto(any(List.class));
+        verify(doctorAppointmentMapper, times(1)).entityToDto(appointmentList);
     }
 
     @Test
@@ -96,7 +105,7 @@ class AppointmentServiceImplTest {
         Assertions.assertNotNull(expectedDoctorList);
         Assertions.assertNotNull(actualDoctorList);
         verify(appointmentRepository, times(1)).findAllByPatientId(anyLong());
-        verify(patientAppointmentMapper, times(1)).entityToDto(any(List.class));
+        verify(patientAppointmentMapper, times(1)).entityToDto(appointmentList);
     }
 
     @Test
@@ -112,6 +121,16 @@ class AppointmentServiceImplTest {
         //then
         Assertions.assertNotNull(appointment);
         verify(appointmentRepository, times(2)).deleteById(appointment.getId());
+    }
+
+    @Test
+    @DisplayName("checking delete appointment by invalid id, exception expected")
+    void testDeleteAppointmentByInvalidId() {
+        // when
+        when(appointmentRepository.existsById(1L)).thenReturn(false);
+        //then
+        assertThrows(NotFoundException.class, () -> appointmentService.deleteAppointment(1L));
+        verify(appointmentRepository, times(1)).existsById(1L);
     }
 
 }

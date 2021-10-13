@@ -26,13 +26,37 @@ class DoctorMapperTest {
         // when
         DoctorDto actualDoctorDto = doctorMapper.entityToDto(doctor);
         //then
+        assertEquals(expectedDoctorDto.getId(), actualDoctorDto.getId());
         assertEquals(expectedDoctorDto.getFirstName(), actualDoctorDto.getFirstName());
         assertEquals(expectedDoctorDto.getLastName(), actualDoctorDto.getLastName());
         assertEquals(expectedDoctorDto.getMiddleName(), actualDoctorDto.getMiddleName());
         assertEquals(expectedDoctorDto.getPosition(), actualDoctorDto.getPosition());
+        assertEquals(expectedDoctorDto.getDateOfBirth(), actualDoctorDto.getDateOfBirth());
+        assertEquals(expectedDoctorDto.getPhoneNumber(), actualDoctorDto.getPhoneNumber());
         assertEquals(expectedDoctorDto, actualDoctorDto);
         assertNotNull(expectedDoctorDto);
         assertNotNull(actualDoctorDto);
+    }
+
+    @Test
+    @DisplayName("check mapping doctor dot to entity")
+    void testMappingDoctorDtoToEntity() {
+        // given
+        Doctor expectedDoctor = getFirstDoctor();
+        DoctorDto doctorDto = getDoctorDto(expectedDoctor);
+        // when
+        Doctor actualDoctor = doctorMapper.dtoToEntity(doctorDto);
+        //then
+        assertEquals(expectedDoctor.getId(), actualDoctor.getId());
+        assertEquals(expectedDoctor.getFirstName(), actualDoctor.getFirstName());
+        assertEquals(expectedDoctor.getLastName(), actualDoctor.getLastName());
+        assertEquals(expectedDoctor.getMiddleName(), actualDoctor.getMiddleName());
+        assertEquals(expectedDoctor.getPosition(), actualDoctor.getPosition());
+        assertEquals(expectedDoctor.getDateOfBirth(), actualDoctor.getDateOfBirth());
+        assertEquals(expectedDoctor.getPhoneNumber(), actualDoctor.getPhoneNumber());
+        assertEquals(expectedDoctor, actualDoctor);
+        assertNotNull(expectedDoctor);
+        assertNotNull(actualDoctor);
     }
 
 }

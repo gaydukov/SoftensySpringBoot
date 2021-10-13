@@ -1,4 +1,4 @@
-package com.softensy.softensyspringboot.service.serviceImpl;
+package com.softensy.softensyspringboot.service.serviceimpl;
 
 import com.softensy.softensyspringboot.TestDataGenerator;
 import com.softensy.softensyspringboot.entity.UserSecurity;
@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
 import static com.softensy.softensyspringboot.TestDataGenerator.getUserDetails;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -42,6 +42,17 @@ class UserDetailsServiceImplTest {
         assertNotNull(expectedUserDetails);
         verify(userSecurityRepository, times(1)).findByLogin(anyString());
         verify(userSecurityMapper, times(1)).userSecurityToUserDetails(any(UserSecurity.class));
+    }
+
+    @Test
+    @DisplayName("checking loud userDetails by invalid userName")
+    void testLoadUserDetailsByInvalidUserName() {
+        // when
+        when(userSecurityRepository.findByLogin(anyString())).thenThrow(UsernameNotFoundException.class);
+        //then
+        assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(anyString()));
+        verify(userSecurityRepository, times(1)).findByLogin(anyString());
+
     }
 
 }

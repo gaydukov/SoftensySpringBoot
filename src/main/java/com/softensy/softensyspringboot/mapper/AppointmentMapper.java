@@ -2,6 +2,8 @@ package com.softensy.softensyspringboot.mapper;
 
 import com.softensy.softensyspringboot.dto.AppointmentDto;
 import com.softensy.softensyspringboot.entity.Appointment;
+import com.softensy.softensyspringboot.entity.Doctor;
+import com.softensy.softensyspringboot.entity.Patient;
 import com.softensy.softensyspringboot.exception.NotFoundException;
 import com.softensy.softensyspringboot.repository.DoctorRepository;
 import com.softensy.softensyspringboot.repository.PatientRepository;
@@ -15,15 +17,13 @@ public class AppointmentMapper {
     private final PatientRepository patientRepository;
 
     public Appointment dtoToEntity(AppointmentDto appointmentDto) {
-        if(doctorRepository.findById(appointmentDto.getDoctorId()).isEmpty()){
-            throw new NotFoundException("Doctor not found");
-        }
-        if (patientRepository.findById(appointmentDto.getPatientId()).isEmpty()){
-            throw new NotFoundException("Patient not found");
-        }
+        Doctor doctor = doctorRepository.findById(appointmentDto.getDoctorId())
+                .orElseThrow(() -> new NotFoundException("Doctor not found"));
+        Patient patient = patientRepository.findById(appointmentDto.getPatientId())
+                .orElseThrow(() -> new NotFoundException("Patient not found"));
         return Appointment.builder()
-                .doctor(doctorRepository.findById(appointmentDto.getDoctorId()).get())
-                .patient(patientRepository.findById(appointmentDto.getPatientId()).get())
+                .doctor(doctor)
+                .patient(patient)
                 .appointmentDate(appointmentDto.getAppointmentDate())
                 .build();
     }

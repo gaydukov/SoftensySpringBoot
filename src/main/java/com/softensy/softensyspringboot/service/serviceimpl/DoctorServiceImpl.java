@@ -1,4 +1,4 @@
-package com.softensy.softensyspringboot.service.serviceImpl;
+package com.softensy.softensyspringboot.service.serviceimpl;
 
 import com.softensy.softensyspringboot.entity.Doctor;
 import com.softensy.softensyspringboot.exception.BadRequestException;
@@ -15,8 +15,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
-    private final String DOCTOR_NOT_FOUND = "Doctor not found";
-    private final String DOCTOR_IS_EMPTY="Doctor is empty";
+    private static final String DOCTOR_NOT_FOUND = "Doctor not found";
+    private static final String DOCTOR_IS_EMPTY = "Doctor is empty";
 
     @Override
     public List<Doctor> getAllDoctors() {

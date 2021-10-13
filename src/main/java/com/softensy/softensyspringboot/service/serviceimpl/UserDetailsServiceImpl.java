@@ -1,4 +1,4 @@
-package com.softensy.softensyspringboot.service.serviceImpl;
+package com.softensy.softensyspringboot.service.serviceimpl;
 
 import com.softensy.softensyspringboot.entity.UserSecurity;
 import com.softensy.softensyspringboot.mapper.UserSecurityMapper;

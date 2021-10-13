@@ -1,10 +1,12 @@
 package com.softensy.softensyspringboot.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softensy.softensyspringboot.dto.DoctorDto;
 import com.softensy.softensyspringboot.entity.Doctor;
+import com.softensy.softensyspringboot.mapper.DoctorMapper;
 import com.softensy.softensyspringboot.service.DoctorService;
-import com.softensy.softensyspringboot.service.serviceImpl.DoctorSecurityService;
-import com.softensy.softensyspringboot.service.serviceImpl.UserDetailsServiceImpl;
+import com.softensy.softensyspringboot.service.serviceimpl.DoctorSecurityService;
+import com.softensy.softensyspringboot.service.serviceimpl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.softensy.softensyspringboot.TestDataGenerator.getDoctorList;
-import static com.softensy.softensyspringboot.TestDataGenerator.getFirstDoctor;
+import static com.softensy.softensyspringboot.TestDataGenerator.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -37,6 +38,8 @@ class DoctorControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private DoctorService doctorService;
+    @MockBean
+    private DoctorMapper doctorMapper;
     @MockBean
     private UserDetailsServiceImpl userDetailsService;
     @MockBean(name = "doctorSecurityService")
@@ -107,7 +110,9 @@ class DoctorControllerTest {
     void testAddNewDoctorWithAuthenticatedReturnStatus201AndDoctor() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
+        DoctorDto doctorDto = getDoctorDto(getFirstDoctor());
         //when
+        when(doctorMapper.dtoToEntity(doctorDto)).thenReturn(doctor);
         when(doctorService.saveDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(post("/doctor")
@@ -147,7 +152,9 @@ class DoctorControllerTest {
     void testUpdateDoctorWithAuthenticatedAdminReturnStatus200AndDoctor() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
+        DoctorDto doctorDto = getDoctorDto(getFirstDoctor());
         //when
+        when(doctorMapper.dtoToEntity(doctorDto)).thenReturn(doctor);
         when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(put("/doctor")
@@ -171,8 +178,9 @@ class DoctorControllerTest {
     void testUpdateDoctorWithAuthenticatedDoctorReturnStatus200AndDoctor() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
+        DoctorDto doctorDto = getDoctorDto(getFirstDoctor());
         //when
-        when(doctorSecurityService.hasDoctor(doctor)).thenReturn(true);
+        when(doctorSecurityService.hasDoctor(doctorDto)).thenReturn(true);
         when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(put("/doctor")
@@ -188,8 +196,9 @@ class DoctorControllerTest {
     void testUpdateDoctorWithAnotherAuthenticatedReturnStatus403() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
+        DoctorDto doctorDto = getDoctorDto(getFirstDoctor());
         //when
-        when(doctorSecurityService.hasDoctor(doctor)).thenReturn(true);
+        when(doctorSecurityService.hasDoctor(doctorDto)).thenReturn(true);
         when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(put("/doctor")
@@ -205,8 +214,9 @@ class DoctorControllerTest {
     void testUpdateDoctorWithAnotherAuthenticatedDoctorReturnStatus403() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
+        DoctorDto doctorDto = getDoctorDto(getFirstDoctor());
         //when
-        when(doctorSecurityService.hasDoctor(doctor)).thenReturn(false);
+        when(doctorSecurityService.hasDoctor(doctorDto)).thenReturn(false);
         when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(put("/doctor")

@@ -1,8 +1,10 @@
 package com.softensy.softensyspringboot.controller;
 
+import com.softensy.softensyspringboot.dto.PatientDto;
 import com.softensy.softensyspringboot.entity.Patient;
+import com.softensy.softensyspringboot.mapper.PatientMapper;
 import com.softensy.softensyspringboot.service.PatientService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,15 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
     private final PatientService patientService;
-
-    @Autowired
-    public PatientController(PatientService patientService) {
-        this.patientService = patientService;
-    }
+    private final PatientMapper patientMapper;
 
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('doctor:read') or hasAuthority('admin:read') or (hasAuthority('patient:read') and @patientSecurityService.hasPatientId(#id))")
@@ -28,14 +27,14 @@ public class PatientController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('admin:write')")
-    public ResponseEntity<Patient> savePatient(@RequestBody Patient patient) {
-        return new ResponseEntity<>(patientService.savePatient(patient), HttpStatus.CREATED);
+    public ResponseEntity<Patient> savePatient(@RequestBody PatientDto patient) {
+        return new ResponseEntity<>(patientService.savePatient(patientMapper.dtoToEntity(patient)), HttpStatus.CREATED);
     }
 
     @PutMapping
     @PreAuthorize("hasAuthority('admin:write') or (hasAuthority('patient:write') and @patientSecurityService.hasPatient(#patient))")
-    public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient) {
-        return new ResponseEntity<>(patientService.updatePatient(patient), HttpStatus.OK);
+    public ResponseEntity<Patient> updatePatient(@RequestBody PatientDto patient) {
+        return new ResponseEntity<>(patientService.updatePatient(patientMapper.dtoToEntity(patient)), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "{id}")

@@ -1,4 +1,4 @@
-package com.softensy.softensyspringboot.service.serviceImpl;
+package com.softensy.softensyspringboot.service.serviceimpl;
 
 
 import com.softensy.softensyspringboot.entity.Patient;
@@ -16,14 +16,14 @@ import java.util.Optional;
 @AllArgsConstructor
 public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
-    private final String PATIENT_NOT_FOUMD = "Patient not found";
-    private final String PATIENT_IS_EMPTY = "Patient is empty";
+    private static final String PATIENT_NOT_FOUND = "Patient not found";
+    private static final String PATIENT_IS_EMPTY = "Patient is empty";
 
     @Override
     public List<Patient> getAllPatients() {
         List<Patient> patient = patientRepository.findAll();
         if (patient.isEmpty()) {
-            throw new NotFoundException(PATIENT_NOT_FOUMD);
+            throw new NotFoundException(PATIENT_NOT_FOUND);
         }
         return patient;
     }
@@ -32,7 +32,7 @@ public class PatientServiceImpl implements PatientService {
     public Patient getPatientById(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
         if (patient.isEmpty()) {
-            throw new NotFoundException(PATIENT_NOT_FOUMD);
+            throw new NotFoundException(PATIENT_NOT_FOUND);
         }
         return patient.get();
     }

@@ -1,8 +1,9 @@
-package com.softensy.softensyspringboot.service.serviceImpl;
+package com.softensy.softensyspringboot.service.serviceimpl;
 
 import com.softensy.softensyspringboot.entity.AccountType;
-import com.softensy.softensyspringboot.entity.Doctor;
+import com.softensy.softensyspringboot.entity.Appointment;
 import com.softensy.softensyspringboot.entity.UserSecurity;
+import com.softensy.softensyspringboot.repository.AppointmentRepository;
 import com.softensy.softensyspringboot.repository.UserSecurityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,28 +12,33 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class DoctorSecurityService {
+public class AppointmentSecurityService {
     private final UserSecurityRepository userSecurityRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    public boolean hasDoctorId(long id) {
+    public boolean hasAuthorityDoctorInAppointment(long id) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         UserSecurity user = userSecurityRepository.findByLogin(login).orElseThrow(() ->
                 new UsernameNotFoundException("User doesn't exists"));
+        Appointment appointment = appointmentRepository.findById(id).orElseThrow(() ->
+                new UsernameNotFoundException("Appointment doesn't exists"));
         if (AccountType.DOCTOR != user.getAccountType()) {
             return false;
         } else {
-            return user.getUserId() == id;
+            return appointment.getDoctor().getId() == user.getUserId();
         }
     }
 
-    public boolean hasDoctor(Doctor doctor) {
+    public boolean hasAuthorityPatientInAppointment(long id) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         UserSecurity user = userSecurityRepository.findByLogin(login).orElseThrow(() ->
                 new UsernameNotFoundException("User doesn't exists"));
-        if (AccountType.DOCTOR != user.getAccountType()) {
+        Appointment appointment = appointmentRepository.findById(id).orElseThrow(() ->
+                new UsernameNotFoundException("Appointment doesn't exists"));
+        if (AccountType.PATIENT != user.getAccountType()) {
             return false;
         } else {
-            return user.getUserId() == doctor.getId();
+            return appointment.getDoctor().getId() == user.getUserId();
         }
     }
 

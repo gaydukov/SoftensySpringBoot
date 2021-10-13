@@ -1,7 +1,7 @@
-package com.softensy.softensyspringboot.service.serviceImpl;
+package com.softensy.softensyspringboot.service.serviceimpl;
 
+import com.softensy.softensyspringboot.dto.DoctorDto;
 import com.softensy.softensyspringboot.entity.AccountType;
-import com.softensy.softensyspringboot.entity.Patient;
 import com.softensy.softensyspringboot.entity.UserSecurity;
 import com.softensy.softensyspringboot.repository.UserSecurityRepository;
 import lombok.AllArgsConstructor;
@@ -11,28 +11,28 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class PatientSecurityService {
+public class DoctorSecurityService {
     private final UserSecurityRepository userSecurityRepository;
 
-    public boolean hasPatientId(long id) {
+    public boolean hasDoctorId(long id) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         UserSecurity user = userSecurityRepository.findByLogin(login).orElseThrow(() ->
                 new UsernameNotFoundException("User doesn't exists"));
-        if (AccountType.PATIENT != user.getAccountType()) {
+        if (AccountType.DOCTOR != user.getAccountType()) {
             return false;
         } else {
             return user.getUserId() == id;
         }
     }
 
-    public boolean hasPatient(Patient patient) {
+    public boolean hasDoctor(DoctorDto doctor) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         UserSecurity user = userSecurityRepository.findByLogin(login).orElseThrow(() ->
                 new UsernameNotFoundException("User doesn't exists"));
-        if (AccountType.PATIENT != user.getAccountType()) {
+        if (AccountType.DOCTOR != user.getAccountType()) {
             return false;
         } else {
-            return user.getUserId() == patient.getId();
+            return user.getUserId() == doctor.getId();
         }
     }
 
