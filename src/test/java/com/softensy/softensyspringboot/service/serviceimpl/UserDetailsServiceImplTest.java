@@ -47,10 +47,13 @@ class UserDetailsServiceImplTest {
     @Test
     @DisplayName("checking loud userDetails by invalid userName")
     void testLoadUserDetailsByInvalidUserName() {
+        //given
+        UserDetails userDetails = getUserDetails();
+        String login = userDetails.getUsername();
         // when
         when(userSecurityRepository.findByLogin(anyString())).thenThrow(UsernameNotFoundException.class);
         //then
-        assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(anyString()));
+        assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(login));
         verify(userSecurityRepository, times(1)).findByLogin(anyString());
 
     }

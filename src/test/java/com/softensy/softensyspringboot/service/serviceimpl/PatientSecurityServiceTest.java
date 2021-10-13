@@ -35,11 +35,12 @@ class PatientSecurityServiceTest {
     void testPatientContainsWithInvalidUserLogin() {
         // given
         UserSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
+        long patientId = patientSecurity.getUserId();
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(patientSecurity.getLogin(), patientSecurity.getPassword()));
         // when
         when(userSecurityRepository.findByLogin(anyString())).thenThrow(UsernameNotFoundException.class);
         //then
-        assertThrows(UsernameNotFoundException.class, () -> patientSecurityService.hasPatientId(patientSecurity.getUserId()));
+        assertThrows(UsernameNotFoundException.class, () -> patientSecurityService.hasPatientId(patientId));
     }
 
     @Test

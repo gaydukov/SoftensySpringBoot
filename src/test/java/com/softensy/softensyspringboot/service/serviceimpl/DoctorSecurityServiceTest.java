@@ -49,12 +49,13 @@ class DoctorSecurityServiceTest {
     void testDoctorHasIdWithInvalidUserLogin() {
         // given
         UserSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
+        long doctorId = doctorSecurity.getUserId();
         SecurityContextHolder.getContext().
                 setAuthentication(new UsernamePasswordAuthenticationToken(doctorSecurity.getLogin(), doctorSecurity.getPassword()));
         // when
         when(userSecurityRepository.findByLogin(anyString())).thenThrow(UsernameNotFoundException.class);
         //then
-        assertThrows(UsernameNotFoundException.class, () -> doctorSecurityService.hasDoctorId(doctorSecurity.getUserId()));
+        assertThrows(UsernameNotFoundException.class, () -> doctorSecurityService.hasDoctorId(doctorId));
         verify(userSecurityRepository, times(1)).findByLogin(anyString());
     }
 

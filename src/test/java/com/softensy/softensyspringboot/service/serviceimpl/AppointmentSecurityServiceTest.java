@@ -67,11 +67,12 @@ class AppointmentSecurityServiceTest {
     void testHasAuthorityDoctorInAppointmentWithInvalidLogin() {
         // given
         UserSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
+        long doctorId = doctorSecurity.getUserId();
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(doctorSecurity.getLogin(), doctorSecurity.getPassword()));
         // when
         when(userSecurityRepository.findByLogin(anyString())).thenThrow(UsernameNotFoundException.class);
         //then
-        assertThrows(UsernameNotFoundException.class, () -> appointmentSecurityService.hasAuthorityDoctorInAppointment(doctorSecurity.getUserId()));
+        assertThrows(UsernameNotFoundException.class, () -> appointmentSecurityService.hasAuthorityDoctorInAppointment(doctorId));
         verify(userSecurityRepository, times(1)).findByLogin(anyString());
     }
 
@@ -80,12 +81,13 @@ class AppointmentSecurityServiceTest {
     void testHasAuthorityDoctorInAppointmentWithInvalidAppointmentId() {
         // given
         UserSecurity doctorSecurity = TestDataGenerator.getDoctorSecurity();
+        long doctorId = doctorSecurity.getUserId();
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(doctorSecurity.getLogin(), doctorSecurity.getPassword()));
         // when
         when(userSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(doctorSecurity));
         when(appointmentRepository.findById(anyLong())).thenThrow(UsernameNotFoundException.class);
         //then
-        assertThrows(UsernameNotFoundException.class, () -> appointmentSecurityService.hasAuthorityDoctorInAppointment(doctorSecurity.getUserId()));
+        assertThrows(UsernameNotFoundException.class, () -> appointmentSecurityService.hasAuthorityDoctorInAppointment(doctorId));
         verify(userSecurityRepository, times(1)).findByLogin(anyString());
         verify(appointmentRepository, times(1)).findById(anyLong());
     }
@@ -95,11 +97,12 @@ class AppointmentSecurityServiceTest {
     void testHasAuthorityPatientInAppointmentWithInvalidLogin() {
         // given
         UserSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
+        long patientId = patientSecurity.getUserId();
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(patientSecurity.getLogin(), patientSecurity.getPassword()));
         // when
         when(userSecurityRepository.findByLogin(anyString())).thenThrow(UsernameNotFoundException.class);
         //then
-        assertThrows(UsernameNotFoundException.class, () -> appointmentSecurityService.hasAuthorityPatientInAppointment(patientSecurity.getUserId()));
+        assertThrows(UsernameNotFoundException.class, () -> appointmentSecurityService.hasAuthorityPatientInAppointment(patientId));
         verify(userSecurityRepository, times(1)).findByLogin(anyString());
     }
 
@@ -108,12 +111,13 @@ class AppointmentSecurityServiceTest {
     void testHasAuthorityPatientInAppointmentWithInvalidAppointmentId() {
         // given
         UserSecurity patientSecurity = TestDataGenerator.getPatientSecurity();
+        long patientId = patientSecurity.getUserId();
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(patientSecurity.getLogin(), patientSecurity.getPassword()));
         // when
         when(userSecurityRepository.findByLogin(anyString())).thenReturn(Optional.of(patientSecurity));
         when(appointmentRepository.findById(anyLong())).thenThrow(UsernameNotFoundException.class);
         //then
-        assertThrows(UsernameNotFoundException.class, () -> appointmentSecurityService.hasAuthorityPatientInAppointment(patientSecurity.getUserId()));
+        assertThrows(UsernameNotFoundException.class, () -> appointmentSecurityService.hasAuthorityPatientInAppointment(patientId));
         verify(userSecurityRepository, times(1)).findByLogin(anyString());
         verify(appointmentRepository, times(1)).findById(anyLong());
     }
