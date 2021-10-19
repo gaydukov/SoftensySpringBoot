@@ -3,10 +3,13 @@ package com.softensy.softensyspringboot.service.serviceimpl;
 import com.softensy.softensyspringboot.dto.AppointmentDto;
 import com.softensy.softensyspringboot.dto.DoctorAppointmentDto;
 import com.softensy.softensyspringboot.dto.PatientAppointmentDto;
+import com.softensy.softensyspringboot.entity.AbsenceSchedule;
 import com.softensy.softensyspringboot.entity.Appointment;
 import com.softensy.softensyspringboot.entity.Doctor;
 import com.softensy.softensyspringboot.entity.Patient;
+import com.softensy.softensyspringboot.exception.DoctorAbsentException;
 import com.softensy.softensyspringboot.exception.NotFoundException;
+import com.softensy.softensyspringboot.mapper.AbsenceScheduleMapper;
 import com.softensy.softensyspringboot.mapper.DoctorAppointmentMapper;
 import com.softensy.softensyspringboot.mapper.PatientAppointmentMapper;
 import com.softensy.softensyspringboot.repository.AppointmentRepository;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +35,8 @@ class AppointmentServiceImplTest {
     @Autowired
     private AppointmentServiceImpl appointmentService;
     @MockBean
+    private AbsenceScheduleServiceImpl absenceScheduleService;
+    @MockBean
     private PatientAppointmentMapper patientAppointmentMapper;
     @MockBean
     private AppointmentRepository appointmentRepository;
@@ -40,6 +46,8 @@ class AppointmentServiceImplTest {
     private PatientRepository patientRepository;
     @MockBean
     private DoctorAppointmentMapper doctorAppointmentMapper;
+    @MockBean
+    private AbsenceScheduleMapper absenceScheduleMapper;
 
     @Test
     @DisplayName("checking create new appointment and saves it")
@@ -53,12 +61,16 @@ class AppointmentServiceImplTest {
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
         when(patientRepository.findById(anyLong())).thenReturn(Optional.of(patient));
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.of(doctor));
+        when(absenceScheduleService.findAllAbsenceScheduleByDoctorId(anyLong())).thenReturn(getAbsenceScheduleListDto());
+        when(absenceScheduleMapper.dtoToEntity(getFirstAbsenceScheduleDto())).thenReturn(getFirstAbsenceSchedule());
         AppointmentDto expectedAppointmentDto = appointmentService.createAppointment(actualAppointmentDto);
         //then
         Assertions.assertEquals(expectedAppointmentDto, actualAppointmentDto);
         verify(appointmentRepository, times(1)).save(any(Appointment.class));
         verify(doctorRepository, times(1)).findById(anyLong());
         verify(patientRepository, times(1)).findById(anyLong());
+        verify(absenceScheduleService, times(1)).findAllAbsenceScheduleByDoctorId(anyLong());
+        verify(absenceScheduleService, times(1)).isDoctorAbsent(any(AbsenceSchedule.class), any(LocalDateTime.class));
         verify(appointmentRepository).save(any(Appointment.class));
         Assertions.assertNotNull(doctor);
         Assertions.assertNotNull(patient);
@@ -69,6 +81,21 @@ class AppointmentServiceImplTest {
     @DisplayName("checking create new invalid appointment, exception expected")
     void testCreateNewInvalidAppointmentReturnException() {
         assertThrows(NotFoundException.class, () -> appointmentService.createAppointment(null));
+
+    }
+
+    @Test
+    @DisplayName("checking create new appointment with invalid date, exception expected")
+    void testCreateNewAppointmentWithInvalidDateReturnException() {
+        // when
+        when(absenceScheduleService.findAllAbsenceScheduleByDoctorId(anyLong())).thenReturn(getAbsenceScheduleListDto());
+        when(absenceScheduleService.isDoctorAbsent(any(AbsenceSchedule.class), any(LocalDateTime.class))).thenReturn(true);
+        when(absenceScheduleMapper.dtoToEntity(getFirstAbsenceScheduleDto())).thenReturn(getFirstAbsenceSchedule());
+        when(doctorRepository.findById(anyLong())).thenReturn(Optional.ofNullable(getFirstDoctor()));
+        when(patientRepository.findById(anyLong())).thenReturn(Optional.of(getFirstPatient()));
+        //then
+        assertThrows(DoctorAbsentException.class, () -> appointmentService.createAppointment(getAppointmentDto(getFirstAppointment())));
+        verify(absenceScheduleService, times(1)).isDoctorAbsent(any(AbsenceSchedule.class), any(LocalDateTime.class));
 
     }
 

@@ -303,4 +303,97 @@ public class TestDataGenerator {
                 .build();
     }
 
+    public static AbsenceSchedule getFirstAbsenceSchedule() {
+        return AbsenceSchedule.builder()
+                .id(1L)
+                .startSickLeave(LocalDateTime.of(2021, 11, 1, 0, 0))
+                .endSickLeave(LocalDateTime.of(2021, 11, 14, 0, 0))
+                .startVocation(LocalDateTime.of(2021, 12, 1, 0, 0))
+                .endVocation(LocalDateTime.of(2021, 12, 21, 0, 0))
+                .doctor(getFirstDoctor())
+                .build();
+    }
+
+    public static AbsenceSchedule getSecondAbsenceSchedule() {
+        return AbsenceSchedule.builder()
+                .id(2L)
+                .startSickLeave(LocalDateTime.of(2021, 11, 15, 0, 0))
+                .endSickLeave(LocalDateTime.of(2021, 11, 21, 0, 0))
+                .startVocation(LocalDateTime.of(2021, 12, 14, 0, 0))
+                .endVocation(LocalDateTime.of(2021, 12, 25, 0, 0))
+                .doctor(getSecondDoctor())
+                .build();
+    }
+
+    public static AbsenceSchedule getThirdAbsenceSchedule() {
+        return AbsenceSchedule.builder()
+                .id(3L)
+                .startSickLeave(LocalDateTime.of(2021, 12, 1, 0, 0))
+                .endSickLeave(LocalDateTime.of(2021, 12, 7, 0, 0))
+                .startVocation(LocalDateTime.of(2021, 12, 20, 0, 0))
+                .endVocation(LocalDateTime.of(2021, 12, 31, 0, 0))
+                .doctor(getThirdDoctor())
+                .build();
+    }
+
+    public static AbsenceScheduleDto getFirstAbsenceScheduleDto() {
+        return AbsenceScheduleDto.builder()
+                .id(1L)
+                .startSickLeave(LocalDateTime.of(2021, 11, 1, 0, 0))
+                .endSickLeave(LocalDateTime.of(2021, 11, 14, 0, 0))
+                .startVocation(LocalDateTime.of(2021, 12, 1, 0, 0))
+                .endVocation(LocalDateTime.of(2021, 12, 21, 0, 0))
+                .doctorId(1L)
+                .build();
+    }
+
+    public static AbsenceScheduleDto getSecondAbsenceScheduleDto() {
+        return AbsenceScheduleDto.builder()
+                .id(2L)
+                .startSickLeave(LocalDateTime.of(2021, 11, 15, 0, 0))
+                .endSickLeave(LocalDateTime.of(2021, 11, 21, 0, 0))
+                .startVocation(LocalDateTime.of(2021, 12, 14, 0, 0))
+                .endVocation(LocalDateTime.of(2021, 12, 25, 0, 0))
+                .doctorId(2L)
+                .build();
+    }
+
+    public static AbsenceScheduleDto getThirdAbsenceScheduleDto() {
+        return AbsenceScheduleDto.builder()
+                .id(3L)
+                .startSickLeave(LocalDateTime.of(2021, 12, 1, 0, 0))
+                .endSickLeave(LocalDateTime.of(2021, 12, 7, 0, 0))
+                .startVocation(LocalDateTime.of(2021, 12, 20, 0, 0))
+                .endVocation(LocalDateTime.of(2021, 12, 31, 0, 0))
+                .doctorId(3L)
+                .build();
+    }
+
+    public static List<AbsenceScheduleDto> getAbsenceScheduleListDto() {
+        List<AbsenceScheduleDto> result = new ArrayList<>();
+        result.add(getFirstAbsenceScheduleDto());
+        result.add(getSecondAbsenceScheduleDto());
+        result.add(getThirdAbsenceScheduleDto());
+        return result;
+    }
+
+    public static List<AbsenceSchedule> getAbsenceScheduleList() {
+        List<AbsenceSchedule> result = new ArrayList<>();
+        result.add(getFirstAbsenceSchedule());
+        result.add(getSecondAbsenceSchedule());
+        result.add(getThirdAbsenceSchedule());
+        return result;
+    }
+
+    public static AbsenceScheduleDto getInvalidAbsenceSchedule() {
+        return AbsenceScheduleDto.builder()
+                .id(4L)
+                .doctorId(1L)
+                .startSickLeave(null)
+                .endSickLeave(null)
+                .startVocation(null)
+                .endVocation(null)
+                .build();
+    }
+
 }

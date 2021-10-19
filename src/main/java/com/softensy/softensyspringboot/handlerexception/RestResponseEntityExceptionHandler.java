@@ -1,6 +1,7 @@
 package com.softensy.softensyspringboot.handlerexception;
 
 import com.softensy.softensyspringboot.exception.BadRequestException;
+import com.softensy.softensyspringboot.exception.DoctorAbsentException;
 import com.softensy.softensyspringboot.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = {BadRequestException.class})
     protected ResponseEntity<Object> handleConflictBadRequest(BadRequestException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {DoctorAbsentException.class})
+    protected ResponseEntity<Object> handleConflictBadRequest(DoctorAbsentException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
