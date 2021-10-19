@@ -60,7 +60,9 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.firstName").value("Ivan"))
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
-                .andExpect(jsonPath("$.position").value("Hirurg"))
+                .andExpect(jsonPath("$.position.position").value("family doctor"))
+                .andExpect(jsonPath("$.position.primaryPrice").value(300.0))
+                .andExpect(jsonPath("$.position.secondaryPrice").value(1000.0))
                 .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("45632147"));
     }
@@ -116,7 +118,7 @@ class DoctorControllerTest {
         when(doctorService.saveDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(post("/doctor")
-                        .content(objectMapper.writeValueAsString(doctor))
+                        .content(objectMapper.writeValueAsString(doctorDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -124,7 +126,9 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.firstName").value("Ivan"))
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
-                .andExpect(jsonPath("$.position").value("Hirurg"))
+                .andExpect(jsonPath("$.position.position").value("family doctor"))
+                .andExpect(jsonPath("$.position.primaryPrice").value(300.0))
+                .andExpect(jsonPath("$.position.secondaryPrice").value(1000.0))
                 .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("45632147"))
                 .andExpect(content().json(objectMapper.writeValueAsString(doctor)));
@@ -136,11 +140,12 @@ class DoctorControllerTest {
     void testAddNewDoctorWithAnotherAuthenticatedReturnStatus403() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
+        DoctorDto doctorDto = getDoctorDto(getFirstDoctor());
         //when
         when(doctorService.saveDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(post("/doctor")
-                        .content(objectMapper.writeValueAsString(doctor))
+                        .content(objectMapper.writeValueAsString(doctorDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
@@ -158,7 +163,7 @@ class DoctorControllerTest {
         when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(put("/doctor")
-                        .content(objectMapper.writeValueAsString(doctor))
+                        .content(objectMapper.writeValueAsString(doctorDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -166,7 +171,9 @@ class DoctorControllerTest {
                 .andExpect(jsonPath("$.firstName").value("Ivan"))
                 .andExpect(jsonPath("$.lastName").value("Ivanov"))
                 .andExpect(jsonPath("$.middleName").value("Ivanovich"))
-                .andExpect(jsonPath("$.position").value("Hirurg"))
+                .andExpect(jsonPath("$.position.position").value("family doctor"))
+                .andExpect(jsonPath("$.position.primaryPrice").value(300.0))
+                .andExpect(jsonPath("$.position.secondaryPrice").value(1000.0))
                 .andExpect(jsonPath("$.dateOfBirth").value("12-05-1987"))
                 .andExpect(jsonPath("$.phoneNumber").value("45632147"))
                 .andExpect(content().json(objectMapper.writeValueAsString(doctor)));
@@ -184,7 +191,7 @@ class DoctorControllerTest {
         when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(put("/doctor")
-                        .content(objectMapper.writeValueAsString(doctor))
+                        .content(objectMapper.writeValueAsString(doctorDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -202,7 +209,7 @@ class DoctorControllerTest {
         when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(put("/doctor")
-                        .content(objectMapper.writeValueAsString(doctor))
+                        .content(objectMapper.writeValueAsString(doctorDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
@@ -220,7 +227,7 @@ class DoctorControllerTest {
         when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
         //then
         mockMvc.perform(put("/doctor")
-                        .content(objectMapper.writeValueAsString(doctor))
+                        .content(objectMapper.writeValueAsString(doctorDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());

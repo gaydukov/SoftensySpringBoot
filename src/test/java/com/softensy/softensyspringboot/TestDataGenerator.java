@@ -17,13 +17,69 @@ import java.util.Set;
 @NoArgsConstructor
 public class TestDataGenerator {
 
+    public static Price getFirstPrice() {
+        return Price.builder()
+                .position("family doctor")
+                .primaryPrice(300)
+                .secondaryPrice(1000)
+                .build();
+    }
+
+    public static Price getSecondPrice() {
+        return Price.builder()
+                .position("ENT")
+                .primaryPrice(400)
+                .secondaryPrice(1200)
+                .build();
+    }
+
+    public static Price getThirdPrice() {
+        return Price.builder()
+                .position("surgeon")
+                .primaryPrice(500)
+                .secondaryPrice(1500)
+                .build();
+    }
+
+    public static List<Price> getPricerList() {
+        List<Price> result = new ArrayList<>();
+        result.add(getFirstPrice());
+        result.add(getSecondPrice());
+        result.add(getThirdPrice());
+        return result;
+    }
+
+    public static PriceDto getFirstPriceDto() {
+        return PriceDto.builder()
+                .position("family doctor")
+                .primaryPrice(300)
+                .secondaryPrice(1000)
+                .build();
+    }
+
+    public static PriceDto getSecondPriceDto() {
+        return PriceDto.builder()
+                .position("ENT")
+                .primaryPrice(400)
+                .secondaryPrice(1200)
+                .build();
+    }
+
+    public static PriceDto getThirdPriceDto() {
+        return PriceDto.builder()
+                .position("surgeon")
+                .primaryPrice(500)
+                .secondaryPrice(1500)
+                .build();
+    }
+
     public static Doctor getFirstDoctor() {
         return Doctor.builder()
                 .id(1)
                 .firstName("Ivan")
                 .lastName("Ivanov")
                 .middleName("Ivanovich")
-                .position("Hirurg")
+                .position(getFirstPrice())
                 .dateOfBirth(LocalDate.of(1987, 5, 12))
                 .phoneNumber("45632147")
                 .build();
@@ -35,7 +91,7 @@ public class TestDataGenerator {
                 .firstName("Petr")
                 .lastName("Petrov")
                 .middleName("Petrov")
-                .position("Terapevt")
+                .position(getSecondPrice())
                 .dateOfBirth(LocalDate.of(1988, 7, 19))
                 .phoneNumber("54321")
                 .build();
@@ -47,7 +103,7 @@ public class TestDataGenerator {
                 .firstName("Semen")
                 .lastName("Semenov")
                 .middleName("Ivanovich")
-                .position("Okulist")
+                .position(getThirdPrice())
                 .dateOfBirth(LocalDate.of(1987, 1, 25))
                 .phoneNumber("45632")
                 .build();
@@ -59,7 +115,7 @@ public class TestDataGenerator {
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .middleName(doctor.getMiddleName())
-                .position(doctor.getPosition())
+                .position(doctor.getPosition().getPosition())
                 .dateOfBirth(doctor.getDateOfBirth())
                 .phoneNumber(doctor.getPhoneNumber())
                 .build();

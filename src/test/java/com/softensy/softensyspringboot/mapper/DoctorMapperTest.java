@@ -2,20 +2,28 @@ package com.softensy.softensyspringboot.mapper;
 
 import com.softensy.softensyspringboot.dto.DoctorDto;
 import com.softensy.softensyspringboot.entity.Doctor;
+import com.softensy.softensyspringboot.entity.Price;
+import com.softensy.softensyspringboot.exception.NotFoundException;
+import com.softensy.softensyspringboot.repository.PriceRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-import static com.softensy.softensyspringboot.TestDataGenerator.getDoctorDto;
-import static com.softensy.softensyspringboot.TestDataGenerator.getFirstDoctor;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.Optional;
+
+import static com.softensy.softensyspringboot.TestDataGenerator.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class DoctorMapperTest {
     @Autowired
     private DoctorMapper doctorMapper;
+    @MockBean
+    private PriceRepository priceRepository;
 
     @Test
     @DisplayName("check mapping doctor entity to dto")
@@ -39,12 +47,14 @@ class DoctorMapperTest {
     }
 
     @Test
-    @DisplayName("check mapping doctor dot to entity")
+    @DisplayName("check mapping doctor dto to entity")
     void testMappingDoctorDtoToEntity() {
         // given
         Doctor expectedDoctor = getFirstDoctor();
         DoctorDto doctorDto = getDoctorDto(expectedDoctor);
+        Price price = getFirstPrice();
         // when
+        when(priceRepository.findById(anyString())).thenReturn(Optional.ofNullable(price));
         Doctor actualDoctor = doctorMapper.dtoToEntity(doctorDto);
         //then
         assertEquals(expectedDoctor.getId(), actualDoctor.getId());
@@ -57,6 +67,18 @@ class DoctorMapperTest {
         assertEquals(expectedDoctor, actualDoctor);
         assertNotNull(expectedDoctor);
         assertNotNull(actualDoctor);
+    }
+
+    @Test
+    @DisplayName("check mapping doctor dto to entity with empty price, expected exception")
+    void testMappingDoctorDtoToEntityWithEmptyPrice() {
+        // given
+        DoctorDto doctor = getDoctorDto(getFirstDoctor());
+        // when
+        when(priceRepository.findById(anyString())).thenReturn(Optional.empty());
+        //then
+        assertThrows(NotFoundException.class, () -> doctorMapper.dtoToEntity(doctor));
+
     }
 
 }
