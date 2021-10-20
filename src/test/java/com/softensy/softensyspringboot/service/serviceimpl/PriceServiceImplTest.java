@@ -75,11 +75,11 @@ class PriceServiceImplTest {
         // given
         Price expectedPrice = getFirstPrice();
         // when
-        when(priceRepository.save(any(Price.class))).thenReturn(expectedPrice);
+        when(priceRepository.saveAndFlush(any(Price.class))).thenReturn(expectedPrice);
         Price actualPrice = priceService.updatePrice(expectedPrice);
         //then
         Assertions.assertEquals(expectedPrice, actualPrice);
-        verify(priceRepository, times(1)).save(any(Price.class));
+        verify(priceRepository, times(1)).saveAndFlush(any(Price.class));
     }
 
     @Test

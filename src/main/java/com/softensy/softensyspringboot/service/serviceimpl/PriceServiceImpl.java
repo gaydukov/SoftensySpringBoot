@@ -36,7 +36,7 @@ public class PriceServiceImpl implements PriceService {
         if (price == null) {
             throw new NotFoundException("Price not found");
         }
-        return priceRepository.save(price);
+        return priceRepository.saveAndFlush(price);
     }
 
 }

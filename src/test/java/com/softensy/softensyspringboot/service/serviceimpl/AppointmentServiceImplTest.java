@@ -87,6 +87,8 @@ class AppointmentServiceImplTest {
     @Test
     @DisplayName("checking create new appointment with invalid date, exception expected")
     void testCreateNewAppointmentWithInvalidDateReturnException() {
+        //given
+        AppointmentDto appointmentDto = getAppointmentDto(getFirstAppointment());
         // when
         when(absenceScheduleService.findAllAbsenceScheduleByDoctorId(anyLong())).thenReturn(getAbsenceScheduleListDto());
         when(absenceScheduleService.isDoctorAbsent(any(AbsenceSchedule.class), any(LocalDateTime.class))).thenReturn(true);
@@ -94,7 +96,7 @@ class AppointmentServiceImplTest {
         when(doctorRepository.findById(anyLong())).thenReturn(Optional.ofNullable(getFirstDoctor()));
         when(patientRepository.findById(anyLong())).thenReturn(Optional.of(getFirstPatient()));
         //then
-        assertThrows(DoctorAbsentException.class, () -> appointmentService.createAppointment(getAppointmentDto(getFirstAppointment())));
+        assertThrows(DoctorAbsentException.class, () -> appointmentService.createAppointment(appointmentDto));
         verify(absenceScheduleService, times(1)).isDoctorAbsent(any(AbsenceSchedule.class), any(LocalDateTime.class));
 
     }

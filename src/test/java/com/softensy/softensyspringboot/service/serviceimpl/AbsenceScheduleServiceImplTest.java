@@ -55,10 +55,8 @@ class AbsenceScheduleServiceImplTest {
     @Test
     @DisplayName("checking create new sick leave with empty absence schedule, expected exception")
     void testCreateNewSickLeaveWithEmptyAbsenceSchedule() {
-        assertThrows(BadRequestException.class, () -> {
-            final AbsenceScheduleDto invalidAbsenceSchedule = getInvalidAbsenceSchedule();
-            absenceScheduleService.createSickLeave(invalidAbsenceSchedule);
-        });
+        AbsenceScheduleDto invalidAbsenceSchedule = getInvalidAbsenceSchedule();
+        assertThrows(BadRequestException.class, () -> absenceScheduleService.createSickLeave(invalidAbsenceSchedule));
     }
 
     @Test
@@ -81,10 +79,8 @@ class AbsenceScheduleServiceImplTest {
     @Test
     @DisplayName("checking update sick leave with empty absence schedule, expected exception")
     void testUpdateSickLeaveWithEmptyAbsenceSchedule() {
-        assertThrows(BadRequestException.class, () -> {
-            final AbsenceScheduleDto invalidAbsenceSchedule = getInvalidAbsenceSchedule();
-            absenceScheduleService.closeSickLeave(invalidAbsenceSchedule);
-        });
+        AbsenceScheduleDto invalidAbsenceSchedule = getInvalidAbsenceSchedule();
+        assertThrows(BadRequestException.class, () -> absenceScheduleService.closeSickLeave(invalidAbsenceSchedule));
     }
 
     @Test
@@ -107,10 +103,8 @@ class AbsenceScheduleServiceImplTest {
     @Test
     @DisplayName("checking create new vocation with empty absence schedule, expected exception")
     void testCreateNewVocationWithEmptyAbsenceSchedule() {
-        assertThrows(BadRequestException.class, () -> {
-            final AbsenceScheduleDto invalidAbsenceSchedule = getInvalidAbsenceSchedule();
-            absenceScheduleService.createVocation(invalidAbsenceSchedule);
-        });
+        AbsenceScheduleDto invalidAbsenceSchedule = getInvalidAbsenceSchedule();
+        assertThrows(BadRequestException.class, () -> absenceScheduleService.createVocation(invalidAbsenceSchedule));
     }
 
     @Test
