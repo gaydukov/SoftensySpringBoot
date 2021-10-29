@@ -1,15 +1,18 @@
 package com.softensy.SoftensySpringBoot;
 
 import com.softensy.SoftensySpringBoot.dto.*;
-import com.softensy.SoftensySpringBoot.entity.Appointment;
-import com.softensy.SoftensySpringBoot.entity.Doctor;
-import com.softensy.SoftensySpringBoot.entity.Patient;
+import com.softensy.SoftensySpringBoot.entity.*;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 public class TestDataGenerator {
@@ -250,6 +253,47 @@ public class TestDataGenerator {
         result.add(getSecondPatientAppointmentDto());
         result.add(getThirdPatientAppointmentDto());
         return result;
+    }
+
+    private static Set<SimpleGrantedAuthority> getAuthorities() {
+        Set<SimpleGrantedAuthority> authority = new HashSet<>();
+        authority.add(new SimpleGrantedAuthority("appointment:read"));
+        authority.add(new SimpleGrantedAuthority("appointment:write"));
+        authority.add(new SimpleGrantedAuthority("patient:read"));
+        authority.add(new SimpleGrantedAuthority("patient:write"));
+        return authority;
+    }
+
+    public static UserDetails getUserDetails() {
+        return User.builder()
+                .username("user")
+                .password("user")
+                .disabled(false)
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .authorities(getAuthorities())
+                .build();
+    }
+
+    public static UserSecurity getPatientSecurity() {
+        return UserSecurity.builder()
+                .login("user")
+                .password("user")
+                .role(Role.PATIENT)
+                .accountType(AccountType.PATIENT)
+                .userId(1L)
+                .build();
+    }
+
+    public static UserSecurity getDoctorSecurity() {
+        return UserSecurity.builder()
+                .login("user")
+                .password("user")
+                .role(Role.DOCTOR)
+                .accountType(AccountType.DOCTOR)
+                .userId(1L)
+                .build();
     }
 
 }

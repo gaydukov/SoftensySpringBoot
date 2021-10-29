@@ -3,6 +3,8 @@ package com.softensy.SoftensySpringBoot.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softensy.SoftensySpringBoot.entity.Doctor;
 import com.softensy.SoftensySpringBoot.service.DoctorService;
+import com.softensy.SoftensySpringBoot.service.serviceImpl.DoctorSecurityService;
+import com.softensy.SoftensySpringBoot.service.serviceImpl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(DoctorController.class)
+@ContextConfiguration
 class DoctorControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -33,10 +38,15 @@ class DoctorControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private DoctorService doctorService;
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
+    @MockBean(name = "doctorSecurityService")
+    private DoctorSecurityService doctorSecurityService;
 
     @Test
-    @DisplayName("checking get doctor by id with status 200")
-    void testGetDoctorByIdReturnStatus200andDoctor() throws Exception {
+    @DisplayName("checking get doctor by id with authenticated with status 200")
+    @WithMockUser(authorities = ("doctor:read"))
+    void testGetDoctorByIdWithAuthenticatedReturnStatus200andDoctor() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
         //when
@@ -54,8 +64,22 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("checking save doctor with status 201")
-    void testAddNewDoctorReturnStatus201AndDoctor() throws Exception {
+    @DisplayName("checking forbidden get doctor by id with another authenticated with status 403")
+    @WithMockUser(authorities = ("patient:read"))
+    void testGetDoctorByIdWithAnotherAuthenticatedReturnStatus403() throws Exception {
+        //given
+        Doctor doctor = getFirstDoctor();
+        //when
+        when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(doctor));
+        //then
+        mockMvc.perform(get("/doctor/1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking save doctor with authenticated status 201")
+    @WithMockUser(authorities = ("admin:write"))
+    void testAddNewDoctorWithAuthenticatedReturnStatus201AndDoctor() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
         //when
@@ -77,8 +101,25 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("checking update doctor with status 200")
-    void testUpdateDoctorReturnStatus200AndDoctor() throws Exception {
+    @DisplayName("checking forbidden save doctor with another authenticated status 403")
+    @WithMockUser(authorities = ("doctor:write"))
+    void testAddNewDoctorWithAnotherAuthenticatedReturnStatus403() throws Exception {
+        //given
+        Doctor doctor = getFirstDoctor();
+        //when
+        when(doctorService.saveDoctor(any(Doctor.class))).thenReturn(doctor);
+        //then
+        mockMvc.perform(post("/doctor")
+                        .content(objectMapper.writeValueAsString(doctor))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking update doctor with authenticated admin with status 200")
+    @WithMockUser(authorities = ("admin:write"))
+    void testUpdateDoctorWithAuthenticatedAdminReturnStatus200AndDoctor() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
         //when
@@ -100,20 +141,115 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("checking remove doctor with status 204")
-    void testRemoveDoctorFindDoctorByIdAndReturnStatus204() throws Exception {
+    @DisplayName("checking update doctor with authenticated doctor with status 200")
+    @WithMockUser(authorities = ("doctor:write"))
+    void testUpdateDoctorWithAuthenticatedDoctorReturnStatus200AndDoctor() throws Exception {
+        //given
+        Doctor doctor = getFirstDoctor();
+        //when
+        when(doctorSecurityService.hasDoctor(doctor)).thenReturn(true);
+        when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
+        //then
+        mockMvc.perform(put("/doctor")
+                        .content(objectMapper.writeValueAsString(doctor))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("checking forbidden update doctor with another authenticated with status 403")
+    @WithMockUser(authorities = ("patient:write"))
+    void testUpdateDoctorWithAnotherAuthenticatedReturnStatus403() throws Exception {
+        //given
+        Doctor doctor = getFirstDoctor();
+        //when
+        when(doctorSecurityService.hasDoctor(doctor)).thenReturn(true);
+        when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
+        //then
+        mockMvc.perform(put("/doctor")
+                        .content(objectMapper.writeValueAsString(doctor))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking forbidden update doctor with another authenticated doctor with status 403")
+    @WithMockUser(authorities = ("doctor:write"))
+    void testUpdateDoctorWithAnotherAuthenticatedDoctorReturnStatus403() throws Exception {
+        //given
+        Doctor doctor = getFirstDoctor();
+        //when
+        when(doctorSecurityService.hasDoctor(doctor)).thenReturn(false);
+        when(doctorService.updateDoctor(any(Doctor.class))).thenReturn(doctor);
+        //then
+        mockMvc.perform(put("/doctor")
+                        .content(objectMapper.writeValueAsString(doctor))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking remove doctor with authenticated admin with status 200")
+    @WithMockUser(authorities = "admin:write")
+    void testRemoveDoctorFindDoctorByIdWithAuthenticatedAdminAndReturnStatus204() throws Exception {
         //given
         Doctor doctor = getFirstDoctor();
         //when
         when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(doctor));
         //then
         mockMvc.perform(delete("/doctor/1"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("checking get all doctors with status 200")
-    void testGetAllDoctorsReturnStatus200andListDoctors() throws Exception {
+    @DisplayName("checking remove doctor with authenticated doctor with status 200")
+    @WithMockUser(authorities = "doctor:write")
+    void testRemoveDoctorFindDoctorByIdWithAuthenticatedDoctorAndReturnStatus204() throws Exception {
+        //given
+        Doctor doctor = getFirstDoctor();
+        //when
+        when(doctorSecurityService.hasDoctorId(1L)).thenReturn(true);
+        when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(doctor));
+        //then
+        mockMvc.perform(delete("/doctor/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("checking forbidden remove doctor with another authenticated with status 403")
+    @WithMockUser(authorities = "patient:write")
+    void testRemoveDoctorFindDoctorByIdWithAnotherAuthenticatedReturnStatus403() throws Exception {
+        //given
+        Doctor doctor = getFirstDoctor();
+        //when
+        when(doctorSecurityService.hasDoctorId(1L)).thenReturn(true);
+        when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(doctor));
+        //then
+        mockMvc.perform(delete("/doctor/1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking forbidden remove doctor with authenticated another doctor with status 403")
+    @WithMockUser(authorities = "doctor:write")
+    void testRemoveDoctorFindDoctorByIdWithAuthenticatedAnotherDoctorReturnStatus403() throws Exception {
+        //given
+        Doctor doctor = getFirstDoctor();
+        //when
+        when(doctorSecurityService.hasDoctorId(1L)).thenReturn(false);
+        when(doctorService.getDoctorById(1L)).thenReturn(Optional.of(doctor));
+        //then
+        mockMvc.perform(delete("/doctor/1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("checking get all doctors with authenticated doctor with status 200")
+    @WithMockUser(authorities = "doctor:read")
+    void testGetAllDoctorsWithAuthenticatedReturnStatus200andListDoctors() throws Exception {
         //given
         List<Doctor> doctors = getDoctorList();
         //when
@@ -123,6 +259,19 @@ class DoctorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(Arrays
                         .asList(doctors.get(0), doctors.get(1), doctors.get(2)))));
+    }
+
+    @Test
+    @DisplayName("checking forbidden get all doctors with another authenticated with status 403")
+    @WithMockUser(authorities = "patient:read")
+    void testGetAllDoctorsWithAnotherAuthenticatedReturnStatus403() throws Exception {
+        //given
+        List<Doctor> doctors = getDoctorList();
+        //when
+        when(doctorService.getAllDoctors()).thenReturn(doctors);
+        //then
+        mockMvc.perform(get("/doctor"))
+                .andExpect(status().isForbidden());
     }
 
 }
