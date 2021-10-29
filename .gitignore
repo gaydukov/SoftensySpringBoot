@@ -3,3 +3,4 @@ target/
 .mvn/
 .idea/
 /SoftensySpringBoot.iml
+/src/main/resources/META-INF/additional-spring-configuration-metadata.json
