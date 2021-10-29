@@ -1,0 +1,16 @@
+language: java
+install: mvn install
+jdk:
+- openjdk11
+services:
+- postgresql
+before_install:
+- psql -c 'create database softensy;' -U postgres
+addons:
+  sonarcloud:
+    organization: "gaydukov"
+    token:
+      secure: "fu31fLyZaDl1GbCVjjGBALZwoD7X/bwPTJfvOr2oGKtJXj1WfIRMyxcCoxKbB6/pOvr5jOyJMZ1jTWYeuPEM8vVsXMxSxDmsAqSnfT81z8C3i5ZEWfwv5EicOdLEfJEiviV1tPRZXlC+dPC/AqeKgxbecpQXBdfVn3yAuwZTYTGDy50Ug4f5TI5Qot8uz7dXSH5WkypqCOajesDWBycYZ8WtUrxcVes/Wk0+zLtOOTbsUAO6RhKw26ODosKGYwHhculk7wTnSCYldqqT+T5MsmqXs7/9UxqmeHOr4g4GBRMYdTg8I+0PvDb1Q7Tcj6mKGPq4linPg8UbJ1Xj5Wyqq4gQraKIsgViz25kIEm52ukUDYrBh7XvkplIGtvjEhXe0/T3PEr4qdpNphRsfHypLjrRw/gopykPHJu3AavnqyIr+wcWtziJGNsEHZxFjMKnSzoGZiCIPPwghxmbIN3qhCTphsRBcGFyv4mCGavaS50Odc7HQqstc7I8TvSIA+2G132/dlNKHb1u8OVOT/vG0kYC5gvpS8B2BTCyFaU4dsnDFQ2FXrFOh3NHCwWyDCCabWDALcya6Te+TraCguhQAEdPbjygR+AQuwWm9ZqdQv2mR+gLc3t1R4yjrb702gLpZAKyMAYrCNwzyVXMbxx99StRYVvx528bIB+6DF02UaA="
+
+script:
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=gaydukov_SoftensySpringBoot
